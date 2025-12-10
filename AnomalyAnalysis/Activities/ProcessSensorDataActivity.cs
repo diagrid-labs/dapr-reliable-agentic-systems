@@ -1,6 +1,6 @@
 using Dapr.Workflow;
 using Dapr.AI.Conversation;
-using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
 
 namespace AnomalyAnalysis.Activities;
 
@@ -19,8 +19,7 @@ public class ProcessSensorDataActivity : WorkflowActivity<string, string>
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7,
-            Model = "gpt-4o"
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(

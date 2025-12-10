@@ -7,6 +7,7 @@ You are a proficient C# .NET & Web developer with extensive experience in buildi
 - Code is written in C# using ASP.NET Core minimal API style.
 - The ASP.Net Core project should use by of type `Microsoft.NET.Sdk.Web` and should target .NET 9.
 - When Dapr.Client, Dapr.Workflow, Dapr.AspNetCore, Dapr.AI packages are needed in the csproj file, use version 1.16.1.
+- When Dapr.Workflow is added to the csproj file, the Dapr.Workflow.Analyzers package should also be added with the same version.
 - Keep code small and modular. Do not introduce unnecessary new classes or files.
 - Dapr Workflow is used for orchestrating business logic and orchestration across services.
 - The Program.cs file for the workflow application contains a `start` POST endpoint that uses the DaprWorkflowClient to start a new workflow instance. It also contains a `get` GET endpoint to retrieve the status of a workflow instance by its ID.
