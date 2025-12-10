@@ -1,0 +1,12 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: conversation
+spec:
+  type: conversation.openai
+  version: v1
+  metadata:
+  - name: key
+    value: "your-openai-api-key"
+  - name: endpoint
+    value: "https://api.openai.com/v1"

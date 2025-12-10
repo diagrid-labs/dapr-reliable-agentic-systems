@@ -28,6 +28,7 @@ You're building a backend system for Data to analyze spatial anomalies detected 
 ### Step 1: Project Setup
 ```
 /AnomalyAnalysis
+  - AnomalyAnalysis.csproj
   - Program.cs
   - local.http
   - appsettings.json
@@ -47,6 +48,8 @@ You're building a backend system for Data to analyze spatial anomalies detected 
   /Resources
     - statestore.yaml
     - conversation.yaml
+  /Properties
+    - launchSettings.json
 ```
 
 ### Step 2: Core Models
@@ -569,7 +572,7 @@ apps:
 **local.http**
 ```http
 ### Analyze a wormhole anomaly
-POST http://localhost:5000/anomaly/analyze
+POST http://localhost:5500/anomaly/analyze
 Content-Type: application/json
 
 {
@@ -586,10 +589,10 @@ Content-Type: application/json
 }
 
 ### Get analysis status
-GET http://localhost:5000/anomaly/status/anomaly-ANM-001-WORMHOLE
+GET http://localhost:5500/anomaly/status/anomaly-ANM-001-WORMHOLE
 
 ### Analyze a quantum singularity (high risk)
-POST http://localhost:5000/anomaly/analyze
+POST http://localhost:5500/anomaly/analyze
 Content-Type: application/json
 
 {
@@ -606,7 +609,7 @@ Content-Type: application/json
 }
 
 ### Get all anomaly history
-GET http://localhost:5000/anomalies/history
+GET http://localhost:5500/anomalies/history
 ```
 
 ### Step 8: Dapr Components

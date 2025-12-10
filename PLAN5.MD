@@ -31,6 +31,7 @@ This is analogous to Picard's careful approach to diplomacy—going through mult
 ### Step 1: Project Setup
 ```
 /AlienTranslator
+  - AlienTranslator.csproj
   - Program.cs
   - local.http
   - appsettings.json
@@ -49,6 +50,8 @@ This is analogous to Picard's careful approach to diplomacy—going through mult
   /Resources
     - statestore.yaml
     - conversation.yaml
+  /Properties
+    - launchSettings.json
 ```
 
 ### Step 2: Core Models
@@ -557,7 +560,7 @@ apps:
 **local.http**
 ```http
 ### Translate a diplomatic message from the Vulcans
-POST http://localhost:5000/translate
+POST http://localhost:5500/translate
 Content-Type: application/json
 
 {
@@ -574,7 +577,7 @@ Content-Type: application/json
 }
 
 ### Translate a Klingon battle poem
-POST http://localhost:5000/translate
+POST http://localhost:5500/translate
 Content-Type: application/json
 
 {
@@ -592,7 +595,7 @@ Content-Type: application/json
 }
 
 ### Translate casual Romulan conversation
-POST http://localhost:5000/translate
+POST http://localhost:5500/translate
 Content-Type: application/json
 
 {
@@ -610,13 +613,13 @@ Content-Type: application/json
 }
 
 ### Get translation result
-GET http://localhost:5000/translate/translation-VULN-DIPL-001
+GET http://localhost:5500/translate/translation-VULN-DIPL-001
 
 ### Get specific iteration
-GET http://localhost:5000/translate/translation-VULN-DIPL-001/iteration/2
+GET http://localhost:5500/translate/translation-VULN-DIPL-001/iteration/2
 
 ### Get translation history
-GET http://localhost:5000/translations/history
+GET http://localhost:5500/translations/history
 ```
 
 ## Benefits of Evaluator-Optimizer Pattern

@@ -1,0 +1,11 @@
+version: 1
+common:
+  resourcesPath: ./Resources
+  appLogDestination: fileAndConsole
+  daprdLogDestination: fileAndConsole
+apps:
+  - appID: anomaly-detection-app
+    appDirPath: ./
+    appPort: 5500
+    daprHTTPPort: 3550
+    command: ["dotnet", "run"]

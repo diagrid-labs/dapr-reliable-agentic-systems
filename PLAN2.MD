@@ -30,6 +30,7 @@ A single generic analysis pipeline would be ineffective. Each type needs special
 ### Step 1: Project Setup
 ```
 /GalacticAnomalyClassifier
+  GalacticAnomalyClassifier.csproj
   - Program.cs
   - local.http
   - appsettings.json
@@ -50,6 +51,8 @@ A single generic analysis pipeline would be ineffective. Each type needs special
   /Resources
     - statestore.yaml
     - conversation.yaml
+  /Properties
+    - launchSettings.json
 ```
 
 ### Step 2: Core Models
@@ -611,7 +614,7 @@ apps:
 **local.http**
 ```http
 ### Analyze a temporal rift
-POST http://localhost:5000/anomaly/analyze
+POST http://localhost:5500/anomaly/analyze
 Content-Type: application/json
 
 {
@@ -628,7 +631,7 @@ Content-Type: application/json
 }
 
 ### Analyze dark matter cluster
-POST http://localhost:5000/anomaly/analyze
+POST http://localhost:5500/anomaly/analyze
 Content-Type: application/json
 
 {
@@ -645,7 +648,7 @@ Content-Type: application/json
 }
 
 ### Analyze alien artifact
-POST http://localhost:5000/anomaly/analyze
+POST http://localhost:5500/anomaly/analyze
 Content-Type: application/json
 
 {
@@ -662,13 +665,13 @@ Content-Type: application/json
 }
 
 ### Get analysis status
-GET http://localhost:5000/anomaly/status/anomaly-ANM-001
+GET http://localhost:5500/anomaly/status/anomaly-ANM-001
 
 ### Get all temporal rifts
-GET http://localhost:5000/anomalies/by-type/TemporalRift
+GET http://localhost:5500/anomalies/by-type/TemporalRift
 
 ### Get anomaly statistics
-GET http://localhost:5000/anomalies/stats
+GET http://localhost:5500/anomalies/stats
 ```
 
 ## Benefits of Routing Pattern

@@ -31,6 +31,7 @@ Additionally, for critical safety findings (warp core instability, hull breaches
 ### Step 1: Project Setup
 ```
 /StarshipDiagnostics
+  - StarshipDiagnostics.csproj
   - Program.cs
   - local.http
   - appsettings.json
@@ -57,6 +58,8 @@ Additionally, for critical safety findings (warp core instability, hull breaches
   /Resources
     - statestore.yaml
     - conversation.yaml
+  /Properties
+    - launchSettings.json
 ```
 
 ### Step 2: Core Models
@@ -701,7 +704,7 @@ apps:
 **local.http**
 ```http
 ### Diagnose a starship with multiple issues
-POST http://localhost:5000/ship/diagnose
+POST http://localhost:5500/ship/diagnose
 Content-Type: application/json
 
 {
@@ -712,7 +715,7 @@ Content-Type: application/json
   "lastMaintenance": "2424-12-01T00:00:00Z",
   "telemetry": {
     "hullStressLevel": 0.67,
-    "reactorTemp": 15000000,
+    "reactorTemp": 15500000,
     "reactorContainment": 0.94,
     "oxygenLevel": 0.98,
     "navigationAccuracy": 0.999,
@@ -721,7 +724,7 @@ Content-Type: application/json
 }
 
 ### Diagnose an aging ship
-POST http://localhost:5000/ship/diagnose
+POST http://localhost:5500/ship/diagnose
 Content-Type: application/json
 
 {
@@ -732,7 +735,7 @@ Content-Type: application/json
   "lastMaintenance": "2420-06-15T00:00:00Z",
   "telemetry": {
     "hullStressLevel": 0.89,
-    "reactorTemp": 16500000,
+    "reactorTemp": 16550000,
     "reactorContainment": 0.78,
     "oxygenLevel": 0.91,
     "navigationAccuracy": 0.95,
@@ -741,10 +744,10 @@ Content-Type: application/json
 }
 
 ### Get diagnostic report
-GET http://localhost:5000/ship/report/diagnostic-NCC-1701-D-638742234567890000
+GET http://localhost:5500/ship/report/diagnostic-NCC-1701-D-638742234567890000
 
 ### Get ship history
-GET http://localhost:5000/ship/NCC-1701-D/history
+GET http://localhost:5500/ship/NCC-1701-D/history
 ```
 
 ## Benefits of Parallelization Pattern

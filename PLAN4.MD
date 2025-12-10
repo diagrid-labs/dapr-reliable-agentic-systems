@@ -31,6 +31,7 @@ The key difference from parallelization: Riker doesn't know ahead of time which 
 ### Step 1: Project Setup
 ```
 /SpaceColonyPlanner
+  - SpaceColonyPlanner.csproj
   - Program.cs
   - local.http
   - appsettings.json
@@ -59,6 +60,8 @@ The key difference from parallelization: Riker doesn't know ahead of time which 
   /Resources
     - statestore.yaml
     - conversation.yaml
+  /Properties
+    - launchSettings.json
 ```
 
 ### Step 2: Core Models
@@ -743,7 +746,7 @@ apps:
 **local.http**
 ```http
 ### Plan a harsh desert planet colony
-POST http://localhost:5000/colony/plan
+POST http://localhost:5500/colony/plan
 Content-Type: application/json
 
 {
@@ -769,14 +772,14 @@ Content-Type: application/json
   },
   "requirements": {
     "initialPopulation": 100,
-    "targetPopulation": 5000,
+    "targetPopulation": 5500,
     "purpose": "Mining",
     "yearsToComplete": 5
   }
 }
 
 ### Plan an ice world research colony
-POST http://localhost:5000/colony/plan
+POST http://localhost:5500/colony/plan
 Content-Type: application/json
 
 {
@@ -809,7 +812,7 @@ Content-Type: application/json
 }
 
 ### Get colony plan
-GET http://localhost:5000/colony/plan/colony-AR-558-638742234567890000
+GET http://localhost:5500/colony/plan/colony-AR-558-638742234567890000
 ```
 
 ## Benefits of Orchestrator-Worker Pattern

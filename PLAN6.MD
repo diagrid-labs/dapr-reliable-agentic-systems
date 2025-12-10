@@ -32,6 +32,7 @@ The probe has **autonomy**—it makes its own decisions about exploration paths 
 ### Step 1: Project Setup
 ```
 /SpaceDebrisAgent
+  - SpaceDebrisAgent.csproj
   - Program.cs
   - local.http
   - appsettings.json
@@ -59,6 +60,8 @@ The probe has **autonomy**—it makes its own decisions about exploration paths 
   /Resources
     - statestore.yaml
     - conversation.yaml
+  /Properties
+    - launchSettings.json
 ```
 
 ### Step 2: Core Models
@@ -714,7 +717,7 @@ apps:
 **local.http**
 ```http
 ### Start a LEO cleanup mission
-POST http://localhost:5000/mission/start
+POST http://localhost:5500/mission/start
 Content-Type: application/json
 
 {
@@ -727,7 +730,7 @@ Content-Type: application/json
 }
 
 ### Start an aggressive mission
-POST http://localhost:5000/mission/start
+POST http://localhost:5500/mission/start
 Content-Type: application/json
 
 {
@@ -740,10 +743,10 @@ Content-Type: application/json
 }
 
 ### Get mission status
-GET http://localhost:5000/mission/status/mission-CLEANUP-LEO-001
+GET http://localhost:5500/mission/status/mission-CLEANUP-LEO-001
 
 ### Get agent decision history
-GET http://localhost:5000/mission/mission-CLEANUP-LEO-001/decisions
+GET http://localhost:5500/mission/mission-CLEANUP-LEO-001/decisions
 ```
 
 ## Benefits of Autonomous Agent Pattern
