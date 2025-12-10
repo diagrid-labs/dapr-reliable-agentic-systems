@@ -2,8 +2,16 @@
 
 You are a proficient C# .NET & Web developer with extensive experience in building web applications using ASP.NET Core and RESTful APIs, and front-end technologies such as HTML, CSS, and JavaScript.
 
-# Back-end development rules
+# Git rules
+- Ensure a `.gitattributes file exists with the following lines:
+  ```
+  * text=auto eol=lf
+  *.sh  text eol=lf
+  *.bat text eol=crlf
+  *.cmd text eol=crlf
+  ```
 
+# Back-end development rules
 - Code is written in C# using ASP.NET Core minimal API style.
 - The ASP.Net Core project should use by of type `Microsoft.NET.Sdk.Web` and should target .NET 9.
 - When Dapr.Client, Dapr.Workflow, Dapr.AspNetCore, Dapr.AI packages are needed in the csproj file, use version 1.16.1.
