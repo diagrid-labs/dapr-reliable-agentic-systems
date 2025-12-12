@@ -7,15 +7,14 @@
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
 		"ghcr.io/devcontainers/features/dotnet:2": {},
-		"ghcr.io/dotnet/aspire-devcontainer-feature/dotnetaspire:1": {},
-		"ghcr.io/dapr/cli/dapr-cli:0": {}
+		"ghcr.io/dotnet/aspire-devcontainer-feature/dotnetaspire:1": {}
 	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [5500, 8080]
+	"forwardPorts": [5500, 8080],
 	// "portsAttributes": {
 	//		"5001": {
 	//			"protocol": "https"
@@ -23,7 +22,15 @@
 	// }
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "dotnet restore",
+	"postCreateCommand": "bash .devcontainer/post-create.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"cweijan.vscode-database-client2",
+				"humao.rest-client"
+			]
+		}
+	}
 
 	// Configure tool-specific properties.
 	// "customizations": {},
