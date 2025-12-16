@@ -4,7 +4,7 @@ using Dapr.AI.Conversation.ConversationRoles;
 
 namespace AnomalyAnalysis.Activities;
 
-public class GenerateRecommendationActivity : WorkflowActivity<object, string>
+public class GenerateRecommendationActivity : WorkflowActivity<GenerateRecommendationInput, string>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -15,13 +15,8 @@ public class GenerateRecommendationActivity : WorkflowActivity<object, string>
     
     public override async Task<string> RunAsync(
         WorkflowActivityContext context, 
-        object input)
+        GenerateRecommendationInput input)
     {
-        var data = (dynamic)input;
-        string anomalyType = data.AnomalyType;
-        string analysis = data.Analysis;
-        string riskLevel = data.RiskLevel;
-        
         var conversationOptions = new ConversationOptions("conversation")
         {
             Temperature = 0.7
@@ -49,7 +44,7 @@ public class GenerateRecommendationActivity : WorkflowActivity<object, string>
                     {
                         Name = "DataTactical",
                         Content = [
-                            new MessageContent($"Generate recommendation for {anomalyType} (Risk: {riskLevel}):\n{analysis}")
+                            new MessageContent($"Generate recommendation for {input.AnomalyType} (Risk: {input.RiskLevel}):\n{input.Analysis}")
                         ]
                     }
                 })
@@ -59,3 +54,5 @@ public class GenerateRecommendationActivity : WorkflowActivity<object, string>
         return response.Outputs.First().Choices.First().Message.Content;
     }
 }
+
+public record GenerateRecommendationInput(string AnomalyType, string Analysis, string RiskLevel);

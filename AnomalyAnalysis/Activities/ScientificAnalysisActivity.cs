@@ -4,7 +4,7 @@ using Dapr.AI.Conversation.ConversationRoles;
 
 namespace AnomalyAnalysis.Activities;
 
-public class ScientificAnalysisActivity : WorkflowActivity<object, string>
+public class ScientificAnalysisActivity : WorkflowActivity<ScientificAnalysisInput, string>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -15,12 +15,8 @@ public class ScientificAnalysisActivity : WorkflowActivity<object, string>
     
     public override async Task<string> RunAsync(
         WorkflowActivityContext context, 
-        object input)
+        ScientificAnalysisInput input)
     {
-        var data = (dynamic)input;
-        string processedData = data.ProcessedData;
-        string anomalyType = data.AnomalyType;
-        
         var conversationOptions = new ConversationOptions("conversation")
         {
             Temperature = 0.7
@@ -43,7 +39,7 @@ public class ScientificAnalysisActivity : WorkflowActivity<object, string>
                     {
                         Name = "DataScience",
                         Content = [
-                            new MessageContent($"Analyze {anomalyType}: {processedData}")
+                            new MessageContent($"Analyze {input.AnomalyType}: {input.ProcessedData}")
                         ]
                     }
                 })
@@ -53,3 +49,5 @@ public class ScientificAnalysisActivity : WorkflowActivity<object, string>
         return response.Outputs.First().Choices.First().Message.Content;
     }
 }
+
+public record ScientificAnalysisInput(string ProcessedData, string AnomalyType);

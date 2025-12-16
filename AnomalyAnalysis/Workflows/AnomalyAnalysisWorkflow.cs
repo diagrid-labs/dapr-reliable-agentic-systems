@@ -7,7 +7,7 @@ namespace AnomalyAnalysis.Workflows;
 public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
 {
     public override async Task<AnalysisResult> RunAsync(
-        WorkflowContext context, 
+        WorkflowContext context,
         SpatialAnomaly input)
     {
         var stages = new List<AnalysisStage>();
@@ -18,9 +18,9 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
             input.RawSensorData);
         
         stages.Add(new AnalysisStage(
-            "ProcessSensorData", 
-            input.RawSensorData, 
-            processedData, 
+            nameof(ProcessSensorDataActivity), 
+            input.RawSensorData,
+            processedData,
             true));
         
         // Gate check: Ensure sensor data processing was successful
@@ -35,7 +35,7 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
             processedData);
         
         stages.Add(new AnalysisStage(
-            "ClassifyAnomaly", 
+            nameof(ClassifyAnomalyActivity), 
             processedData, 
             anomalyType, 
             true));
@@ -43,23 +43,23 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         // Stage 3: Scientific Analysis
         var scientificAnalysis = await context.CallActivityAsync<string>(
             nameof(ScientificAnalysisActivity),
-            new { ProcessedData = processedData, AnomalyType = anomalyType });
+            new ScientificAnalysisInput(processedData, anomalyType));
         
         stages.Add(new AnalysisStage(
-            "ScientificAnalysis", 
-            anomalyType, 
-            scientificAnalysis, 
+            nameof(ScientificAnalysisActivity),
+            anomalyType,
+            scientificAnalysis,
             true));
         
         // Stage 4: Risk Assessment
         var riskLevel = await context.CallActivityAsync<string>(
             nameof(RiskAssessmentActivity),
-            new { AnomalyType = anomalyType, Analysis = scientificAnalysis });
+            new RiskAssessmentInput(anomalyType, scientificAnalysis));
         
         stages.Add(new AnalysisStage(
-            "RiskAssessment", 
-            scientificAnalysis, 
-            riskLevel, 
+            nameof(RiskAssessmentActivity),
+            scientificAnalysis,
+            riskLevel,
             true));
         
         // Gate check: Alert bridge if critical risk detected
@@ -73,16 +73,16 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         // Stage 5: Generate Tactical Recommendation
         var recommendation = await context.CallActivityAsync<string>(
             nameof(GenerateRecommendationActivity),
-            new { 
-                AnomalyType = anomalyType, 
-                Analysis = scientificAnalysis,
-                RiskLevel = riskLevel 
-            });
+            new GenerateRecommendationInput(
+                anomalyType,
+                scientificAnalysis,
+                riskLevel
+            ));
         
         stages.Add(new AnalysisStage(
-            "GenerateRecommendation", 
-            riskLevel, 
-            recommendation, 
+            nameof(GenerateRecommendationActivity),
+            riskLevel,
+            recommendation,
             true));
         
         return new AnalysisResult(

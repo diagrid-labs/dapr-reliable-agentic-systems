@@ -4,7 +4,7 @@ using Dapr.AI.Conversation.ConversationRoles;
 
 namespace AnomalyAnalysis.Activities;
 
-public class RiskAssessmentActivity : WorkflowActivity<object, string>
+public class RiskAssessmentActivity : WorkflowActivity<RiskAssessmentInput, string>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -15,12 +15,8 @@ public class RiskAssessmentActivity : WorkflowActivity<object, string>
     
     public override async Task<string> RunAsync(
         WorkflowActivityContext context, 
-        object input)
+        RiskAssessmentInput input)
     {
-        var data = (dynamic)input;
-        string anomalyType = data.AnomalyType;
-        string analysis = data.Analysis;
-        
         var conversationOptions = new ConversationOptions("conversation")
         {
             Temperature = 0.3
@@ -48,7 +44,7 @@ public class RiskAssessmentActivity : WorkflowActivity<object, string>
                     {
                         Name = "GeordiAndWorf",
                         Content = [
-                            new MessageContent($"Assess risk for {anomalyType}:\n{analysis}")
+                            new MessageContent($"Assess risk for {input.AnomalyType}:\n{input.Analysis}")
                         ]
                     }
                 })
@@ -58,3 +54,5 @@ public class RiskAssessmentActivity : WorkflowActivity<object, string>
         return response.Outputs.First().Choices.First().Message.Content.Trim();
     }
 }
+
+public record RiskAssessmentInput(string AnomalyType, string Analysis);
