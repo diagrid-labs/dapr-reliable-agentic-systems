@@ -4,7 +4,7 @@ common:
   appLogDestination: fileAndConsole
   daprdLogDestination: fileAndConsole
 apps:
-  - appID: anomaly-detection-app
+  - appID: conversation-tests
     appDirPath: ./
     appPort: 5500
     daprHTTPPort: 3550
