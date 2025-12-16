@@ -22,6 +22,7 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
             input.RawSensorData,
             processedData,
             true));
+        context.SetCustomStatus(stages);
         
         // Gate check: Ensure sensor data processing was successful
         if (string.IsNullOrEmpty(processedData))
@@ -39,6 +40,7 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
             processedData, 
             anomalyType, 
             true));
+        context.SetCustomStatus(stages);
         
         // Stage 3: Scientific Analysis
         var scientificAnalysis = await context.CallActivityAsync<string>(
@@ -50,6 +52,7 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
             anomalyType,
             scientificAnalysis,
             true));
+        context.SetCustomStatus(stages);
         
         // Stage 4: Risk Assessment
         var riskLevel = await context.CallActivityAsync<string>(
@@ -61,6 +64,7 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
             scientificAnalysis,
             riskLevel,
             true));
+        context.SetCustomStatus(stages);
         
         // Gate check: Alert bridge if critical risk detected
         if (riskLevel.Contains("CRITICAL", StringComparison.OrdinalIgnoreCase))
@@ -84,6 +88,7 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
             riskLevel,
             recommendation,
             true));
+        context.SetCustomStatus(stages);
         
         return new AnalysisResult(
             input.AnomalyId,

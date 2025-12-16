@@ -33,7 +33,7 @@ public class ProcessSensorDataActivity : WorkflowActivity<string, string>
                             Process raw sensor data from the Enterprise's long-range scanners. 
                             Convert electromagnetic readings, subspace distortions, and quantum 
                             fluctuations into structured scientific data with key measurements 
-                            (wavelength, frequency, intensity, spatial coordinates).")
+                            (wavelength, frequency, intensity, spatial coordinates). Limit the output to 100 words.")
                         ]
                     },
                     new UserMessage

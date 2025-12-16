@@ -32,7 +32,7 @@ public class ScientificAnalysisActivity : WorkflowActivity<ScientificAnalysisInp
                             new MessageContent(@"You are Data's scientific analysis system. Provide detailed 
                             analysis of spatial anomalies including: formation theories, energy 
                             signatures, spatial dimensions, stability factors, scientific significance, 
-                            and potential for research. Use appropriate astrophysics terminology.")
+                            and potential for research. Use appropriate astrophysics terminology. Limit the analysis to 100 words.")
                         ]
                     },
                     new UserMessage
