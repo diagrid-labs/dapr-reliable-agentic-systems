@@ -45,6 +45,9 @@ You're building a backend system for Data to analyze spatial anomalies detected 
     - SpatialAnomaly.cs
     - AnalysisResult.cs
     - AnomalyMetadata.cs
+    - ScientificAnalysisInput.cs
+    - RiskAssessmentInput.cs
+    - RecommendationInput.cs
   /Resources
     - statestore.yaml
     - conversation.yaml
@@ -78,6 +81,22 @@ public record AnalysisResult(
     string ScientificAnalysis,
     string RiskLevel,
     string TacticalRecommendation
+);
+
+public record ScientificAnalysisInput(
+    string ProcessedData,
+    string AnomalyType
+);
+
+public record RiskAssessmentInput(
+    string AnomalyType,
+    string Analysis
+);
+
+public record RecommendationInput(
+    string AnomalyType,
+    string Analysis,
+    string RiskLevel
 );
 ```
 
@@ -123,7 +142,7 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         // Stage 3: Scientific Analysis
         var scientificAnalysis = await context.CallActivityAsync<string>(
             nameof(ScientificAnalysisActivity),
-            new { ProcessedData = processedData, AnomalyType = anomalyType });
+            new ScientificAnalysisInput(processedData, anomalyType));
         
         stages.Add(new AnalysisStage(
             "ScientificAnalysis", 
@@ -134,7 +153,7 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         // Stage 4: Risk Assessment
         var riskLevel = await context.CallActivityAsync<string>(
             nameof(RiskAssessmentActivity),
-            new { AnomalyType = anomalyType, Analysis = scientificAnalysis });
+            new RiskAssessmentInput(anomalyType, scientificAnalysis));
         
         stages.Add(new AnalysisStage(
             "RiskAssessment", 
@@ -291,7 +310,7 @@ public class ClassifyAnomalyActivity : WorkflowActivity<string, string>
 using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.Extensions;
 
-public class ScientificAnalysisActivity : WorkflowActivity<object, string>
+public class ScientificAnalysisActivity : WorkflowActivity<ScientificAnalysisInput, string>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -302,11 +321,8 @@ public class ScientificAnalysisActivity : WorkflowActivity<object, string>
     
     public override async Task<string> RunAsync(
         WorkflowActivityContext context, 
-        object input)
+        ScientificAnalysisInput input)
     {
-        var data = (dynamic)input;
-        string processedData = data.ProcessedData;
-        string anomalyType = data.AnomalyType;
         
         var conversationOptions = new ConversationOptions("conversation")
         {
@@ -331,7 +347,7 @@ public class ScientificAnalysisActivity : WorkflowActivity<object, string>
                     {
                         Name = "DataScience",
                         Content = [
-                            new MessageContent($"Analyze {anomalyType}: {processedData}")
+                            new MessageContent($"Analyze {input.AnomalyType}: {input.ProcessedData}")
                         ]
                     }
                 })
@@ -348,7 +364,7 @@ public class ScientificAnalysisActivity : WorkflowActivity<object, string>
 using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.Extensions;
 
-public class RiskAssessmentActivity : WorkflowActivity<object, string>
+public class RiskAssessmentActivity : WorkflowActivity<RiskAssessmentInput, string>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -359,11 +375,8 @@ public class RiskAssessmentActivity : WorkflowActivity<object, string>
     
     public override async Task<string> RunAsync(
         WorkflowActivityContext context, 
-        object input)
+        RiskAssessmentInput input)
     {
-        var data = (dynamic)input;
-        string anomalyType = data.AnomalyType;
-        string analysis = data.Analysis;
         
         var conversationOptions = new ConversationOptions("conversation")
         {
@@ -393,7 +406,7 @@ public class RiskAssessmentActivity : WorkflowActivity<object, string>
                     {
                         Name = "GeordiAndWorf",
                         Content = [
-                            new MessageContent($"Assess risk for {anomalyType}:\n{analysis}")
+                            new MessageContent($"Assess risk for {input.AnomalyType}:\n{input.Analysis}")
                         ]
                     }
                 })
@@ -410,7 +423,7 @@ public class RiskAssessmentActivity : WorkflowActivity<object, string>
 using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.Extensions;
 
-public class GenerateRecommendationActivity : WorkflowActivity<object, string>
+public class GenerateRecommendationActivity : WorkflowActivity<RecommendationInput, string>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -421,12 +434,8 @@ public class GenerateRecommendationActivity : WorkflowActivity<object, string>
     
     public override async Task<string> RunAsync(
         WorkflowActivityContext context, 
-        object input)
+        RecommendationInput input)
     {
-        var data = (dynamic)input;
-        string anomalyType = data.AnomalyType;
-        string analysis = data.Analysis;
-        string riskLevel = data.RiskLevel;
         
         var conversationOptions = new ConversationOptions("conversation")
         {
@@ -456,7 +465,7 @@ public class GenerateRecommendationActivity : WorkflowActivity<object, string>
                     {
                         Name = "DataTactical",
                         Content = [
-                            new MessageContent($"Generate recommendation for {anomalyType} (Risk: {riskLevel}):\n{analysis}")
+                            new MessageContent($"Generate recommendation for {input.AnomalyType} (Risk: {input.RiskLevel}):\n{input.Analysis}")
                         ]
                     }
                 })

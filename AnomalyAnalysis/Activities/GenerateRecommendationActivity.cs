@@ -37,7 +37,7 @@ public class GenerateRecommendationActivity : WorkflowActivity<GenerateRecommend
                             - EMERGENCY_EVASION: Immediate warp speed departure, shields to maximum
                             - REPORT_TO_STARFLEET: Notify Starfleet Command and Science Division
                             
-                            Include specific tactical details for implementation. Limit the recommendation to 100 words.")
+                            Include specific tactical details for implementation.".FormatToMarkDown(wordLength: 75))
                         ]
                     },
                     new UserMessage

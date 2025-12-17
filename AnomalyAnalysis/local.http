@@ -16,7 +16,7 @@ Content-Type: application/json
   }
 }
 
-### Get isntance status
+### Get instance status
 @instanceId= {{analyzeRequest.response.body.$.instanceId}}
 GET http://localhost:3550/v1.0/workflows/dapr/{{instanceId}}
 

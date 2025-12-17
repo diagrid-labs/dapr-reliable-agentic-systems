@@ -37,7 +37,7 @@ public class RiskAssessmentActivity : WorkflowActivity<RiskAssessmentInput, stri
                             - CRITICAL: Immediate threat to ship integrity or crew safety
                             
                             Consider: radiation levels, gravitational stress on hull, subspace interference, 
-                            temporal effects. Return only the risk level. Limit the assessment to 100 words.")
+                            temporal effects. Return only the risk level.".FormatToMarkDown(wordLength: 75))
                         ]
                     },
                     new UserMessage

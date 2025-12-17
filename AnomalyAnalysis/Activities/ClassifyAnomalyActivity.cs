@@ -34,7 +34,7 @@ public class ClassifyAnomalyActivity : WorkflowActivity<string, string>
                             Classify spatial anomalies based on sensor data. Categories include: 
                             WORMHOLE, SUBSPACE_RIFT, QUANTUM_SINGULARITY, TEMPORAL_DISTORTION, 
                             DARK_MATTER_CLOUD, STELLAR_NURSERY, NEBULA, GRAVIMETRIC_DISTORTION. 
-                            Return only the classification type.")
+                            Return only the classification type.".FormatToMarkDown(wordLength: 25))
                         ]
                     },
                     new UserMessage
