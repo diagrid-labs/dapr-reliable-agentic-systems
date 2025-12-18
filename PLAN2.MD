@@ -230,8 +230,7 @@ Measurements: {string.Join(", ", input.Measurements.Select(m => $"{m.Key}={m.Val
 
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.3,
-            Model = "gpt-4o"
+            Temperature = 0.3
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -287,6 +286,7 @@ Measurements: {string.Join(", ", input.Measurements.Select(m => $"{m.Key}={m.Val
 > ```csharp
 > using Dapr.AI.Conversation;
 > using Dapr.AI.Conversation.Extensions;
+> using Dapr.AI.Conversation.ConversationRoles;
 > 
 > public class YourActivity : WorkflowActivity<InputType, OutputType>
 > {
@@ -301,6 +301,11 @@ Measurements: {string.Join(", ", input.Measurements.Select(m => $"{m.Key}={m.Val
 
 **AnalyzeTemporalRiftActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public record TemporalAnalysis(
     string Analysis,
     Dictionary<string, object> QuantumMetrics,
@@ -310,47 +315,56 @@ public record TemporalAnalysis(
 
 public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, TemporalAnalysis>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public AnalyzeTemporalRiftActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<TemporalAnalysis> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
-        var conversationRequest = new
+        var conversationOptions = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a quantum chronodynamics specialist. Analyze temporal 
-                    rifts for:
-                    - Timeline divergence probability
-                    - Causality violation risk
-                    - Temporal radiation levels
-                    - Safe approach vectors
-                    - Potential for time travel research
-                    
-                    Provide detailed technical analysis with quantum metrics and safety protocols.
-                    Respond in JSON format with: analysis, quantumMetrics (dict), 
-                    safetyProtocols (list), timelineStability (LOW/MEDIUM/HIGH/CRITICAL)." 
-                },
-                new { 
-                    role = "user", 
-                    content = $"Analyze temporal rift: {input.SensorData}" 
-                }
-            },
-            response_format = new { type = "json_object" }
+            Temperature = 0.7,
+            ResponseFormat = new { type = "json_object" }
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a quantum chronodynamics specialist. Analyze temporal 
+                            rifts for:
+                            - Timeline divergence probability
+                            - Causality violation risk
+                            - Temporal radiation levels
+                            - Safe approach vectors
+                            - Potential for time travel research
+                            
+                            Provide detailed technical analysis with quantum metrics and safety protocols.
+                            Respond in JSON format with: analysis, quantumMetrics (dict), 
+                            safetyProtocols (list), timelineStability (LOW/MEDIUM/HIGH/CRITICAL).")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "TemporalAnalyst",
+                        Content = [
+                            new MessageContent($"Analyze temporal rift: {input.SensorData}")
+                        ]
+                    }
+                })
+            ],
+            conversationOptions);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         return new TemporalAnalysis(
             json.GetProperty("analysis").GetString(),
@@ -366,6 +380,11 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
 
 **AnalyzeDarkMatterActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public record DarkMatterAnalysis(
     string Analysis,
     Dictionary<string, object> GravitationalData,
@@ -375,45 +394,54 @@ public record DarkMatterAnalysis(
 
 public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatterAnalysis>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public AnalyzeDarkMatterActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<DarkMatterAnalysis> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
-        var conversationRequest = new
+        var conversationOptions = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a dark matter physicist. Analyze dark matter clusters for:
-                    - Mass concentration and distribution
-                    - Gravitational lensing effects
-                    - Exotic matter harvesting potential
-                    - Black hole formation risk
-                    - Energy extraction possibilities
-                    
-                    Respond in JSON format with: analysis, gravitationalData (dict), 
-                    harvestingOpportunities (list), collapseProbability (LOW/MEDIUM/HIGH/CRITICAL)." 
-                },
-                new { 
-                    role = "user", 
-                    content = $"Analyze dark matter cluster: {input.SensorData}" 
-                }
-            },
-            response_format = new { type = "json_object" }
+            Temperature = 0.7,
+            ResponseFormat = new { type = "json_object" }
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a dark matter physicist. Analyze dark matter clusters for:
+                            - Mass concentration and distribution
+                            - Gravitational lensing effects
+                            - Exotic matter harvesting potential
+                            - Black hole formation risk
+                            - Energy extraction possibilities
+                            
+                            Respond in JSON format with: analysis, gravitationalData (dict), 
+                            harvestingOpportunities (list), collapseProbability (LOW/MEDIUM/HIGH/CRITICAL).")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "DarkMatterPhysicist",
+                        Content = [
+                            new MessageContent($"Analyze dark matter cluster: {input.SensorData}")
+                        ]
+                    }
+                })
+            ],
+            conversationOptions);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         return new DarkMatterAnalysis(
             json.GetProperty("analysis").GetString(),
@@ -429,6 +457,11 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
 
 **AnalyzeAlienArtifactActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public record ArtifactAnalysis(
     string Analysis,
     Dictionary<string, object> XenoarchaeologyData,
@@ -438,46 +471,55 @@ public record ArtifactAnalysis(
 
 public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, ArtifactAnalysis>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public AnalyzeAlienArtifactActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<ArtifactAnalysis> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
-        var conversationRequest = new
+        var conversationOptions = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a xenoarchaeologist specializing in alien artifacts. Analyze for:
-                    - Estimated age and civilization of origin
-                    - Technology level and purpose
-                    - Active vs dormant status
-                    - Defensive mechanisms or traps
-                    - Cultural and scientific value
-                    - Safe extraction procedures
-                    
-                    Respond in JSON format with: analysis, xenoarchaeologyData (dict), 
-                    extractionProcedures (list), hostilityIndicators (SAFE/CAUTION/DANGEROUS/LETHAL)." 
-                },
-                new { 
-                    role = "user", 
-                    content = $"Analyze alien artifact: {input.SensorData}" 
-                }
-            },
-            response_format = new { type = "json_object" }
+            Temperature = 0.7,
+            ResponseFormat = new { type = "json_object" }
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a xenoarchaeologist specializing in alien artifacts. Analyze for:
+                            - Estimated age and civilization of origin
+                            - Technology level and purpose
+                            - Active vs dormant status
+                            - Defensive mechanisms or traps
+                            - Cultural and scientific value
+                            - Safe extraction procedures
+                            
+                            Respond in JSON format with: analysis, xenoarchaeologyData (dict), 
+                            extractionProcedures (list), hostilityIndicators (SAFE/CAUTION/DANGEROUS/LETHAL).")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "Xenoarchaeologist",
+                        Content = [
+                            new MessageContent($"Analyze alien artifact: {input.SensorData}")
+                        ]
+                    }
+                })
+            ],
+            conversationOptions);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         return new ArtifactAnalysis(
             json.GetProperty("analysis").GetString(),

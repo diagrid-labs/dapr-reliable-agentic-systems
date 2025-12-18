@@ -211,30 +211,59 @@ public record PlanetAnalysis(
     List<string> Opportunities,
     string RecommendedApproach
 );
+
+public record DetermineStructuresInput(
+    Planet Planet,
+    ColonyRequirements Requirements,
+    PlanetAnalysis PlanetAnalysis
+);
+
+public record SynthesizePlanInput(
+    string PlanetId,
+    List<StructurePlan> StructurePlans
+);
 ```
 
 ### Step 4: Orchestrator Activities
 
-> **Note**: All orchestrator and worker activities use `DaprConversationClient` with constructor injection. Each activity creates `ConversationOptions` with the conversation component name, temperature, and model, then calls `ConverseAsync()` with `SystemMessage` and `UserMessage`. See PLAN1 for complete implementation examples.
+> **Note**: All orchestrator and worker activities use `DaprConversationClient` with constructor injection:
+> ```csharp
+> using Dapr.AI.Conversation;
+> using Dapr.AI.Conversation.Extensions;
+> using Dapr.AI.Conversation.ConversationRoles;
+> 
+> private readonly DaprConversationClient _conversationClient;
+> 
+> public YourActivity(DaprConversationClient conversationClient)
+> {
+>     _conversationClient = conversationClient;
+> }
+> ```
+> Use `ConversationOptions("conversation")` with temperature (no model specification), then `ConverseAsync()` with message collections.
 
 **AnalyzePlanetActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class AnalyzePlanetActivity : WorkflowActivity<Planet, PlanetAnalysis>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public AnalyzePlanetActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<PlanetAnalysis> RunAsync(
         WorkflowActivityContext context, 
         Planet input)
     {
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a planetary colonization expert. Analyze planets for 
+            Temperature = 0.7f,
                     colonization challenges and opportunities. Consider:
                     - Environmental hazards (radiation, temperature, atmosphere)
                     - Available resources
@@ -264,17 +293,41 @@ Resources:
 - Soil: {input.Resources.SoilQuality}" 
                 }
             },
-            response_format = new { type = "json_object" }
+            ResponseFormat = ConversationResponseFormat.Json
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(@"You are a planetary colonization expert. Analyze planets for 
+                    colonization challenges and opportunities. Consider:
+                    - Environmental hazards (radiation, temperature, atmosphere)
+                    - Available resources
+                    - Engineering requirements
+                    - Long-term sustainability
+                    
+                    Return JSON with: challenges (list), opportunities (list), 
+                    recommendedApproach (string).")]),
+                new UserMessage([new MessageContent($@"Analyze planet for colonization:
+Planet: {input.Name}
+Gravity: {input.Conditions.Gravity}g
+Atmosphere: {input.Conditions.AtmosphereType}
+Temperature: {input.Conditions.Temperature}°C
+Radiation: {input.Conditions.RadiationLevel} Sv/year
+Has Water: {input.Conditions.HasWater}
+Day Length: {input.Conditions.DayLength} Earth days
+
+Resources:
+- Metals: {input.Resources.Metals}
+- Rare Earths: {input.Resources.RareEarths}
+- Water: {input.Resources.Water}
+- Organics: {input.Resources.Organics}
+- Uranium: {input.Resources.Uranium}
+- Soil: {input.Resources.SoilQuality}")])
+            ],
+            options);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         return new PlanetAnalysis(
             JsonSerializer.Deserialize<List<string>>(
@@ -289,27 +342,33 @@ Resources:
 
 **DetermineStructuresActivity.cs**
 ```csharp
-public class DetermineStructuresActivity : WorkflowActivity<object, List<StructureRequest>>
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
+public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresInput, List<StructureRequest>>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public DetermineStructuresActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<List<StructureRequest>> RunAsync(
         WorkflowActivityContext context, 
-        object input)
+        DetermineStructuresInput input)
     {
-        var data = (dynamic)input;
-        Planet planet = data.Planet;
-        ColonyRequirements requirements = data.Requirements;
-        PlanetAnalysis analysis = data.planetAnalysis;
-        
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a colony planning AI. Determine what structures are 
+            Temperature = 0.7f,
+            ResponseFormat = ConversationResponseFormat.Json
+        };
+        
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(@"You are a colony planning AI. Determine what structures are 
                     needed for a successful colony. Consider:
                     - Environmental protection needs
                     - Resource availability
@@ -326,38 +385,27 @@ public class DetermineStructuresActivity : WorkflowActivity<object, List<Structu
                     
                     Return JSON array of structures:
                     [{
-                      ""structureType"": ""HabitatDome"",
-                      ""priority"": ""Critical|High|Medium|Low"",
-                      ""quantity"": 3,
-                      ""reasoning"": ""explanation""
-                    }]" 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Determine structures needed:
+                      \"structureType\": \"HabitatDome\",
+                      \"priority\": \"Critical|High|Medium|Low\",
+                      \"quantity\": 3,
+                      \"reasoning\": \"explanation\"
+                    }]")]),
+                new UserMessage([new MessageContent($@"Determine structures needed:
 
-Planet Challenges: {string.Join(", ", analysis.Challenges)}
-Planet Opportunities: {string.Join(", ", analysis.Opportunities)}
+Planet Challenges: {string.Join(\", \", input.PlanetAnalysis.Challenges)}
+Planet Opportunities: {string.Join(\", \", input.PlanetAnalysis.Opportunities)}
 
 Colony Requirements:
-- Population: {requirements.InitialPopulation} → {requirements.TargetPopulation}
-- Purpose: {requirements.Purpose}
-- Timeline: {requirements.YearsToComplete} years
+- Population: {input.Requirements.InitialPopulation} → {input.Requirements.TargetPopulation}
+- Purpose: {input.Requirements.Purpose}
+- Timeline: {input.Requirements.YearsToComplete} years
 
-What structures are needed?" 
-                }
-            },
-            response_format = new { type = "json_object" }
-        };
-        
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+What structures are needed?")])
+            ],
+            options);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         var structures = json.GetProperty("structures");
         var result = new List<StructureRequest>();
@@ -381,22 +429,33 @@ What structures are needed?"
 
 **PlanHabitatDomeActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePlan>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public PlanHabitatDomeActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<StructurePlan> RunAsync(
         WorkflowActivityContext context, 
         WorkerInput input)
     {
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a habitat dome construction specialist. Design detailed 
+            Temperature = 0.7f,
+            ResponseFormat = ConversationResponseFormat.Json
+        };
+        
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(@"You are a habitat dome construction specialist. Design detailed 
                     plans for pressurized living environments. Consider:
                     - Atmospheric containment for planet conditions
                     - Radiation shielding requirements
@@ -406,11 +465,8 @@ public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePl
                     
                     Return JSON with: structureType, quantity, materials (list), 
                     constructionDays, workerHours, prerequisites (list), 
-                    detailedSpecification (string)." 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Plan habitat domes:
+                    detailedSpecification (string).")]),
+                new UserMessage([new MessageContent($@"Plan habitat domes:
 Quantity Needed: {input.Request.Quantity}
 Priority: {input.Request.Priority}
 
@@ -421,19 +477,11 @@ Planet Conditions:
 
 Challenges: {string.Join(", ", input.Analysis.Challenges)}
 
-Provide detailed construction plan." 
-                }
-            },
-            response_format = new { type = "json_object" }
-        };
+Provide detailed construction plan.")])
+            ],
+            options);
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
-        
-        return ParseStructurePlan(response.Choices[0].Message.Content);
+        return ParseStructurePlan(response.Outputs.First().Choices.First().Message.Content);
     }
     
     private StructurePlan ParseStructurePlan(string jsonContent)
@@ -456,33 +504,41 @@ Provide detailed construction plan."
 
 **PlanPowerPlantActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePlan>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public PlanPowerPlantActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<StructurePlan> RunAsync(
         WorkflowActivityContext context, 
         WorkerInput input)
     {
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a power generation specialist. Design power plants 
+            Temperature = 0.7f,
+            ResponseFormat = ConversationResponseFormat.Json
+        };
+        
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(@"You are a power generation specialist. Design power plants 
                     appropriate for planetary conditions. Options:
                     - Solar (if adequate sunlight)
                     - Nuclear (if uranium available)
                     - Geothermal (if volcanic activity)
                     - Fusion (most reliable but complex)
                     
-                    Return detailed construction plan in JSON format." 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Plan power generation:
+                    Return detailed construction plan in JSON format.")]),
+                new UserMessage([new MessageContent($@"Plan power generation:
 Quantity: {input.Request.Quantity}
 
 Planet:
@@ -490,52 +546,52 @@ Planet:
 - Uranium Available: {input.Planet.Resources.Uranium}
 - Temperature: {input.Planet.Conditions.Temperature}°C
 
-Design appropriate power plant(s)." 
-                }
-            },
-            response_format = new { type = "json_object" }
-        };
+Design appropriate power plant(s).")])
+            ],
+            options);
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
-        
-        return ParseStructurePlan(response.Choices[0].Message.Content);
+        return ParseStructurePlan(response.Outputs.First().Choices.First().Message.Content);
     }
 }
 ```
 
 **PlanAgricultureActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePlan>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public PlanAgricultureActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<StructurePlan> RunAsync(
         WorkflowActivityContext context, 
         WorkerInput input)
     {
-        var conversationRequest = new
+        var conversationOptions = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are an agricultural engineer specializing in off-world 
+            Temperature = 0.7f,
+            ResponseFormat = ConversationResponseFormat.Json
+        };
+        
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(@"You are an agricultural engineer specializing in off-world 
                     farming. Design food production facilities considering:
                     - Hydroponic vs soil-based farming
                     - Artificial lighting needs
                     - Water recycling systems
                     - Calorie production per person
                     
-                    Return detailed plan in JSON." 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Plan agricultural facilities:
+                    Return detailed plan in JSON.")]),
+                new UserMessage([new MessageContent($@"Plan agricultural facilities:
 Population: will grow to target size
 Quantity: {input.Request.Quantity}
 
@@ -544,19 +600,11 @@ Planet:
 - Soil Quality: {input.Planet.Resources.SoilQuality}
 - Organics: {input.Planet.Resources.Organics}
 
-Design food production system." 
-                }
-            },
-            response_format = new { type = "json_object" }
-        };
+Design food production system.")])
+            ],
+            options);
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
-        
-        return ParseStructurePlan(response.Choices[0].Message.Content);
+        return ParseStructurePlan(response.Outputs.First().Choices.First().Message.Content);
     }
 }
 ```
@@ -564,21 +612,27 @@ Design food production system."
 ### Step 6: Synthesis Activity
 **SynthesizePlanActivity.cs**
 ```csharp
-public class SynthesizePlanActivity : WorkflowActivity<object, ColonyMasterPlan>
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
+public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, ColonyMasterPlan>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public SynthesizePlanActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<ColonyMasterPlan> RunAsync(
         WorkflowActivityContext context, 
-        object input)
+        SynthesizePlanInput input)
     {
-        var data = (dynamic)input;
-        string planetId = data.PlanetId;
-        List<StructurePlan> plans = data.StructurePlans;
-        
         // Aggregate materials
         var allMaterials = new Dictionary<string, int>();
-        foreach (var plan in plans)
+        foreach (var plan in input.StructurePlans)
         {
             foreach (var material in plan.Materials)
             {
@@ -590,40 +644,30 @@ public class SynthesizePlanActivity : WorkflowActivity<object, ColonyMasterPlan>
         }
         
         // Create construction timeline by analyzing prerequisites
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a construction project manager. Organize structures 
+            Temperature = 0.7f,
+            ResponseFormat = ConversationResponseFormat.Json
+        };
+        
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(@"You are a construction project manager. Organize structures 
                     into construction phases based on prerequisites and efficiency. 
                     
                     Return JSON with:
                     - timeline: array of phases [{phaseNumber, name, structures[], durationDays}]
                     - successFactors: string
-                    - riskAssessment: string" 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Organize construction timeline:
+                    - riskAssessment: string")]),
+                new UserMessage([new MessageContent($@"Organize construction timeline:
 Structures: {JsonSerializer.Serialize(plans)}
 
-Create phased construction plan." 
-                }
-            },
-            response_format = new { type = "json_object" }
-        };
-        
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+Create phased construction plan.")])
+            ],
+            options);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         var timeline = new List<ConstructionPhase>();
         foreach (var phase in json.GetProperty("timeline").EnumerateArray())

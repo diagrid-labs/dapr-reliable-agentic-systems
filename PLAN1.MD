@@ -217,8 +217,7 @@ public class ProcessSensorDataActivity : WorkflowActivity<string, string>
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7,
-            Model = "gpt-4o"
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -271,8 +270,7 @@ public class ClassifyAnomalyActivity : WorkflowActivity<string, string>
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.3,
-            Model = "gpt-4o"
+            Temperature = 0.3
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -326,8 +324,7 @@ public class ScientificAnalysisActivity : WorkflowActivity<ScientificAnalysisInp
         
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7,
-            Model = "gpt-4o"
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -380,8 +377,7 @@ public class RiskAssessmentActivity : WorkflowActivity<RiskAssessmentInput, stri
         
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.3,
-            Model = "gpt-4o"
+            Temperature = 0.3
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -439,8 +435,7 @@ public class GenerateRecommendationActivity : WorkflowActivity<RecommendationInp
         
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7,
-            Model = "gpt-4o"
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(

@@ -90,6 +90,11 @@ public record VoteResult(
     double AgreementLevel
 );
 
+public record AggregateResultsInput(
+    List<ScanResult> ScanResults,
+    List<VoteResult> VoteResults
+);
+
 public record DiagnosticReport(
     string ShipId,
     DateTime ScanTimestamp,
@@ -207,17 +212,28 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
 
 ### Step 4: Scanner Activities (Parallel Sectioning)
 
-> **Note**: All scanner and voter activities use `DaprConversationClient` with constructor injection for LLM calls. See PLAN1 for the complete pattern with `ConversationOptions`, `SystemMessage`, `UserMessage`, and `ConverseAsync()`.
+> **Note**: All scanner and voter activities use `DaprConversationClient` with constructor injection for LLM calls. Required using statements:
+> ```csharp
+> using Dapr.AI.Conversation;
+> using Dapr.AI.Conversation.Extensions;
+> using Dapr.AI.Conversation.ConversationRoles;
+> ```
+> See PLAN1 for the complete pattern with `ConversationOptions`, `SystemMessage`, `UserMessage`, and `ConverseAsync()`.
 
 **HullIntegrityScanActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class HullIntegrityScanActivity : WorkflowActivity<Starship, ScanResult>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
     
-    public HullIntegrityScanActivity(DaprClient daprClient)
+    public HullIntegrityScanActivity(DaprConversationClient conversationClient)
     {
-        _daprClient = daprClient;
+        _conversationClient = conversationClient;
     }
     
     public override async Task<ScanResult> RunAsync(
@@ -226,48 +242,52 @@ public class HullIntegrityScanActivity : WorkflowActivity<Starship, ScanResult>
     {
         var telemetryData = JsonSerializer.Serialize(input.Telemetry);
         
-        var conversationRequest = new
+        var conversationOptions = new ConversationOptions("conversation")
         {
-            model = "gpt-4o-mini", // Use cheaper model for routine scans
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a hull integrity scanner AI. Analyze starship hull 
-                    condition for:
-                    - Micrometeorite impacts
-                    - Stress fractures from FTL travel
-                    - Corrosion from space radiation
-                    - Structural weak points
-                    
-                    Return JSON: {
-                      ""status"": ""OK|WARNING|CRITICAL"",
-                      ""healthPercentage"": 0-100,
-                      ""issues"": [""issue1"", ""issue2""],
-                      ""recommendations"": [""rec1"", ""rec2""],
-                      ""detailedAnalysis"": ""full analysis text""
-                    }" 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Ship: {input.Name} ({input.Class})
+            Temperature = 0.7,
+            ResponseFormat = new { type = "json_object" }
+        };
+        
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a hull integrity scanner AI. Analyze starship hull 
+                            condition for:
+                            - Micrometeorite impacts
+                            - Stress fractures from FTL travel
+                            - Corrosion from space radiation
+                            - Structural weak points
+                            
+                            Return JSON: {
+                              ""status"": ""OK|WARNING|CRITICAL"",
+                              ""healthPercentage"": 0-100,
+                              ""issues"": [""issue1"", ""issue2""],
+                              ""recommendations"": [""rec1"", ""rec2""],
+                              ""detailedAnalysis"": ""full analysis text""
+                            }")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "HullScanner",
+                        Content = [
+                            new MessageContent($@"Ship: {input.Name} ({input.Class})
 Years in service: {input.YearsInService}
 Last maintenance: {input.LastMaintenance}
 Telemetry: {telemetryData}
 
-Scan hull integrity:" 
-                }
-            },
-            response_format = new { type = "json_object" }
-        };
+Scan hull integrity:")
+                        ]
+                    }
+                })
+            ],
+            conversationOptions);
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
-        
-        return ParseScanResult("Hull Integrity", response.Choices[0].Message.Content);
+        return ParseScanResult("Hull Integrity", response.Outputs.First().Choices.First().Message.Content);
     }
     
     private ScanResult ParseScanResult(string subsystem, string jsonContent)
@@ -289,9 +309,19 @@ Scan hull integrity:"
 
 **ReactorCoreScanActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class ReactorCoreScanActivity : WorkflowActivity<Starship, ScanResult>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public ReactorCoreScanActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<ScanResult> RunAsync(
         WorkflowActivityContext context, 
@@ -299,66 +329,81 @@ public class ReactorCoreScanActivity : WorkflowActivity<Starship, ScanResult>
     {
         var telemetryData = JsonSerializer.Serialize(input.Telemetry);
         
-        var conversationRequest = new
+        var conversationOptions = new ConversationOptions("conversation")
         {
-            model = "gpt-4o", // Use powerful model for critical reactor analysis
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a fusion reactor specialist AI. Analyze reactor core for:
-                    - Containment field stability
-                    - Plasma temperature regulation
-                    - Radiation shielding integrity
-                    - Fuel efficiency and burn rate
-                    - Coolant system performance
-                    
-                    This is CRITICAL - reactor failures are catastrophic.
-                    
-                    Return JSON with status, healthPercentage, issues, recommendations, 
-                    and detailedAnalysis." 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Ship: {input.Name}
+            Temperature = 0.7,
+            ResponseFormat = new { type = "json_object" }
+        };
+        
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a fusion reactor specialist AI. Analyze reactor core for:
+                            - Containment field stability
+                            - Plasma temperature regulation
+                            - Radiation shielding integrity
+                            - Fuel efficiency and burn rate
+                            - Coolant system performance
+                            
+                            This is CRITICAL - reactor failures are catastrophic.
+                            
+                            Return JSON with status, healthPercentage, issues, recommendations, 
+                            and detailedAnalysis.")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "ReactorScanner",
+                        Content = [
+                            new MessageContent($@"Ship: {input.Name}
 Years in service: {input.YearsInService}
 Telemetry: {telemetryData}
 
-Scan reactor core:" 
-                }
-            },
-            response_format = new { type = "json_object" }
-        };
+Scan reactor core:")
+                        ]
+                    }
+                })
+            ],
+            conversationOptions);
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
-        
-        return ParseScanResult("Reactor Core", response.Choices[0].Message.Content);
+        return ParseScanResult("Reactor Core", response.Outputs.First().Choices.First().Message.Content);
     }
 }
 ```
 
 **LifeSupportScanActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class LifeSupportScanActivity : WorkflowActivity<Starship, ScanResult>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public LifeSupportScanActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<ScanResult> RunAsync(
         WorkflowActivityContext context, 
         Starship input)
     {
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o-mini",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a life support systems expert. Analyze:
+            Temperature = 0.5f,
+            ResponseFormat = ConversationResponseFormat.Json
+        };
+        
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(@"You are a life support systems expert. Analyze:
                     - Oxygen generation and recycling
                     - Water purification systems
                     - Artificial gravity generators
@@ -366,23 +411,12 @@ public class LifeSupportScanActivity : WorkflowActivity<Starship, ScanResult>
                     - Air quality and contamination levels
                     
                     Return JSON with status, healthPercentage, issues, recommendations, 
-                    and detailedAnalysis." 
-                },
-                new { 
-                    role = "user", 
-                    content = $"Ship: {input.Name}, Years: {input.YearsInService}\n\nScan life support:" 
-                }
-            },
-            response_format = new { type = "json_object" }
-        };
+                    and detailedAnalysis.")]),
+                new UserMessage([new MessageContent($"Ship: {input.Name}, Years: {input.YearsInService}\n\nScan life support:")])
+            ],
+            options);
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
-        
-        return ParseScanResult("Life Support", response.Choices[0].Message.Content);
+        return ParseScanResult("Life Support", response.Outputs.First().Choices.First().Message.Content);
     }
 }
 ```
@@ -391,152 +425,191 @@ public class LifeSupportScanActivity : WorkflowActivity<Starship, ScanResult>
 
 **SafetyVoterActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+
 public class SafetyVoterActivity : WorkflowActivity<ScanResult, KeyValuePair<string, string>>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public SafetyVoterActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<KeyValuePair<string, string>> RunAsync(
         WorkflowActivityContext context, 
         ScanResult input)
     {
-        var conversationRequest = new
+        var conversationOptions = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a SAFETY-FOCUSED evaluator. Analyze the finding from 
-                    a crew safety perspective. Is this finding:
-                    - IMMEDIATE_GROUNDING: Ship cannot safely operate
-                    - URGENT_REPAIR: Must fix before next voyage
-                    - SCHEDULED_MAINTENANCE: Can wait for next scheduled service
-                    
-                    Return only one of these three values." 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Subsystem: {input.SubsystemName}
+            Temperature = 0.3
+        };
+        
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a SAFETY-FOCUSED evaluator. Analyze the finding from 
+                            a crew safety perspective. Is this finding:
+                            - IMMEDIATE_GROUNDING: Ship cannot safely operate
+                            - URGENT_REPAIR: Must fix before next voyage
+                            - SCHEDULED_MAINTENANCE: Can wait for next scheduled service
+                            
+                            Return only one of these three values.")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "SafetyEvaluator",
+                        Content = [
+                            new MessageContent($@"Subsystem: {input.SubsystemName}
 Status: {input.Status}
 Health: {input.HealthPercentage}%
 Issues: {string.Join(", ", input.Issues)}
 
-Vote on safety classification:" 
-                }
-            }
-        };
-        
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+Vote on safety classification:")
+                        ]
+                    }
+                })
+            ],
+            conversationOptions);
         
         return new KeyValuePair<string, string>(
             "SafetyVoter", 
-            response.Choices[0].Message.Content.Trim());
+            response.Outputs.First().Choices.First().Message.Content.Trim());
     }
 }
 ```
 
 **SeverityVoterActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+
 public class SeverityVoterActivity : WorkflowActivity<ScanResult, KeyValuePair<string, string>>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public SeverityVoterActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<KeyValuePair<string, string>> RunAsync(
         WorkflowActivityContext context, 
         ScanResult input)
     {
-        var conversationRequest = new
+        var conversationOptions = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a SEVERITY-FOCUSED evaluator. Analyze the technical 
-                    severity of the finding. Consider:
-                    - Likelihood of catastrophic failure
-                    - Time to failure if not addressed
-                    - Potential for cascading failures
-                    
-                    Classify as:
-                    - IMMEDIATE_GROUNDING
-                    - URGENT_REPAIR
-                    - SCHEDULED_MAINTENANCE" 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Subsystem: {input.SubsystemName}
-Analysis: {input.DetailedAnalysis}
-
-Vote on severity classification:" 
-                }
-            }
+            Temperature = 0.3
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a SEVERITY-FOCUSED evaluator. Analyze the technical 
+                            severity of the finding. Consider:
+                            - Likelihood of catastrophic failure
+                            - Time to failure if not addressed
+                            - Potential for cascading failures
+                            
+                            Classify as:
+                            - IMMEDIATE_GROUNDING
+                            - URGENT_REPAIR
+                            - SCHEDULED_MAINTENANCE")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "SeverityEvaluator",
+                        Content = [
+                            new MessageContent($@"Subsystem: {input.SubsystemName}
+Analysis: {input.DetailedAnalysis}
+
+Vote on severity classification:")
+                        ]
+                    }
+                })
+            ],
+            conversationOptions);
         
         return new KeyValuePair<string, string>(
             "SeverityVoter", 
-            response.Choices[0].Message.Content.Trim());
+            response.Outputs.First().Choices.First().Message.Content.Trim());
     }
 }
 ```
 
 **RecommendationVoterActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+
 public class RecommendationVoterActivity : WorkflowActivity<ScanResult, KeyValuePair<string, string>>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public RecommendationVoterActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<KeyValuePair<string, string>> RunAsync(
         WorkflowActivityContext context, 
         ScanResult input)
     {
-        var conversationRequest = new
+        var conversationOptions = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"You are a COST-BENEFIT evaluator. Balance repair urgency 
-                    against operational needs and costs. Consider:
-                    - Can the ship operate safely with temporary measures?
-                    - Cost of immediate repair vs scheduled maintenance
-                    - Mission criticality
-                    
-                    Classify as:
-                    - IMMEDIATE_GROUNDING
-                    - URGENT_REPAIR
-                    - SCHEDULED_MAINTENANCE" 
-                },
-                new { 
-                    role = "user", 
-                    content = $@"Subsystem: {input.SubsystemName}
-Recommendations: {string.Join(", ", input.Recommendations)}
-
-Vote on action classification:" 
-                }
-            }
+            Temperature = 0.3
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a COST-BENEFIT evaluator. Balance repair urgency 
+                            against operational needs and costs. Consider:
+                            - Can the ship operate safely with temporary measures?
+                            - Cost of immediate repair vs scheduled maintenance
+                            - Mission criticality
+                            
+                            Classify as:
+                            - IMMEDIATE_GROUNDING
+                            - URGENT_REPAIR
+                            - SCHEDULED_MAINTENANCE")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "CostBenefitEvaluator",
+                        Content = [
+                            new MessageContent($@"Subsystem: {input.SubsystemName}
+Recommendations: {string.Join(", ", input.Recommendations)}
+
+Vote on action classification:")
+                        ]
+                    }
+                })
+            ],
+            conversationOptions);
         
         return new KeyValuePair<string, string>(
             "RecommendationVoter", 
-            response.Choices[0].Message.Content.Trim());
+            response.Outputs.First().Choices.First().Message.Content.Trim());
     }
 }
 ```
@@ -544,43 +617,39 @@ Vote on action classification:"
 ### Step 6: Aggregation Activity
 **AggregateResultsActivity.cs**
 ```csharp
-public class AggregateResultsActivity : WorkflowActivity<object, DiagnosticReport>
+public class AggregateResultsActivity : WorkflowActivity<AggregateResultsInput, DiagnosticReport>
 {
     public override async Task<DiagnosticReport> RunAsync(
         WorkflowActivityContext context, 
-        object input)
+        AggregateResultsInput input)
     {
-        var data = (dynamic)input;
-        List<ScanResult> scanResults = data.ScanResults;
-        List<VoteResult> voteResults = data.VoteResults;
-        
         // Determine overall status
-        var hasCritical = scanResults.Any(s => s.Status == "CRITICAL");
-        var hasWarning = scanResults.Any(s => s.Status == "WARNING");
+        var hasCritical = input.ScanResults.Any(s => s.Status == "CRITICAL");
+        var hasWarning = input.ScanResults.Any(s => s.Status == "WARNING");
         
         string overallStatus = hasCritical ? "CRITICAL" : 
                               hasWarning ? "WARNING" : "OK";
         
         // Check if any votes resulted in IMMEDIATE_GROUNDING consensus
-        var mustGround = voteResults.Any(v => 
+        var mustGround = input.VoteResults.Any(v => 
             v.Consensus == "IMMEDIATE_GROUNDING");
         
         // Collect required repairs
-        var requiredRepairs = scanResults
+        var requiredRepairs = input.ScanResults
             .Where(s => s.Status != "OK")
             .SelectMany(s => s.Recommendations)
             .Distinct()
             .ToList();
         
         // Estimate repair time
-        int estimatedHours = scanResults.Count(s => s.Status == "CRITICAL") * 24 +
-                           scanResults.Count(s => s.Status == "WARNING") * 4;
+        int estimatedHours = input.ScanResults.Count(s => s.Status == "CRITICAL") * 24 +
+                           input.ScanResults.Count(s => s.Status == "WARNING") * 4;
         
         return new DiagnosticReport(
             "SHIP-ID", // Would come from input
             DateTime.UtcNow,
-            scanResults.ToList(),
-            voteResults.ToList(),
+            input.ScanResults.ToList(),
+            input.VoteResults.ToList(),
             overallStatus,
             ClearForDeparture: !mustGround && !hasCritical,
             requiredRepairs,
