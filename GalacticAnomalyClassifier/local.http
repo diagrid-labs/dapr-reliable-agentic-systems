@@ -1,0 +1,103 @@
+### Analyze a temporal rift
+# @name TemporalRiftRequest
+POST http://localhost:5500/anomaly/analyze
+Content-Type: application/json
+
+{
+  "anomalyId": "CLASS-{{$guid}}",
+  "sensorData": "Chronal flux readings off the scale. Time dilation factor: 847.2. Causality loops detected in 3-dimensional space. Tachyon particles streaming from epicenter.",
+  "coordinates": "Sector 7-G, Quadrant Epsilon",
+  "detectedAt": "2425-03-15T10:22:00Z",
+  "measurements": {
+    "chronalFlux": 847.2,
+    "timeDialation": 3.4,
+    "tachyonDensity": 0.00042,
+    "causalityIndex": -2.1
+  }
+}
+
+### Get analysis status for temporal rift
+@instanceId={{$TemporalRiftRequest.body.$.instanceId}}
+GET http://localhost:5500/anomaly/status/{{instanceId}}
+
+### Analyze dark matter cluster
+POST http://localhost:5500/anomaly/analyze
+Content-Type: application/json
+
+{
+  "anomalyId": "CLASS-{{$guid}}",
+  "sensorData": "Massive gravitational anomaly. No visible matter detected. Gravitational lensing severe. Estimated mass: 10^6 solar masses in 5 cubic light-years.",
+  "coordinates": "Outer rim, Nebula X-42",
+  "detectedAt": "2425-03-15T11:45:00Z",
+  "measurements": {
+    "gravitationalPull": 9.8e12,
+    "mass": 1.989e36,
+    "volume": 1.18e50,
+    "lensingFactor": 4.7
+  }
+}
+
+### Analyze alien artifact
+POST http://localhost:5500/anomaly/analyze
+Content-Type: application/json
+
+{
+  "anomalyId": "CLASS-{{$guid}}",
+  "sensorData": "Geometric structure detected. Composed of unknown alloy. Emitting low-frequency EM pulses in prime number sequences. Surface temperature: -270C despite no heat source nearby.",
+  "coordinates": "Derelict orbit around pulsar PSR J0737",
+  "detectedAt": "2425-03-15T13:10:00Z",
+  "measurements": {
+    "size": 47.5,
+    "temperature": -270,
+    "emFrequency": 1.42e9,
+    "materialDensity": 22.6
+  }
+}
+
+### Analyze stellar phenomenon
+POST http://localhost:5500/anomaly/analyze
+Content-Type: application/json
+
+{
+  "anomalyId": "CLASS-{{$guid}}",
+  "sensorData": "Supernova remnant detected. Massive energy output. Neutron star core visible. Expanding shock wave at 0.1c. High gamma radiation detected.",
+  "coordinates": "Sagittarius Arm, Sector 12",
+  "detectedAt": "2425-03-15T14:30:00Z",
+  "measurements": {
+    "energyOutput": 1.5e44,
+    "expansionVelocity": 30000000,
+    "gammaRadiation": 850,
+    "coreTemperature": 1.2e9
+  }
+}
+
+### Analyze dimensional tear
+POST http://localhost:5500/anomaly/analyze
+Content-Type: application/json
+
+{
+  "anomalyId": "CLASS-{{$guid}}",
+  "sensorData": "Spacetime fabric showing signs of rupture. Exotic particles leaking from breach. Reality distortion measured at 78%. Parallel universe signatures detected.",
+  "coordinates": "Deep space, Void Region ZX-9",
+  "detectedAt": "2425-03-15T16:00:00Z",
+  "measurements": {
+    "realityDistortion": 0.78,
+    "exoticParticleDensity": 0.0012,
+    "dimensionalBreach": 12.4,
+    "stabilityIndex": -0.89
+  }
+}
+
+
+
+### Get analysis status for dark matter cluster
+GET http://localhost:5500/anomaly/status/anomaly-ANM-002
+
+### Get analysis status for alien artifact
+GET http://localhost:5500/anomaly/status/anomaly-ANM-003
+
+### Get specific anomaly by ID
+GET http://localhost:5500/anomalies/ANM-001
+
+### Get anomaly statistics
+GET http://localhost:5500/anomalies/stats

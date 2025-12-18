@@ -6,7 +6,7 @@ common:
   placementHostAddress: localhost:50005
   schedulerHostAddress: localhost:50006
 apps:
-  - appID: anomaly-detection-app
+  - appID: anomaly-routing-app
     appDirPath: ./
     appPort: 5500
     daprHTTPPort: 3550

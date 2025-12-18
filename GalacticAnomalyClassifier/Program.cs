@@ -1,54 +1,46 @@
 using Dapr.Client;
 using Dapr.Workflow;
-using AnomalyAnalysis.Models;
-using AnomalyAnalysis.Workflows;
-using AnomalyAnalysis.Activities;
 using Dapr.AI.Conversation.Extensions;
+using GalacticAnomalyClassifier.Models;
+using GalacticAnomalyClassifier.Workflows;
+using GalacticAnomalyClassifier.Activities;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
-builder.Services.AddDaprConversationClient((serviceProvider, clientBuilder) =>
-{
-    clientBuilder.UseTimeout(TimeSpan.FromSeconds(120));
-});
+builder.Services.AddDaprConversationClient();
 builder.Services.AddDaprWorkflow(options =>
 {
-    options.RegisterWorkflow<AnomalyAnalysisWorkflow>();
-    options.RegisterActivity<ProcessSensorDataActivity>();
+    options.RegisterWorkflow<AnomalyRoutingWorkflow>();
     options.RegisterActivity<ClassifyAnomalyActivity>();
-    options.RegisterActivity<ScientificAnalysisActivity>();
-    options.RegisterActivity<RiskAssessmentActivity>();
-    options.RegisterActivity<GenerateRecommendationActivity>();
-    options.RegisterActivity<AlertBridgeActivity>();
+    options.RegisterActivity<ResponseCleanupActivity>();
+    options.RegisterActivity<AnalyzeTemporalRiftActivity>();
+    options.RegisterActivity<AnalyzeDarkMatterActivity>();
+    options.RegisterActivity<AnalyzeAlienArtifactActivity>();
+    options.RegisterActivity<AnalyzeStellarPhenomenonActivity>();
+    options.RegisterActivity<AnalyzeDimensionalTearActivity>();
 });
 
 var app = builder.Build();
 
-// Start analyzing a spatial anomaly
 app.MapPost("/anomaly/analyze", async (
-    SpatialAnomaly anomaly,
+    SpaceAnomaly anomaly,
     DaprWorkflowClient workflowClient,
     DaprClient daprClient) =>
 {
-    var instanceId = $"anomaly-{anomaly.AnomalyId}";
-    
-    // Store original anomaly data
     await daprClient.SaveStateAsync(
         "statestore", 
-        $"anomaly-{anomaly.AnomalyId}", 
+        anomaly.AnomalyId, 
         anomaly);
     
-    // Start workflow
-    await workflowClient.ScheduleNewWorkflowAsync(
-        nameof(AnomalyAnalysisWorkflow),
-        instanceId,
+    var instanceId = await workflowClient.ScheduleNewWorkflowAsync(
+        nameof(AnomalyRoutingWorkflow),
+        anomaly.AnomalyId,
         anomaly);
     
     return Results.Accepted($"/anomaly/status/{instanceId}", new { instanceId });
 });
 
-// Get analysis status
 app.MapGet("/anomaly/status/{instanceId}", async (
     string instanceId,
     DaprWorkflowClient workflowClient) =>
@@ -68,19 +60,34 @@ app.MapGet("/anomaly/status/{instanceId}", async (
     });
 });
 
-// Get a specific analyzed anomaly by ID
 app.MapGet("/anomalies/{anomalyId}", async (
     string anomalyId,
     DaprClient daprClient) =>
 {
-    var anomaly = await daprClient.GetStateAsync<SpatialAnomaly>(
+    var result = await daprClient.GetStateAsync<AnalysisResult>(
         "statestore",
         anomalyId);
     
-    if (anomaly == null)
+    if (result == null)
         return Results.NotFound();
     
-    return Results.Ok(anomaly);
+    return Results.Ok(result);
+});
+
+app.MapGet("/anomalies/stats", (DaprClient daprClient) =>
+{
+    return Results.Ok(new
+    {
+        total = 42,
+        byType = new Dictionary<string, int>
+        {
+            ["TemporalRift"] = 8,
+            ["DarkMatterCluster"] = 15,
+            ["AlienArtifact"] = 5,
+            ["StellarPhenomenon"] = 12,
+            ["DimensionalTear"] = 2
+        }
+    });
 });
 
 app.Run();

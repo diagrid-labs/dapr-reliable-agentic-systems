@@ -1,0 +1,39 @@
+title: 0 - Setup
+description: ''
+version: 2
+demos:
+  - id: demo-mjbfm0tq-42pc
+    title: Start Ollama
+    steps:
+      - action: executeTerminalCommand
+        terminalId: ollama-server
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        autoExecute: true
+        command: ollama serve
+    icons:
+      start: terminal
+      end: ''
+  - id: demo-mjbfm77j-zjzw
+    title: Run model
+    steps:
+      - action: executeTerminalCommand
+        terminalId: ollama-run
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        autoExecute: true
+        command: ollama run phi3:3.8b
+    icons:
+      start: terminal
+      end: ''
+  - id: demo-mjbfmdka-n8p9
+    title: Run Diagrid Dashboard
+    steps:
+      - action: executeTerminalCommand
+        command: docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
+        terminalId: diagrid-dashboard
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+    icons:
+      start: terminal
+      end: ''

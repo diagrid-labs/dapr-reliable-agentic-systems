@@ -3,6 +3,8 @@ common:
   resourcesPath: ../Resources
   appLogDestination: fileAndConsole
   daprdLogDestination: fileAndConsole
+  placementHostAddress: localhost:50005
+  schedulerHostAddress: localhost:50006
 apps:
   - appID: conversation-tests
     appDirPath: ./

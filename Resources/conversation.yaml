@@ -7,6 +7,6 @@ spec:
   version: v1
   metadata:
   - name: model
-    value: phi3:3.8b
+    value: gemma3:1b
   - name: cacheTTL
-    value: 10m
+    value: 30m

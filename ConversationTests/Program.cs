@@ -4,6 +4,8 @@ using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.AI.Conversation.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using AnomalyAnalysis.Models;
+using Google.Protobuf.WellKnownTypes;
+using Google.Protobuf;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +36,7 @@ app.MapPost("/test", async (
                             Process raw sensor data from the Enterprise's long-range scanners. 
                             Convert electromagnetic readings, subspace distortions, and quantum 
                             fluctuations into structured scientific data with key measurements 
-                            (wavelength, frequency, intensity, spatial coordinates).")
+                            (wavelength, frequency, intensity, spatial coordinates). The output should be json.")
                         ]
                     },
                     new UserMessage
