@@ -1,10 +1,10 @@
-# dapr-reliable-agentic-systems
+# Build reliable agentic systems with Dapr Workflow
 
-## Anomaly Analysis
+## Prerequisites
 
-### Running
-
-1. `ollama serve`
-2. `ollama run phi3:3.8b`
-3. `dapr run -f .`
-4. `docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest`
+1. Install a container orchestration tool such as Docker Desktop or Podman.
+2. Install [.NET 9 SDK](https://dotnet.microsoft.com/download)
+3. Install [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
+4. Install [Ollama](https://ollama.com/)
+5. Initialize Dapr: `dapr init`
+6. Run Diagrid Dashboard: `docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest`
