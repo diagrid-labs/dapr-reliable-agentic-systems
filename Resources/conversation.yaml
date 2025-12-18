@@ -7,6 +7,6 @@ spec:
   version: v1
   metadata:
   - name: model
-    value: gemma3:1b
+    value: llama3.2:3b
   - name: cacheTTL
-    value: 30m
+    value: 10m

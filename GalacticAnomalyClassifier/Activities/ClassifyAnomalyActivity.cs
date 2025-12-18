@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace GalacticAnomalyClassifier.Activities;
 
-public class ClassifyAnomalyActivity : WorkflowActivity<SpaceAnomaly, string>
+public class ClassifyAnomalyActivity : WorkflowActivity<SpaceAnomaly, AnomalyClassification>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -16,7 +16,7 @@ public class ClassifyAnomalyActivity : WorkflowActivity<SpaceAnomaly, string>
         _conversationClient = conversationClient;
     }
     
-    public override async Task<string> RunAsync(
+    public override async Task<AnomalyClassification> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
@@ -70,14 +70,13 @@ Measurements: {string.Join(", ", input.Measurements.Select(m => $"{m.Key}={m.Val
         
         Console.WriteLine($"Classification Response: {response.Outputs.First().Choices.First().Message.Content}");
 
-        return response.Outputs.First().Choices.First().Message.Content;
-        // var json = JsonSerializer.Deserialize<JsonElement>(
-        //     response.Outputs.First().Choices.First().Message.Content);
+        var json = JsonSerializer.Deserialize<JsonElement>(
+            response.Outputs.First().Choices.First().Message.Content);
         
-        // return new AnomalyClassification(
-        //     json.GetProperty("type").GetString()!,
-        //     json.GetProperty("confidence").GetDouble(),
-        //     json.GetProperty("reasoning").GetString()!
-        //);
+        return new AnomalyClassification(
+            json.GetProperty("type").GetString()!,
+            json.GetProperty("confidence").GetDouble(),
+            json.GetProperty("reasoning").GetString()!
+        );
     }
 }

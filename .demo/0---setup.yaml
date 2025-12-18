@@ -22,7 +22,7 @@ demos:
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
         autoExecute: true
-        command: ollama run phi3:3.8b
+        command: ollama run llama3.2:3b
     icons:
       start: terminal
       end: ''

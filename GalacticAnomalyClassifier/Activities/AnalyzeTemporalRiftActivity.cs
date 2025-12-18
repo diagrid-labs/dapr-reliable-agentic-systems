@@ -47,11 +47,11 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
                             - Safe approach vectors
                             - Potential for time travel research
                             
-                            The response should be JSON. Do not start the response with any preamble or formatting instructions. Do not wrap the response in a markdown codeblock for json.
+                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
                             Respond only in JSON format as follows:
                             {
                               ""analysis"": ""<detailed technical analysis>"",
-                              ""quantumMetrics"": <A dictionary<string, double> with relevant quantum metrics>,
+                              ""quantumMetrics"": <A dictionary<string, string> with relevant quantum metrics, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""safetyProtocols"": ""<list of safety protocols>"",
                               ""timelineStability"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
                             }

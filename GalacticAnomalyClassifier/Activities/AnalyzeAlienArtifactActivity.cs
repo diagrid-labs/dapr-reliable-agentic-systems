@@ -47,11 +47,11 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
                             - Cultural and scientific value
                             - Safe extraction procedures
                             
-                            The response should be JSON. Do not start the response with any preamble or formatting instructions. Do not wrap the response in a markdown codeblock for json.
+                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
                             Respond only in JSON format as follows:
                             {
                               ""analysis"": ""<detailed technical analysis of the alien artifact>"",
-                              ""xenoarchaeologyData"": <A dictionary<string, double> with relevant artifacts data>,
+                              ""xenoarchaeologyData"": <A dictionary<string, string> with relevant artifacts data, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""extractionProcedures"": ""<list of extraction procedures>"",
                               ""hostilityIndicator"": ""<SAFE, CAUTION, DANGEROUS, LETHAL>""
                             }

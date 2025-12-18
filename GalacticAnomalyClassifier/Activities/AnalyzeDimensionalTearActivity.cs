@@ -47,11 +47,11 @@ public class AnalyzeDimensionalTearActivity : WorkflowActivity<SpaceAnomaly, Dim
                             - Research and exploration potential
                             - Stability of local spacetime fabric
                             
-                            The response should be JSON. Do not start the response with any preamble or formatting instructions. Do not wrap the response in a markdown codeblock for json.
+                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
                             Respond only in JSON format as follows:
                             {
                               ""analysis"": ""<detailed technical analysis of the dimensional tear>"",
-                              ""multiverseMetrics"": <A dictionary<string, double> with relevant multiverse data>,
+                              ""multiverseMetrics"": <A dictionary<string, string> with relevant multiverse data, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""containmentProcedures"": ""<list of containment procedures>"",
                               ""spacetimeTearSeverity"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
                             }

@@ -47,11 +47,11 @@ public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, S
                             - Safe observation distance
                             - Duration and evolution predictions
                             
-                            The response should be JSON. Do not start the response with any preamble or formatting instructions. Do not wrap the response in a markdown codeblock for json.
+                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
                             Respond only in JSON format as follows:
                             {
                               ""analysis"": ""<detailed technical analysis of the stellar event>"",
-                              ""astrophysicsData"": <A dictionary<string, double> with relevant astrophysics data>,
+                              ""astrophysicsData"": <A dictionary<string, string> with relevant astrophysics data, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""observationProtocols"": ""<list of observation protocols>"",
                               ""radiationLevel"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
                             }

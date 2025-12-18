@@ -11,20 +11,10 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
         WorkflowContext context, 
         SpaceAnomaly input)
     {
-        var classificationString = await context.CallActivityAsync<string>(
+        var classification = await context.CallActivityAsync<AnomalyClassification>(
             nameof(ClassifyAnomalyActivity),
             input);
 
-        var json = await context.CallActivityAsync<JsonElement>(
-            nameof(ResponseCleanupActivity),
-            classificationString);
-        
-        var classification = new AnomalyClassification(
-            json.GetProperty("type").GetString()!,
-            json.GetProperty("confidence").GetDouble(),
-            json.GetProperty("reasoning").GetString()!
-        );
-        
         var anomalyType = ParseAnomalyType(classification.Type);
         
         string specializedAnalysis;

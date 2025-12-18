@@ -13,7 +13,6 @@ builder.Services.AddDaprWorkflow(options =>
 {
     options.RegisterWorkflow<AnomalyRoutingWorkflow>();
     options.RegisterActivity<ClassifyAnomalyActivity>();
-    options.RegisterActivity<ResponseCleanupActivity>();
     options.RegisterActivity<AnalyzeTemporalRiftActivity>();
     options.RegisterActivity<AnalyzeDarkMatterActivity>();
     options.RegisterActivity<AnalyzeAlienArtifactActivity>();

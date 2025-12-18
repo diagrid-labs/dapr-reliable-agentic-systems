@@ -46,11 +46,11 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
                             - Black hole formation risk
                             - Energy extraction possibilities
                             
-                            The response should be JSON. Do not start the response with any preamble or formatting instructions. Do not wrap the response in a markdown codeblock for json.
+                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
                             Respond only in JSON format as follows:
                             {
                               ""analysis"": ""<detailed technical analysis of the dark matter cluster>"",
-                              ""gravitationalData"": <A dictionary<string, double> with relevant gravitational data>,
+                              ""gravitationalData"": <A dictionary<string, string> with relevant gravitational data, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""harvestingOpportunities"": ""<list of harvesting opportunities>"",
                               ""collapseProbability"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
                             }
