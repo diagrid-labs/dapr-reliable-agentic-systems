@@ -201,6 +201,7 @@ public record RefineInput(AlienText Text, Translation Current, Evaluation Feedba
 > ```csharp
 > using Dapr.AI.Conversation;
 > using Dapr.AI.Conversation.Extensions;
+> using Dapr.AI.Conversation.ConversationRoles;
 > 
 > private readonly DaprConversationClient _conversationClient;
 > 
@@ -209,13 +210,23 @@ public record RefineInput(AlienText Text, Translation Current, Evaluation Feedba
 >     _conversationClient = conversationClient;
 > }
 > ```
-> Use `ConversationOptions("conversation")` with model and temperature, then `ConverseAsync()` with message collections.
+> Use `ConversationOptions("conversation")` with temperature (no model specification), then `ConverseAsync()` with message collections.
 
 **TranslateActivity.cs** (Initial Translation)
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class TranslateActivity : WorkflowActivity<TranslateInput, Translation>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public TranslateActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<Translation> RunAsync(
         WorkflowActivityContext context, 
@@ -242,25 +253,21 @@ Known Vocabulary:
 
 Provide your translation and explain your reasoning for important translation choices.";
 
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { role = "system", content = systemPrompt },
-                new { role = "user", content = userPrompt }
-            },
-            response_format = new { type = "json_object" }
+            Temperature = 0.7f,
+            ResponseFormat = ConversationResponseFormat.Json
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(systemPrompt)]),
+                new UserMessage([new MessageContent(userPrompt)])
+            ],
+            options);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         return new Translation(
             input.Iteration,
@@ -274,9 +281,19 @@ Provide your translation and explain your reasoning for important translation ch
 
 **RefineTranslationActivity.cs** (Iterative Refinement)
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class RefineTranslationActivity : WorkflowActivity<RefineInput, Translation>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public RefineTranslationActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<Translation> RunAsync(
         WorkflowActivityContext context, 
@@ -312,25 +329,21 @@ Detailed Feedback:
 Provide an improved translation that addresses the weaknesses while preserving the strengths.
 Return JSON with: translation (string), reasoning (string explaining changes made).";
 
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { role = "system", content = systemPrompt },
-                new { role = "user", content = userPrompt }
-            },
-            response_format = new { type = "json_object" }
+            Temperature = 0.7f,
+            ResponseFormat = ConversationResponseFormat.Json
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(systemPrompt)]),
+                new UserMessage([new MessageContent(userPrompt)])
+            ],
+            options);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         return new Translation(
             input.Iteration,
@@ -346,9 +359,19 @@ Return JSON with: translation (string), reasoning (string explaining changes mad
 
 **EvaluateTranslationActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class EvaluateTranslationActivity : WorkflowActivity<EvaluateInput, Evaluation>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public EvaluateTranslationActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<Evaluation> RunAsync(
         WorkflowActivityContext context, 
@@ -395,25 +418,21 @@ Provide comprehensive evaluation in JSON format:
   ""meetsStandards"": true/false
 }}";
 
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o", // Use powerful model for nuanced evaluation
-            messages = new[]
-            {
-                new { role = "system", content = systemPrompt },
-                new { role = "user", content = userPrompt }
-            },
-            response_format = new { type = "json_object" }
+            Temperature = 0.3f,
+            ResponseFormat = ConversationResponseFormat.Json
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(systemPrompt)]),
+                new UserMessage([new MessageContent(userPrompt)])
+            ],
+            options);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         return new Evaluation(
             input.CurrentTranslation.IterationNumber,

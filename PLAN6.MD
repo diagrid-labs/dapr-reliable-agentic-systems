@@ -362,13 +362,36 @@ public record ReasoningInput(
 
 ### Step 4: Agent Reasoning Activity
 
-> **Note**: The agent reasoning activity and all tool activities use `DaprConversationClient` with constructor injection. The agent reasoning uses LLM to make autonomous decisions, while tool activities may use LLM for simulation or use deterministic logic.
+> **Note**: The agent reasoning activity and all tool activities use `DaprConversationClient` with constructor injection:
+> ```csharp
+> using Dapr.AI.Conversation;
+> using Dapr.AI.Conversation.Extensions;
+> using Dapr.AI.Conversation.ConversationRoles;
+> 
+> private readonly DaprConversationClient _conversationClient;
+> 
+> public YourActivity(DaprConversationClient conversationClient)
+> {
+>     _conversationClient = conversationClient;
+> }
+> ```
+> The agent reasoning uses LLM to make autonomous decisions with `ConversationOptions("conversation")` (no model specification), while tool activities may use LLM for simulation or use deterministic logic.
 
 **AgentReasoningActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class AgentReasoningActivity : WorkflowActivity<ReasoningInput, AgentDecision>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public AgentReasoningActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<AgentDecision> RunAsync(
         WorkflowActivityContext context, 
@@ -432,25 +455,21 @@ RECENT TOOL RESULTS:
 
 What is your next action?";
 
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o",
-            messages = new[]
-            {
-                new { role = "system", content = systemPrompt },
-                new { role = "user", content = userPrompt }
-            },
-            response_format = new { type = "json_object" }
+            Temperature = 0.7f,
+            ResponseFormat = ConversationResponseFormat.Json
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(systemPrompt)]),
+                new UserMessage([new MessageContent(userPrompt)])
+            ],
+            options);
         
         var json = JsonSerializer.Deserialize<JsonElement>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
         
         return new AgentDecision(
             input.CurrentState.StepCount,
@@ -469,9 +488,19 @@ What is your next action?";
 
 **ScanDebrisFieldActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, object>, DebrisField>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public ScanDebrisFieldActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<DebrisField> RunAsync(
         WorkflowActivityContext context, 
@@ -480,33 +509,23 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
         // In real implementation, this would interface with actual sensors
         // For demo, we'll generate a simulated debris field
         
-        var conversationRequest = new
+        var options = new ConversationOptions("conversation")
         {
-            model = "gpt-4o-mini",
-            messages = new[]
-            {
-                new { 
-                    role = "system", 
-                    content = @"Generate a realistic space debris field scan result. 
-                    Include 3-8 debris objects with varied types, masses, and threat levels.
-                    Return JSON matching DebrisField schema." 
-                },
-                new { 
-                    role = "user", 
-                    content = "Scan debris field in LEO" 
-                }
-            },
-            response_format = new { type = "json_object" }
+            Temperature = 0.7f,
+            ResponseFormat = ConversationResponseFormat.Json
         };
         
-        var response = await _daprClient.InvokeMethodAsync<object, ConversationResponse>(
-            HttpMethod.Post,
-            "conversation",
-            "v1/chat/completions",
-            conversationRequest);
+        var response = await _conversationClient.ConverseAsync(
+            [
+                new SystemMessage([new MessageContent(@"Generate a realistic space debris field scan result. 
+                    Include 3-8 debris objects with varied types, masses, and threat levels.
+                    Return JSON matching DebrisField schema.")]),
+                new UserMessage([new MessageContent("Scan debris field in LEO")])
+            ],
+            options);
         
         return JsonSerializer.Deserialize<DebrisField>(
-            response.Choices[0].Message.Content);
+            response.Outputs.First().Choices.First().Message.Content);
     }
 }
 ```
@@ -586,6 +605,11 @@ public class MoveToLocationActivity : WorkflowActivity<Dictionary<string, object
 
 **RequestHumanApprovalActivity.cs**
 ```csharp
+using Dapr.AI.Conversation;
+using Dapr.AI.Conversation.Extensions;
+using Dapr.AI.Conversation.ConversationRoles;
+using System.Text.Json;
+
 public record ApprovalResult(
     bool Approved,
     string HumanResponse,
@@ -594,7 +618,12 @@ public record ApprovalResult(
 
 public class RequestHumanApprovalActivity : WorkflowActivity<Dictionary<string, object>, ApprovalResult>
 {
-    private readonly DaprClient _daprClient;
+    private readonly DaprConversationClient _conversationClient;
+    
+    public RequestHumanApprovalActivity(DaprConversationClient conversationClient)
+    {
+        _conversationClient = conversationClient;
+    }
     
     public override async Task<ApprovalResult> RunAsync(
         WorkflowActivityContext context, 
