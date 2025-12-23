@@ -47,13 +47,26 @@ public class AnalyzeDimensionalTearActivity : WorkflowActivity<SpaceAnomaly, Dim
                             - Research and exploration potential
                             - Stability of local spacetime fabric
                             
-                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
-                            Respond only in JSON format as follows:
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis of the dimensional tear>"",
                               ""multiverseMetrics"": <A dictionary<string, string> with relevant multiverse data, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""containmentProcedures"": ""<list of containment procedures>"",
                               ""spacetimeTearSeverity"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
+                            }
+
+                            Example:
+                            {
+                              ""analysis"": ""The dimensional tear exhibits high instability with significant cross-dimensional contamination risk..."",
+                              ""multiverseMetrics"": { ""tearSize"": ""3.2e3 meters"", ""contaminationLevel"": ""7.5e2 particles per cubic meter"" },
+                              ""containmentProcedures"": [""Deploy quantum stabilizers"", ""Establish dimensional anchor points""],
+                              ""spacetimeTearSeverity"": ""HIGH""
                             }
                             ")
                         ]

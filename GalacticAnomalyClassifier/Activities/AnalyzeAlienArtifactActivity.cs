@@ -47,13 +47,26 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
                             - Cultural and scientific value
                             - Safe extraction procedures
                             
-                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
-                            Respond only in JSON format as follows:
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+                            
+                            JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis of the alien artifact>"",
                               ""xenoarchaeologyData"": <A dictionary<string, string> with relevant artifacts data, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""extractionProcedures"": ""<list of extraction procedures>"",
                               ""hostilityIndicator"": ""<SAFE, CAUTION, DANGEROUS, LETHAL>""
+                            }
+
+                            Example:
+                            {
+                              ""analysis"": ""The artifact appears to be a communication device from an advanced civilization..."",
+                              ""xenoarchaeologyData"": { ""frequencyRange"": ""1.5e9 Hz"", ""materialComposition"": ""Unobtanium"" },
+                              ""extractionProcedures"": [""Use magnetic containment field"", ""Avoid direct contact""],
+                              ""hostilityIndicator"": ""CAUTION""
                             }
                             ")
                         ]

@@ -47,13 +47,26 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
                             - Safe approach vectors
                             - Potential for time travel research
                             
-                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
-                            Respond only in JSON format as follows:
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis>"",
                               ""quantumMetrics"": <A dictionary<string, string> with relevant quantum metrics, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""safetyProtocols"": ""<list of safety protocols>"",
                               ""timelineStability"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
+                            }
+
+                            Example:
+                            {
+                              ""analysis"": ""The temporal rift exhibits moderate timeline divergence with potential causality violations..."",
+                              ""quantumMetrics"": { ""divergenceIndex"": ""2.3e1"", ""radiationLevel"": ""5.6e-4 Sv/h"" },
+                              ""safetyProtocols"": [""Establish temporal anchors"", ""Deploy chronal dampeners""],
+                              ""timelineStability"": ""MEDIUM""
                             }
                             ")
                         ]

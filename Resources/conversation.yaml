@@ -9,4 +9,4 @@ spec:
   - name: model
     value: llama3.2:3b
   - name: cacheTTL
-    value: 10m
+    value: 1m

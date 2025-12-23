@@ -46,13 +46,26 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
                             - Black hole formation risk
                             - Energy extraction possibilities
                             
-                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
-                            Respond only in JSON format as follows:
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis of the dark matter cluster>"",
                               ""gravitationalData"": <A dictionary<string, string> with relevant gravitational data, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""harvestingOpportunities"": ""<list of harvesting opportunities>"",
                               ""collapseProbability"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
+                            }
+
+                            Example:
+                            {
+                              ""analysis"": ""The dark matter cluster exhibits a high mass concentration with significant gravitational lensing effects..."",
+                              ""gravitationalData"": { ""massDensity"": ""2.5e10 solar masses per cubic parsec"", ""lensingEffect"": ""Strong"" },
+                              ""harvestingOpportunities"": [""Exotic particle extraction"", ""Dark energy conversion""],
+                              ""collapseProbability"": ""MEDIUM""
                             }
                             ")
                         ]

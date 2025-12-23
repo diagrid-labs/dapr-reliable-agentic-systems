@@ -47,12 +47,24 @@ Measurements: {string.Join(", ", input.Measurements.Select(m => $"{m.Key}={m.Val
                             4. STELLAR PHENOMENON - Star-related events, supernovae, neutron star activity
                             5. DIMENSIONAL TEAR - Reality breaches, multiverse intrusions, spatial ruptures
                             
-                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
-                            Respond only in JSON format as follows:
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
                             {
                               ""type"": ""<category name>"",
                               ""confidence"": <0.0 to 1.0>,
                               ""reasoning"": ""<brief explanation>""
+                            }
+
+                            Example:
+                            {
+                              ""type"": ""DARK MATTER CLUSTER"",
+                              ""confidence"": 0.92,
+                              ""reasoning"": ""The anomaly exhibits strong gravitational lensing effects and mass concentration consistent with dark matter clusters.""
                             }
                             ")
                         ]

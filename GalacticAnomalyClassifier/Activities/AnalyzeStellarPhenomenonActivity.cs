@@ -47,13 +47,26 @@ public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, S
                             - Safe observation distance
                             - Duration and evolution predictions
                             
-                            The response should be JSON, not markdown. Do not start the response with any preamble or formatting instructions.
-                            Respond only in JSON format as follows:
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis of the stellar event>"",
                               ""astrophysicsData"": <A dictionary<string, string> with relevant astrophysics data, use scientific E notation where necessary (for example 1.5e-35)>,
                               ""observationProtocols"": ""<list of observation protocols>"",
                               ""radiationLevel"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
+                            }
+
+                            Example:
+                            {
+                              ""analysis"": ""The stellar phenomenon appears to be a Type II supernova with an estimated energy output of 1.0e44 joules..."",
+                              ""astrophysicsData"": { ""peakLuminosity"": ""3.5e9 L☉"", ""radiationFlux"": ""2.1e-3 W/m²"" },
+                              ""observationProtocols"": [""Maintain distance of at least 5 light-years"", ""Use gamma-ray detectors""],
+                              ""radiationLevel"": ""HIGH""
                             }
                             ")
                         ]
