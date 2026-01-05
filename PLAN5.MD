@@ -454,6 +454,7 @@ Provide comprehensive evaluation in JSON format:
 ### Step 6: API Endpoints
 **Program.cs**
 ```csharp
+using Dapr.AI.Conversation.Extensions;
 using Dapr.Client;
 using Dapr.Workflow;
 

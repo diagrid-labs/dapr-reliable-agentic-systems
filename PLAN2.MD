@@ -249,11 +249,24 @@ Measurements: {string.Join(", ", input.Measurements.Select(m => $"{m.Key}={m.Val
                             4. STELLAR PHENOMENON - Star-related events, supernovae, neutron star activity
                             5. DIMENSIONAL TEAR - Reality breaches, multiverse intrusions, spatial ruptures
                             
-                            Respond in JSON format:
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
                             {
                               ""type"": ""<category name>"",
                               ""confidence"": <0.0 to 1.0>,
                               ""reasoning"": ""<brief explanation>""
+                            }
+
+                            Example:
+                            {
+                              ""type"": ""DARK MATTER CLUSTER"",
+                              ""confidence"": 0.92,
+                              ""reasoning"": ""The anomaly exhibits strong gravitational lensing effects and mass concentration consistent with dark matter clusters.""
                             }")
                         ]
                     },
@@ -328,8 +341,7 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7,
-            ResponseFormat = new { type = "json_object" }
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -347,9 +359,27 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
                             - Safe approach vectors
                             - Potential for time travel research
                             
-                            Provide detailed technical analysis with quantum metrics and safety protocols.
-                            Respond in JSON format with: analysis, quantumMetrics (dict), 
-                            safetyProtocols (list), timelineStability (LOW/MEDIUM/HIGH/CRITICAL).")
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
+                            {
+                              ""analysis"": ""<detailed technical analysis>"",
+                              ""quantumMetrics"": <A dictionary<string, string> with relevant quantum metrics, use scientific E notation where necessary (for example 1.5e-35)>,
+                              ""safetyProtocols"": ""<list of safety protocols>"",
+                              ""timelineStability"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
+                            }
+
+                            Example:
+                            {
+                              ""analysis"": ""The temporal rift exhibits moderate timeline divergence with potential causality violations..."",
+                              ""quantumMetrics"": { ""divergenceIndex"": ""2.3e1"", ""radiationLevel"": ""5.6e-4 Sv/h"" },
+                              ""safetyProtocols"": [""Establish temporal anchors"", ""Deploy chronal dampeners""],
+                              ""timelineStability"": ""MEDIUM""
+                            }")
                         ]
                     },
                     new UserMessage
@@ -407,8 +437,7 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7,
-            ResponseFormat = new { type = "json_object" }
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -425,8 +454,28 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
                             - Black hole formation risk
                             - Energy extraction possibilities
                             
-                            Respond in JSON format with: analysis, gravitationalData (dict), 
-                            harvestingOpportunities (list), collapseProbability (LOW/MEDIUM/HIGH/CRITICAL).")
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
+                            {
+                              ""analysis"": ""<detailed technical analysis of the dark matter cluster>"",
+                              ""gravitationalData"": <A dictionary<string, string> with relevant gravitational data, use scientific E notation where necessary (for example 1.5e-35)>,
+                              ""harvestingOpportunities"": ""<list of harvesting opportunities>"",
+                              ""collapseProbability"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
+                            }
+
+                            Example:
+                            {
+                              ""analysis"": ""The dark matter cluster exhibits a high mass concentration with significant gravitational lensing effects..."",
+                              ""gravitationalData"": { ""massDensity"": ""2.5e10 solar masses per cubic parsec"", ""lensingEffect"": ""Strong"" },
+                              ""harvestingOpportunities"": [""Exotic particle extraction"", ""Dark energy conversion""],
+                              ""collapseProbability"": ""MEDIUM""
+                            }
+                            ")
                         ]
                     },
                     new UserMessage
@@ -484,8 +533,7 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7,
-            ResponseFormat = new { type = "json_object" }
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -503,8 +551,28 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
                             - Cultural and scientific value
                             - Safe extraction procedures
                             
-                            Respond in JSON format with: analysis, xenoarchaeologyData (dict), 
-                            extractionProcedures (list), hostilityIndicators (SAFE/CAUTION/DANGEROUS/LETHAL).")
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+                            
+                            JSON structure that describes the fields:
+                            {
+                              ""analysis"": ""<detailed technical analysis of the alien artifact>"",
+                              ""xenoarchaeologyData"": <A dictionary<string, string> with relevant artifacts data, use scientific E notation where necessary (for example 1.5e-35)>,
+                              ""extractionProcedures"": ""<list of extraction procedures>"",
+                              ""hostilityIndicator"": ""<SAFE, CAUTION, DANGEROUS, LETHAL>""
+                            }
+
+                            Example:
+                            {
+                              ""analysis"": ""The artifact appears to be a communication device from an advanced civilization..."",
+                              ""xenoarchaeologyData"": { ""frequencyRange"": ""1.5e9 Hz"", ""materialComposition"": ""Unobtanium"" },
+                              ""extractionProcedures"": [""Use magnetic containment field"", ""Avoid direct contact""],
+                              ""hostilityIndicator"": ""CAUTION""
+                            }
+                            ")
                         ]
                     },
                     new UserMessage

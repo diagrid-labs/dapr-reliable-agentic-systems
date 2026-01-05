@@ -244,8 +244,7 @@ public class HullIntegrityScanActivity : WorkflowActivity<Starship, ScanResult>
         
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7,
-            ResponseFormat = new { type = "json_object" }
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -255,19 +254,34 @@ public class HullIntegrityScanActivity : WorkflowActivity<Starship, ScanResult>
                     new SystemMessage
                     {
                         Content = [
-                            new MessageContent(@"You are a hull integrity scanner AI. Analyze starship hull 
-                            condition for:
+                            new MessageContent(@"You are a hull integrity scanner AI. Analyze starship hull condition for:
                             - Micrometeorite impacts
                             - Stress fractures from FTL travel
                             - Corrosion from space radiation
                             - Structural weak points
                             
-                            Return JSON: {
-                              ""status"": ""OK|WARNING|CRITICAL"",
-                              ""healthPercentage"": 0-100,
-                              ""issues"": [""issue1"", ""issue2""],
-                              ""recommendations"": [""rec1"", ""rec2""],
-                              ""detailedAnalysis"": ""full analysis text""
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
+                            {
+                              ""status"": ""<OK|WARNING|CRITICAL>"",
+                              ""healthPercentage"": <0-100>,
+                              ""issues"": [""<issue1>"", ""<issue2>""],
+                              ""recommendations"": [""<rec1>"", ""<rec2>""],
+                              ""detailedAnalysis"": ""<full analysis text>""
+                            }
+
+                            Example:
+                            {
+                              ""status"": ""WARNING"",
+                              ""healthPercentage"": 78,
+                              ""issues"": [""Minor micrometeorite impacts on sections 7-12"", ""Stress fractures detected near warp nacelle mounts""],
+                              ""recommendations"": [""Schedule hull plating replacement for sections 7-12"", ""Reinforce structural supports before next FTL jump""],
+                              ""detailedAnalysis"": ""Hull integrity assessment reveals moderate wear consistent with 15 years of deep space operations. Primary concerns are concentrated in high-stress areas...""
                             }")
                         ]
                     },
@@ -331,8 +345,7 @@ public class ReactorCoreScanActivity : WorkflowActivity<Starship, ScanResult>
         
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7,
-            ResponseFormat = new { type = "json_object" }
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -351,8 +364,29 @@ public class ReactorCoreScanActivity : WorkflowActivity<Starship, ScanResult>
                             
                             This is CRITICAL - reactor failures are catastrophic.
                             
-                            Return JSON with status, healthPercentage, issues, recommendations, 
-                            and detailedAnalysis.")
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
+                            {
+                              ""status"": ""<OK|WARNING|CRITICAL>"",
+                              ""healthPercentage"": <0-100>,
+                              ""issues"": [""<issue1>"", ""<issue2>""],
+                              ""recommendations"": [""<rec1>"", ""<rec2>""],
+                              ""detailedAnalysis"": ""<full analysis text>""
+                            }
+
+                            Example:
+                            {
+                              ""status"": ""CRITICAL"",
+                              ""healthPercentage"": 62,
+                              ""issues"": [""Containment field fluctuations detected in quadrant 3"", ""Plasma temperature exceeding safe threshold by 8%"", ""Coolant flow rate below optimal levels""],
+                              ""recommendations"": [""Immediate field generator recalibration required"", ""Reduce reactor output to 75% until coolant system is repaired"", ""Replace worn dilithium crystal matrix""],
+                              ""detailedAnalysis"": ""Reactor core analysis indicates significant stress on containment systems. The matter/antimatter reaction chamber shows signs of field instability that could lead to catastrophic failure if not addressed immediately...""
+                            }")
                         ]
                     },
                     new UserMessage
@@ -397,22 +431,56 @@ public class LifeSupportScanActivity : WorkflowActivity<Starship, ScanResult>
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.5f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.5
         };
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(@"You are a life support systems expert. Analyze:
-                    - Oxygen generation and recycling
-                    - Water purification systems
-                    - Artificial gravity generators
-                    - Temperature and humidity control
-                    - Air quality and contamination levels
-                    
-                    Return JSON with status, healthPercentage, issues, recommendations, 
-                    and detailedAnalysis.")]),
-                new UserMessage([new MessageContent($"Ship: {input.Name}, Years: {input.YearsInService}\n\nScan life support:")])
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a life support systems expert. Analyze:
+                            - Oxygen generation and recycling
+                            - Water purification systems
+                            - Artificial gravity generators
+                            - Temperature and humidity control
+                            - Air quality and contamination levels
+                            
+                            Respond **only** with valid JSON.
+                            Do not include explanations, comments, or text outside the JSON object.
+                            Ensure the JSON is syntactically correct and can be parsed without errors.
+                            Use double quotes around all keys and string values.
+                            Use opening and closing curly braces.
+
+                            JSON structure that describes the fields:
+                            {
+                              ""status"": ""<OK|WARNING|CRITICAL>"",
+                              ""healthPercentage"": <0-100>,
+                              ""issues"": [""<issue1>"", ""<issue2>""],
+                              ""recommendations"": [""<rec1>"", ""<rec2>""],
+                              ""detailedAnalysis"": ""<full analysis text>""
+                            }
+
+                            Example:
+                            {
+                              ""status"": ""OK"",
+                              ""healthPercentage"": 94,
+                              ""issues"": [""Oxygen recycler efficiency slightly degraded in section B""],
+                              ""recommendations"": [""Replace carbon dioxide scrubber filters during next scheduled maintenance""],
+                              ""detailedAnalysis"": ""Life support systems are operating within normal parameters. All critical subsystems are functional with minor efficiency degradation in non-critical components...""
+                            }")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "LifeSupportScanner",
+                        Content = [
+                            new MessageContent($"Ship: {input.Name}, Years: {input.YearsInService}\n\nScan life support:")
+                        ]
+                    }
+                })
             ],
             options);
         
@@ -454,13 +522,24 @@ public class SafetyVoterActivity : WorkflowActivity<ScanResult, KeyValuePair<str
                     new SystemMessage
                     {
                         Content = [
-                            new MessageContent(@"You are a SAFETY-FOCUSED evaluator. Analyze the finding from 
-                            a crew safety perspective. Is this finding:
-                            - IMMEDIATE_GROUNDING: Ship cannot safely operate
-                            - URGENT_REPAIR: Must fix before next voyage
-                            - SCHEDULED_MAINTENANCE: Can wait for next scheduled service
+                            new MessageContent(@"You are a SAFETY-FOCUSED evaluator. Analyze the finding from a crew safety perspective.
                             
-                            Return only one of these three values.")
+                            Respond **only** with one of these exact values (no quotes, no explanations):
+                            - IMMEDIATE_GROUNDING
+                            - URGENT_REPAIR
+                            - SCHEDULED_MAINTENANCE
+                            
+                            Classification criteria:
+                            - IMMEDIATE_GROUNDING: Ship cannot safely operate, immediate crew danger
+                            - URGENT_REPAIR: Must fix before next voyage, safety risk if ignored
+                            - SCHEDULED_MAINTENANCE: Can wait for next scheduled service, minimal safety impact
+                            
+                            Example responses:
+                            IMMEDIATE_GROUNDING
+                            or
+                            URGENT_REPAIR
+                            or
+                            SCHEDULED_MAINTENANCE")
                         ]
                     },
                     new UserMessage
@@ -517,16 +596,29 @@ public class SeverityVoterActivity : WorkflowActivity<ScanResult, KeyValuePair<s
                     new SystemMessage
                     {
                         Content = [
-                            new MessageContent(@"You are a SEVERITY-FOCUSED evaluator. Analyze the technical 
-                            severity of the finding. Consider:
+                            new MessageContent(@"You are a SEVERITY-FOCUSED evaluator. Analyze the technical severity of the finding.
+                            
+                            Respond **only** with one of these exact values (no quotes, no explanations):
+                            - IMMEDIATE_GROUNDING
+                            - URGENT_REPAIR
+                            - SCHEDULED_MAINTENANCE
+                            
+                            Classification criteria:
+                            - IMMEDIATE_GROUNDING: High likelihood of catastrophic failure, imminent danger
+                            - URGENT_REPAIR: Time to failure measured in hours/days, cascading failure risk
+                            - SCHEDULED_MAINTENANCE: Gradual degradation, failure unlikely in short term
+                            
+                            Consider:
                             - Likelihood of catastrophic failure
                             - Time to failure if not addressed
                             - Potential for cascading failures
                             
-                            Classify as:
-                            - IMMEDIATE_GROUNDING
-                            - URGENT_REPAIR
-                            - SCHEDULED_MAINTENANCE")
+                            Example responses:
+                            IMMEDIATE_GROUNDING
+                            or
+                            URGENT_REPAIR
+                            or
+                            SCHEDULED_MAINTENANCE")
                         ]
                     },
                     new UserMessage
@@ -581,16 +673,29 @@ public class RecommendationVoterActivity : WorkflowActivity<ScanResult, KeyValue
                     new SystemMessage
                     {
                         Content = [
-                            new MessageContent(@"You are a COST-BENEFIT evaluator. Balance repair urgency 
-                            against operational needs and costs. Consider:
-                            - Can the ship operate safely with temporary measures?
-                            - Cost of immediate repair vs scheduled maintenance
-                            - Mission criticality
+                            new MessageContent(@"You are a COST-BENEFIT evaluator. Balance repair urgency against operational needs and costs.
                             
-                            Classify as:
+                            Respond **only** with one of these exact values (no quotes, no explanations):
                             - IMMEDIATE_GROUNDING
                             - URGENT_REPAIR
-                            - SCHEDULED_MAINTENANCE")
+                            - SCHEDULED_MAINTENANCE
+                            
+                            Classification criteria:
+                            - IMMEDIATE_GROUNDING: No safe workarounds, repair costs exceed mission value if delayed
+                            - URGENT_REPAIR: Temporary measures possible but expensive/risky, fix before next mission
+                            - SCHEDULED_MAINTENANCE: Cost-effective to defer, minimal operational impact
+                            
+                            Consider:
+                            - Can the ship operate safely with temporary measures?
+                            - Cost of immediate repair vs scheduled maintenance
+                            - Mission criticality and operational urgency
+                            
+                            Example responses:
+                            IMMEDIATE_GROUNDING
+                            or
+                            URGENT_REPAIR
+                            or
+                            SCHEDULED_MAINTENANCE")
                         ]
                     },
                     new UserMessage
@@ -662,6 +767,7 @@ public class AggregateResultsActivity : WorkflowActivity<AggregateResultsInput, 
 ### Step 7: API Endpoints
 **Program.cs**
 ```csharp
+using Dapr.AI.Conversation.Extensions;
 using Dapr.Client;
 using Dapr.Workflow;
 

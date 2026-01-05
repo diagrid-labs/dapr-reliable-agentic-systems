@@ -697,6 +697,7 @@ Create phased construction plan.")])
 ### Step 7: API Endpoints
 **Program.cs**
 ```csharp
+using Dapr.AI.Conversation.Extensions;
 using Dapr.Client;
 using Dapr.Workflow;
 

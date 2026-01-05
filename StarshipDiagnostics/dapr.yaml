@@ -1,0 +1,10 @@
+version: 1
+common:
+  resourcesPath: ../Resources
+  appLogDestination: fileAndConsole
+  daprdLogDestination: fileAndConsole
+apps:
+  - appID: starship-diagnostics-app
+    appDirPath: ./StarshipDiagnostics/
+    appPort: 5500
+    command: ["dotnet", "run"]

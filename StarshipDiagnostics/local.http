@@ -1,0 +1,65 @@
+### Diagnose USS Enterprise-D with multiple issues
+POST http://localhost:5500/ship/diagnose
+Content-Type: application/json
+
+{
+  "shipId": "NCC-1701-D",
+  "name": "USS Enterprise",
+  "class": "Galaxy",
+  "yearsInService": 15,
+  "lastMaintenance": "2424-12-01T00:00:00Z",
+  "telemetry": {
+    "hullStressLevel": 0.67,
+    "reactorTemperature": 1250,
+    "shieldIntegrity": 0.85,
+    "oxygenLevel": 0.98,
+    "navigationAccuracy": 0.95,
+    "weaponsPower": 0.88
+  }
+}
+
+### Diagnose an aging ship
+POST http://localhost:5500/ship/diagnose
+Content-Type: application/json
+
+{
+  "shipId": "NCC-1701",
+  "name": "USS Enterprise (Original)",
+  "class": "Constitution",
+  "yearsInService": 40,
+  "lastMaintenance": "2420-06-15T00:00:00Z",
+  "telemetry": {
+    "hullStressLevel": 0.89,
+    "reactorTemperature": 1450,
+    "shieldIntegrity": 0.62,
+    "oxygenLevel": 0.91,
+    "navigationAccuracy": 0.88,
+    "weaponsPower": 0.75
+  }
+}
+
+### Diagnose a well-maintained ship
+POST http://localhost:5500/ship/diagnose
+Content-Type: application/json
+
+{
+  "shipId": "NCC-1701-E",
+  "name": "USS Enterprise-E",
+  "class": "Sovereign",
+  "yearsInService": 3,
+  "lastMaintenance": "2425-01-01T00:00:00Z",
+  "telemetry": {
+    "hullStressLevel": 0.15,
+    "reactorTemperature": 1100,
+    "shieldIntegrity": 0.98,
+    "oxygenLevel": 1.0,
+    "navigationAccuracy": 0.99,
+    "weaponsPower": 0.97
+  }
+}
+
+### Get diagnostic report (replace instanceId with actual value from POST response)
+GET http://localhost:5500/ship/report/diagnostic-NCC-1701-D-638742234567890000
+
+### Get ship history
+GET http://localhost:5500/ship/NCC-1701-D/history
