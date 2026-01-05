@@ -5,6 +5,7 @@ common:
   daprdLogDestination: fileAndConsole
 apps:
   - appID: starship-diagnostics-app
-    appDirPath: ./StarshipDiagnostics/
+    appDirPath: ./
     appPort: 5500
+    daprHTTPPort: 3550
     command: ["dotnet", "run"]

@@ -12,7 +12,7 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
         WorkflowContext context, 
         Starship input)
     {
-        // SECTIONING: Run independent scans in parallel
+        // Specify independent scans to be run in parallel
         var scanTasks = new List<Task<ScanResult>>
         {
             context.CallActivityAsync<ScanResult>(
@@ -32,7 +32,7 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
                 input)
         };
         
-        // Wait for all scans to complete
+        // Run the scans and wait for all scans to complete
         var scanResults = await Task.WhenAll(scanTasks);
         
         // Identify critical findings that need voting
