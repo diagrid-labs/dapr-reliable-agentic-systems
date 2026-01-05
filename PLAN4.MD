@@ -52,6 +52,7 @@ The key difference from parallelization: Riker doesn't know ahead of time which 
       - PlanResearchLabActivity.cs
       - PlanDefenseSystemActivity.cs
   /Models
+    - Enums.cs
     - Planet.cs
     - ColonyRequirements.cs
     - StructureRequest.cs
@@ -65,6 +66,42 @@ The key difference from parallelization: Riker doesn't know ahead of time which 
 ```
 
 ### Step 2: Core Models
+**Enums.cs**
+```csharp
+public enum AtmosphereType
+{
+    None,
+    Toxic,
+    Breathable,
+    Thin
+}
+
+public enum SoilQuality
+{
+    None,
+    Poor,
+    Fair,
+    Good
+}
+
+public enum Purpose
+{
+    Mining,
+    Research,
+    Agriculture,
+    Military,
+    Mixed
+}
+
+public enum Priority
+{
+    Critical,
+    High,
+    Medium,
+    Low
+}
+```
+
 **Planet.cs**
 ```csharp
 public record Planet(
@@ -76,7 +113,7 @@ public record Planet(
 
 public record PlanetaryConditions(
     double Gravity, // Earth = 1.0
-    string AtmosphereType, // "None", "Toxic", "Breathable", "Thin"
+    AtmosphereType AtmosphereType,
     double Temperature, // Celsius
     double RadiationLevel, // Sv/year
     bool HasWater,
@@ -89,19 +126,19 @@ public record AvailableResources(
     bool Water,
     bool Organics,
     bool Uranium,
-    string SoilQuality // "None", "Poor", "Fair", "Good"
+    SoilQuality SoilQuality
 );
 
 public record ColonyRequirements(
     int InitialPopulation,
     int TargetPopulation,
-    string Purpose, // "Mining", "Research", "Agriculture", "Military", "Mixed"
+    Purpose Purpose,
     int YearsToComplete
 );
 
 public record StructureRequest(
     string StructureType,
-    string Priority, // "Critical", "High", "Medium", "Low"
+    Priority Priority,
     int Quantity,
     string Reasoning
 );
@@ -263,15 +300,7 @@ public class AnalyzePlanetActivity : WorkflowActivity<Planet, PlanetAnalysis>
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-                    colonization challenges and opportunities. Consider:
-                    - Environmental hazards (radiation, temperature, atmosphere)
-                    - Available resources
-                    - Engineering requirements
-                    - Long-term sustainability
-                    
-                    Return JSON with: challenges (list), opportunities (list), 
-                    recommendedApproach (string)." 
+            Temperature = 0.7f
                 },
                 new { 
                     role = "user", 
@@ -292,8 +321,7 @@ Resources:
 - Uranium: {input.Resources.Uranium}
 - Soil: {input.Resources.SoilQuality}" 
                 }
-            },
-            ResponseFormat = ConversationResponseFormat.Json
+            }
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -305,8 +333,25 @@ Resources:
                     - Engineering requirements
                     - Long-term sustainability
                     
-                    Return JSON with: challenges (list), opportunities (list), 
-                    recommendedApproach (string).")]),
+                    Respond **only** with valid JSON.
+                    Do not include explanations, comments, or text outside the JSON object.
+                    Ensure the JSON is syntactically correct and can be parsed without errors.
+                    Use double quotes around all keys and string values.
+                    Use opening and closing curly braces.
+
+                    JSON structure that describes the fields:
+                    {
+                      ""challenges"": [""<challenge1>"", ""<challenge2>""],
+                      ""opportunities"": [""<opportunity1>"", ""<opportunity2>""],
+                      ""recommendedApproach"": ""<approach description>""
+                    }
+
+                    Example:
+                    {
+                      ""challenges"": [""High radiation levels require heavy shielding"", ""Thin atmosphere needs pressurized habitats""],
+                      ""opportunities"": [""Rich metal deposits enable local manufacturing"", ""Low gravity reduces structural requirements""],
+                      ""recommendedApproach"": ""Focus on underground construction to leverage natural radiation protection while exploiting mineral resources for building materials.""
+                    }")]),
                 new UserMessage([new MessageContent($@"Analyze planet for colonization:
 Planet: {input.Name}
 Gravity: {input.Conditions.Gravity}g
@@ -362,8 +407,7 @@ public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresI
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.7f
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -383,13 +427,41 @@ public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresI
                     - ResearchLab (scientific research)
                     - DefenseSystem (protection from threats)
                     
-                    Return JSON array of structures:
-                    [{
-                      \"structureType\": \"HabitatDome\",
-                      \"priority\": \"Critical|High|Medium|Low\",
-                      \"quantity\": 3,
-                      \"reasoning\": \"explanation\"
-                    }]")]),
+                    Respond **only** with valid JSON.
+                    Do not include explanations, comments, or text outside the JSON object.
+                    Ensure the JSON is syntactically correct and can be parsed without errors.
+                    Use double quotes around all keys and string values.
+                    Use opening and closing curly braces.
+                    
+                    JSON structure that describes the fields:
+                    {
+                      ""structures"": [
+                        {
+                          ""structureType"": ""<HabitatDome|PowerPlant|Agriculture|MiningFacility|ResearchLab|DefenseSystem>"",
+                          ""priority"": ""<Critical|High|Medium|Low>"",
+                          ""quantity"": <number>,
+                          ""reasoning"": ""<explanation>""
+                        }
+                      ]
+                    }
+
+                    Example:
+                    {
+                      ""structures"": [
+                        {
+                          ""structureType"": ""HabitatDome"",
+                          ""priority"": ""Critical"",
+                          ""quantity"": 3,
+                          ""reasoning"": ""Initial population of 100 requires multiple habitat modules for redundancy and growth capacity""
+                        },
+                        {
+                          ""structureType"": ""PowerPlant"",
+                          ""priority"": ""Critical"",
+                          ""quantity"": 2,
+                          ""reasoning"": ""Dual power generation for reliability in harsh environment""
+                        }
+                      ]
+                    }")]),
                 new UserMessage([new MessageContent($@"Determine structures needed:
 
 Planet Challenges: {string.Join(\", \", input.PlanetAnalysis.Challenges)}
@@ -414,7 +486,7 @@ What structures are needed?")])
         {
             result.Add(new StructureRequest(
                 item.GetProperty("structureType").GetString(),
-                item.GetProperty("priority").GetString(),
+                Enum.Parse<Priority>(item.GetProperty("priority").GetString()),
                 item.GetProperty("quantity").GetInt32(),
                 item.GetProperty("reasoning").GetString()
             ));
@@ -449,8 +521,7 @@ public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePl
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -463,9 +534,33 @@ public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePl
                     - Living space per person
                     - Emergency backup systems
                     
-                    Return JSON with: structureType, quantity, materials (list), 
-                    constructionDays, workerHours, prerequisites (list), 
-                    detailedSpecification (string).")]),
+                    Respond **only** with valid JSON.
+                    Do not include explanations, comments, or text outside the JSON object.
+                    Ensure the JSON is syntactically correct and can be parsed without errors.
+                    Use double quotes around all keys and string values.
+                    Use opening and closing curly braces.
+                    
+                    JSON structure that describes the fields:
+                    {
+                      ""structureType"": ""<structure type>"",
+                      ""quantity"": <number>,
+                      ""materials"": [""<material1>"", ""<material2>""],
+                      ""constructionDays"": <number>,
+                      ""workerHours"": <number>,
+                      ""prerequisites"": [""<prerequisite1>"", ""<prerequisite2>""],
+                      ""detailedSpecification"": ""<full specification text>""
+                    }
+
+                    Example:
+                    {
+                      ""structureType"": ""HabitatDome"",
+                      ""quantity"": 3,
+                      ""materials"": [""Reinforced titanium-alloy framework"", ""Multi-layer radiation shielding"", ""Transparent aluminum viewports"", ""Life support modules""],
+                      ""constructionDays"": 180,
+                      ""workerHours"": 12000,
+                      ""prerequisites"": [""Level foundation"", ""Power distribution network"", ""Water supply connection""],
+                      ""detailedSpecification"": ""Each habitat dome provides 500 cubic meters of living space with triple-redundant life support, radiation shielding rated for 2 Sv/year environments, and emergency atmosphere retention systems. Modular design allows expansion...""
+                    }")]),
                 new UserMessage([new MessageContent($@"Plan habitat domes:
 Quantity Needed: {input.Request.Quantity}
 Priority: {input.Request.Priority}
@@ -524,8 +619,7 @@ public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePla
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -537,7 +631,33 @@ public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePla
                     - Geothermal (if volcanic activity)
                     - Fusion (most reliable but complex)
                     
-                    Return detailed construction plan in JSON format.")]),
+                    Respond **only** with valid JSON.
+                    Do not include explanations, comments, or text outside the JSON object.
+                    Ensure the JSON is syntactically correct and can be parsed without errors.
+                    Use double quotes around all keys and string values.
+                    Use opening and closing curly braces.
+                    
+                    JSON structure that describes the fields:
+                    {
+                      ""structureType"": ""<structure type>"",
+                      ""quantity"": <number>,
+                      ""materials"": [""<material1>"", ""<material2>""],
+                      ""constructionDays"": <number>,
+                      ""workerHours"": <number>,
+                      ""prerequisites"": [""<prerequisite1>"", ""<prerequisite2>""],
+                      ""detailedSpecification"": ""<full specification text>""
+                    }
+
+                    Example:
+                    {
+                      ""structureType"": ""PowerPlant"",
+                      ""quantity"": 2,
+                      ""materials"": [""Fusion reactor cores"", ""Plasma containment vessels"", ""Power distribution transformers"", ""Cooling systems""],
+                      ""constructionDays"": 240,
+                      ""workerHours"": 18000,
+                      ""prerequisites"": [""Secure foundation with seismic dampening"", ""Coolant water supply"", ""Emergency shutdown systems""],
+                      ""detailedSpecification"": ""Dual fusion reactors each generating 500MW, with automatic load balancing and failover capability. Tritium-deuterium fuel requires minimal resupply. Redundant cooling loops prevent meltdown scenarios...""
+                    }")]),
                 new UserMessage([new MessageContent($@"Plan power generation:
 Quantity: {input.Request.Quantity}
 
@@ -577,8 +697,7 @@ public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePl
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -590,7 +709,33 @@ public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePl
                     - Water recycling systems
                     - Calorie production per person
                     
-                    Return detailed plan in JSON.")]),
+                    Respond **only** with valid JSON.
+                    Do not include explanations, comments, or text outside the JSON object.
+                    Ensure the JSON is syntactically correct and can be parsed without errors.
+                    Use double quotes around all keys and string values.
+                    Use opening and closing curly braces.
+                    
+                    JSON structure that describes the fields:
+                    {
+                      ""structureType"": ""<structure type>"",
+                      ""quantity"": <number>,
+                      ""materials"": [""<material1>"", ""<material2>""],
+                      ""constructionDays"": <number>,
+                      ""workerHours"": <number>,
+                      ""prerequisites"": [""<prerequisite1>"", ""<prerequisite2>""],
+                      ""detailedSpecification"": ""<full specification text>""
+                    }
+
+                    Example:
+                    {
+                      ""structureType"": ""Agriculture"",
+                      ""quantity"": 4,
+                      ""materials"": [""Hydroponic growth chambers"", ""LED grow lights"", ""Water recirculation systems"", ""Climate control units"", ""Seed vault""],
+                      ""constructionDays"": 120,
+                      ""workerHours"": 8000,
+                      ""prerequisites"": [""Power supply connection"", ""Water purification system"", ""Atmospheric CO2 scrubbing""],
+                      ""detailedSpecification"": ""Vertical farming towers with 12 levels each, producing 3000 calories per person per day through rotation of fast-growing crops. Automated nutrient delivery and harvesting systems minimize labor requirements...""
+                    }")]),
                 new UserMessage([new MessageContent($@"Plan agricultural facilities:
 Population: will grow to target size
 Quantity: {input.Request.Quantity}
@@ -646,8 +791,7 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
         // Create construction timeline by analyzing prerequisites
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -655,10 +799,45 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
                 new SystemMessage([new MessageContent(@"You are a construction project manager. Organize structures 
                     into construction phases based on prerequisites and efficiency. 
                     
-                    Return JSON with:
-                    - timeline: array of phases [{phaseNumber, name, structures[], durationDays}]
-                    - successFactors: string
-                    - riskAssessment: string")]),
+                    Respond **only** with valid JSON.
+                    Do not include explanations, comments, or text outside the JSON object.
+                    Ensure the JSON is syntactically correct and can be parsed without errors.
+                    Use double quotes around all keys and string values.
+                    Use opening and closing curly braces.
+                    
+                    JSON structure that describes the fields:
+                    {
+                      ""timeline"": [
+                        {
+                          ""phaseNumber"": <number>,
+                          ""name"": ""<phase name>"",
+                          ""structures"": [""<structure1>"", ""<structure2>""],
+                          ""durationDays"": <number>
+                        }
+                      ],
+                      ""successFactors"": ""<success factors description>"",
+                      ""riskAssessment"": ""<risk assessment description>""
+                    }
+
+                    Example:
+                    {
+                      ""timeline"": [
+                        {
+                          ""phaseNumber"": 1,
+                          ""name"": ""Foundation Infrastructure"",
+                          ""structures"": [""PowerPlant"", ""Water Processing""],
+                          ""durationDays"": 90
+                        },
+                        {
+                          ""phaseNumber"": 2,
+                          ""name"": ""Life Support Systems"",
+                          ""structures"": [""HabitatDome"", ""Agriculture""],
+                          ""durationDays"": 150
+                        }
+                      ],
+                      ""successFactors"": ""Critical success depends on reliable power generation from day one, establishing closed-loop water recycling, and achieving food self-sufficiency within 6 months."",
+                      ""riskAssessment"": ""Primary risks include construction delays due to extreme temperatures, potential equipment failures in high-radiation environment, and dependency on imported materials for first 2 years.""
+                    }")]),
                 new UserMessage([new MessageContent($@"Organize construction timeline:
 Structures: {JsonSerializer.Serialize(plans)}
 
