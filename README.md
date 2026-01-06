@@ -1,5 +1,9 @@
 # Build reliable agentic systems with Dapr Workflow
 
+This repo contains demos showcasing the patterns described in [Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) by Anthropic.
+
+The demos use Dapr Workflow to implement reliable multi-step processes and the Dapr Conversation API to interact with LLMs. In this case, Ollama is used as the local LLM provider.
+
 ## Prerequisites
 
 1. Install a container orchestration tool such as Docker Desktop or Podman.

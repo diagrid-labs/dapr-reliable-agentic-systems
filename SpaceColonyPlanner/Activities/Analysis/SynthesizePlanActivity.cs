@@ -36,7 +36,7 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
         // Create construction timeline by analyzing prerequisites
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -106,6 +106,7 @@ Create phased construction plan.")
         
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
+        Console.WriteLine(json);
         
         var timeline = new List<ConstructionPhase>();
         foreach (var phase in json.GetProperty("timeline").EnumerateArray())

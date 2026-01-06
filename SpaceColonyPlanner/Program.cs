@@ -8,6 +8,12 @@ using SpaceColonyPlanner.Activities.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNameCaseInsensitive = true;
+    options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+});
+
 builder.Services.AddDaprClient();
 builder.Services.AddDaprConversationClient();
 builder.Services.AddDaprWorkflow(options =>
