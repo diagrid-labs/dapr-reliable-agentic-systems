@@ -1,0 +1,68 @@
+### Plan a harsh desert planet colony
+POST http://localhost:5500/colony/plan
+Content-Type: application/json
+
+{
+  "planet": {
+    "planetId": "AR-558",
+    "name": "Arrakis Minor",
+    "conditions": {
+      "gravity": 0.9,
+      "atmosphereType": "Thin",
+      "temperature": 45,
+      "radiationLevel": 0.5,
+      "hasWater": false,
+      "dayLength": 1.2
+    },
+    "resources": {
+      "metals": true,
+      "rareEarths": true,
+      "water": false,
+      "organics": false,
+      "uranium": false,
+      "soilQuality": "Poor"
+    }
+  },
+  "requirements": {
+    "initialPopulation": 100,
+    "targetPopulation": 5500,
+    "purpose": "Mining",
+    "yearsToComplete": 5
+  }
+}
+
+### Plan an ice world research colony
+POST http://localhost:5500/colony/plan
+Content-Type: application/json
+
+{
+  "planet": {
+    "planetId": "HOTH-7",
+    "name": "Glacius Prime",
+    "conditions": {
+      "gravity": 1.1,
+      "atmosphereType": "Breathable",
+      "temperature": -40,
+      "radiationLevel": 0.1,
+      "hasWater": true,
+      "dayLength": 0.8
+    },
+    "resources": {
+      "metals": false,
+      "rareEarths": false,
+      "water": true,
+      "organics": true,
+      "uranium": false,
+      "soilQuality": "None"
+    }
+  },
+  "requirements": {
+    "initialPopulation": 50,
+    "targetPopulation": 500,
+    "purpose": "Research",
+    "yearsToComplete": 3
+  }
+}
+
+### Get colony plan status
+GET http://localhost:5500/colony/plan/colony-AR-558-638742234567890000

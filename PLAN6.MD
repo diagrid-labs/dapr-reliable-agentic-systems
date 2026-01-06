@@ -417,12 +417,26 @@ DECISION-MAKING PROCESS:
 - Request human approval for high-risk actions
 - Complete mission when objectives met
 
-Return JSON:
+Respond **only** with valid JSON.
+Do not include explanations, comments, or text outside the JSON object.
+Ensure the JSON is syntactically correct and can be parsed without errors.
+Use double quotes around all keys and string values.
+Use opening and closing curly braces.
+
+JSON structure that describes the fields:
 {
-  ""reasoning"": ""your thought process"",
-  ""chosenAction"": ""TOOL_NAME"",
-  ""actionParameters"": {parameters},
-  ""expectedOutcome"": ""what you expect to happen""
+  ""reasoning"": ""<your analytical thought process for choosing this action>"",
+  ""chosenAction"": ""<TOOL_NAME from available tools list>"",
+  ""actionParameters"": {<tool-specific parameters as object>},
+  ""expectedOutcome"": ""<what you expect this action to accomplish>""
+}
+
+Example:
+{
+  ""reasoning"": ""Mission just started. Need to understand debris field before planning capture strategy. Scanning will reveal debris locations, masses, and threat levels to inform prioritization."",
+  ""chosenAction"": ""SCAN_DEBRIS_FIELD"",
+  ""actionParameters"": {},
+  ""expectedOutcome"": ""Will receive list of debris objects with positions, velocities, and threat assessments to plan optimal capture sequence.""
 }";
 
         var previousActions = string.Join("\n", 
@@ -457,14 +471,23 @@ What is your next action?";
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(systemPrompt)]),
-                new UserMessage([new MessageContent(userPrompt)])
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [new MessageContent(systemPrompt)]
+                    },
+                    new UserMessage
+                    {
+                        Name = "AutonomousAgent",
+                        Content = [new MessageContent(userPrompt)]
+                    }
+                })
             ],
             options);
         
@@ -511,16 +534,47 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
         
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(@"Generate a realistic space debris field scan result. 
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [new MessageContent(@"Generate a realistic space debris field scan result. 
                     Include 3-8 debris objects with varied types, masses, and threat levels.
-                    Return JSON matching DebrisField schema.")]),
-                new UserMessage([new MessageContent("Scan debris field in LEO")])
+                    
+                    Respond **only** with valid JSON.
+                    Do not include explanations, comments, or text outside the JSON object.
+                    Ensure the JSON is syntactically correct and can be parsed without errors.
+                    Use double quotes around all keys and string values.
+                    Use opening and closing curly braces.
+                    
+                    JSON structure matching DebrisField schema:
+                    {
+                      ""debris"": [
+                        {
+                          ""id"": ""<unique debris identifier>"",
+                          ""mass"": <mass in kg>,
+                          ""type"": ""<Satellite|Rocket Stage|Fragment>"",
+                          ""position"": [<x km>, <y km>, <z km>],
+                          ""velocity"": [<vx km/s>, <vy km/s>, <vz km/s>],
+                          ""threatLevel"": ""<Low|Medium|High|Critical>"",
+                          ""isFragmented"": <true or false>
+                        }
+                      ],
+                      ""totalMass"": <sum of all debris mass>,
+                      ""riskLevel"": ""<Low|Medium|High|Critical>""
+                    }")]
+                    },
+                    new UserMessage
+                    {
+                        Name = "DebrisScanner",
+                        Content = [new MessageContent("Scan debris field in LEO")]
+                    }
+                })
             ],
             options);
         

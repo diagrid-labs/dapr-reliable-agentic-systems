@@ -240,7 +240,25 @@ translation for first contact scenarios. Your translations must:
 - Maintain the tone and formality level
 - Note any untranslatable concepts
 
-Provide both the translation and your reasoning for key choices.";
+Provide both the translation and your reasoning for key choices.
+
+Respond **only** with valid JSON.
+Do not include explanations, comments, or text outside the JSON object.
+Ensure the JSON is syntactically correct and can be parsed without errors.
+Use double quotes around all keys and string values.
+Use opening and closing curly braces.
+
+JSON structure that describes the fields:
+{
+  ""translation"": ""<translated text in English>"",
+  ""reasoning"": ""<explanation of key translation choices>""
+}
+
+Example:
+{
+  ""translation"": ""Live long and prosper. Infinite diversity in infinite combinations. We treasure our bond."",
+  ""reasoning"": ""Translated formal Vulcan greeting with emphasis on longevity and prosperity. IDIC philosophy referenced using 'infinite diversity' phrase. 'Taluhk' rendered as 'treasure' to convey emotional depth while maintaining diplomatic tone.""
+}";
 
         var userPrompt = $@"Translate this {input.Text.AlienSpecies} text to English:
 
@@ -255,14 +273,23 @@ Provide your translation and explain your reasoning for important translation ch
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(systemPrompt)]),
-                new UserMessage([new MessageContent(userPrompt)])
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [new MessageContent(systemPrompt)]
+                    },
+                    new UserMessage
+                    {
+                        Name = "Xenolinguist",
+                        Content = [new MessageContent(userPrompt)]
+                    }
+                })
             ],
             options);
         
@@ -301,7 +328,25 @@ public class RefineTranslationActivity : WorkflowActivity<RefineInput, Translati
     {
         var systemPrompt = @"You are an expert xenolinguist refining a translation based on 
 detailed editorial feedback. Your goal is to address the specific weaknesses identified 
-while maintaining the strengths of the current translation.";
+while maintaining the strengths of the current translation.
+
+Respond **only** with valid JSON.
+Do not include explanations, comments, or text outside the JSON object.
+Ensure the JSON is syntactically correct and can be parsed without errors.
+Use double quotes around all keys and string values.
+Use opening and closing curly braces.
+
+JSON structure that describes the fields:
+{
+  ""translation"": ""<improved translated text>"",
+  ""reasoning"": ""<explanation of changes made to address feedback>""
+}
+
+Example:
+{
+  ""translation"": ""May you live long and prosper. We embrace infinite diversity in infinite combinations. Our alliance is precious to us."",
+  ""reasoning"": ""Improved opening with 'May you' for more diplomatic tone. Changed 'infinite diversity' to 'We embrace infinite diversity' to show active participation in IDIC philosophy. Replaced 'treasure our bond' with 'alliance is precious' for clearer diplomatic context while maintaining emotional nuance.""
+}";
 
         var userPrompt = $@"Refine this translation based on evaluator feedback:
 
@@ -331,14 +376,23 @@ Return JSON with: translation (string), reasoning (string explaining changes mad
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(systemPrompt)]),
-                new UserMessage([new MessageContent(userPrompt)])
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [new MessageContent(systemPrompt)]
+                    },
+                    new UserMessage
+                    {
+                        Name = "TranslationRefiner",
+                        Content = [new MessageContent(userPrompt)]
+                    }
+                })
             ],
             options);
         
@@ -406,28 +460,55 @@ Translation (Iteration {input.CurrentTranslation.IterationNumber}):
 Translator's Reasoning:
 {input.CurrentTranslation.TranslatorReasoning}
 
-Provide comprehensive evaluation in JSON format:
+Respond **only** with valid JSON.
+Do not include explanations, comments, or text outside the JSON object.
+Ensure the JSON is syntactically correct and can be parsed without errors.
+Use double quotes around all keys and string values.
+Use opening and closing curly braces.
+
+JSON structure that describes the fields:
 {{
-  ""accuracyScore"": 0-10,
-  ""culturalNuanceScore"": 0-10,
-  ""idiomaticScore"": 0-10,
-  ""overallQuality"": 0-10,
-  ""strengths"": [""strength 1"", ""strength 2""],
-  ""weaknesses"": [""weakness 1"", ""weakness 2""],
-  ""detailedFeedback"": ""comprehensive feedback for improvement"",
-  ""meetsStandards"": true/false
+  ""accuracyScore"": <0-10 numeric score>,
+  ""culturalNuanceScore"": <0-10 numeric score>,
+  ""idiomaticScore"": <0-10 numeric score>,
+  ""overallQuality"": <0-10 numeric score>,
+  ""strengths"": [""<specific strength 1>"", ""<specific strength 2>""],
+  ""weaknesses"": [""<specific weakness 1>"", ""<specific weakness 2>""],
+  ""detailedFeedback"": ""<comprehensive actionable feedback>"",
+  ""meetsStandards"": <true or false boolean>
+}}
+
+Example:
+{{
+  ""accuracyScore"": 8.5,
+  ""culturalNuanceScore"": 7.0,
+  ""idiomaticScore"": 9.0,
+  ""overallQuality"": 8.0,
+  ""strengths"": [""Excellent handling of formal greeting conventions"", ""Natural English phrasing"", ""Preserved philosophical references""],
+  ""weaknesses"": [""IDIC reference could be more explicit"", ""Cultural context of longevity greeting slightly understated""],
+  ""detailedFeedback"": ""The translation successfully captures the formal diplomatic tone and core meaning. However, the IDIC philosophy reference would benefit from more explicit treatment to ensure non-Vulcan readers understand its significance. Consider expanding the greeting's emphasis on longevity as a core Vulcan value."",
+  ""meetsStandards"": true
 }}";
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.3f,
-            ResponseFormat = ConversationResponseFormat.Json
+            Temperature = 0.3
         };
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(systemPrompt)]),
-                new UserMessage([new MessageContent(userPrompt)])
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [new MessageContent(systemPrompt)]
+                    },
+                    new UserMessage
+                    {
+                        Name = "TranslationEvaluator",
+                        Content = [new MessageContent(userPrompt)]
+                    }
+                })
             ],
             options);
         

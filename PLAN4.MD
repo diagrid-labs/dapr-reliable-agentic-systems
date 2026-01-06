@@ -326,7 +326,12 @@ Resources:
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(@"You are a planetary colonization expert. Analyze planets for 
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a planetary colonization expert. Analyze planets for 
                     colonization challenges and opportunities. Consider:
                     - Environmental hazards (radiation, temperature, atmosphere)
                     - Available resources
@@ -351,8 +356,14 @@ Resources:
                       ""challenges"": [""High radiation levels require heavy shielding"", ""Thin atmosphere needs pressurized habitats""],
                       ""opportunities"": [""Rich metal deposits enable local manufacturing"", ""Low gravity reduces structural requirements""],
                       ""recommendedApproach"": ""Focus on underground construction to leverage natural radiation protection while exploiting mineral resources for building materials.""
-                    }")]),
-                new UserMessage([new MessageContent($@"Analyze planet for colonization:
+                    }")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "PlanetaryAnalyst",
+                        Content = [
+                            new MessageContent($@"Analyze planet for colonization:
 Planet: {input.Name}
 Gravity: {input.Conditions.Gravity}g
 Atmosphere: {input.Conditions.AtmosphereType}
@@ -367,7 +378,10 @@ Resources:
 - Water: {input.Resources.Water}
 - Organics: {input.Resources.Organics}
 - Uranium: {input.Resources.Uranium}
-- Soil: {input.Resources.SoilQuality}")])
+- Soil: {input.Resources.SoilQuality}")
+                        ]
+                    }
+                })
             ],
             options);
         
@@ -412,7 +426,12 @@ public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresI
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(@"You are a colony planning AI. Determine what structures are 
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a colony planning AI. Determine what structures are 
                     needed for a successful colony. Consider:
                     - Environmental protection needs
                     - Resource availability
@@ -461,8 +480,14 @@ public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresI
                           ""reasoning"": ""Dual power generation for reliability in harsh environment""
                         }
                       ]
-                    }")]),
-                new UserMessage([new MessageContent($@"Determine structures needed:
+                    }")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "ColonyPlanner",
+                        Content = [
+                            new MessageContent($@"Determine structures needed:
 
 Planet Challenges: {string.Join(\", \", input.PlanetAnalysis.Challenges)}
 Planet Opportunities: {string.Join(\", \", input.PlanetAnalysis.Opportunities)}
@@ -472,7 +497,10 @@ Colony Requirements:
 - Purpose: {input.Requirements.Purpose}
 - Timeline: {input.Requirements.YearsToComplete} years
 
-What structures are needed?")])
+What structures are needed?")
+                        ]
+                    }
+                })
             ],
             options);
         
@@ -526,7 +554,12 @@ public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePl
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(@"You are a habitat dome construction specialist. Design detailed 
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a habitat dome construction specialist. Design detailed 
                     plans for pressurized living environments. Consider:
                     - Atmospheric containment for planet conditions
                     - Radiation shielding requirements
@@ -560,8 +593,14 @@ public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePl
                       ""workerHours"": 12000,
                       ""prerequisites"": [""Level foundation"", ""Power distribution network"", ""Water supply connection""],
                       ""detailedSpecification"": ""Each habitat dome provides 500 cubic meters of living space with triple-redundant life support, radiation shielding rated for 2 Sv/year environments, and emergency atmosphere retention systems. Modular design allows expansion...""
-                    }")]),
-                new UserMessage([new MessageContent($@"Plan habitat domes:
+                    }")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "HabitatDomeSpecialist",
+                        Content = [
+                            new MessageContent($@"Plan habitat domes:
 Quantity Needed: {input.Request.Quantity}
 Priority: {input.Request.Priority}
 
@@ -572,7 +611,10 @@ Planet Conditions:
 
 Challenges: {string.Join(", ", input.Analysis.Challenges)}
 
-Provide detailed construction plan.")])
+Provide detailed construction plan.")
+                        ]
+                    }
+                })
             ],
             options);
         
@@ -624,7 +666,12 @@ public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePla
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(@"You are a power generation specialist. Design power plants 
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a power generation specialist. Design power plants 
                     appropriate for planetary conditions. Options:
                     - Solar (if adequate sunlight)
                     - Nuclear (if uranium available)
@@ -657,8 +704,14 @@ public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePla
                       ""workerHours"": 18000,
                       ""prerequisites"": [""Secure foundation with seismic dampening"", ""Coolant water supply"", ""Emergency shutdown systems""],
                       ""detailedSpecification"": ""Dual fusion reactors each generating 500MW, with automatic load balancing and failover capability. Tritium-deuterium fuel requires minimal resupply. Redundant cooling loops prevent meltdown scenarios...""
-                    }")]),
-                new UserMessage([new MessageContent($@"Plan power generation:
+                    }")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "PowerGenerationSpecialist",
+                        Content = [
+                            new MessageContent($@"Plan power generation:
 Quantity: {input.Request.Quantity}
 
 Planet:
@@ -666,7 +719,10 @@ Planet:
 - Uranium Available: {input.Planet.Resources.Uranium}
 - Temperature: {input.Planet.Conditions.Temperature}°C
 
-Design appropriate power plant(s).")])
+Design appropriate power plant(s).")
+                        ]
+                    }
+                })
             ],
             options);
         
@@ -702,7 +758,12 @@ public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePl
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(@"You are an agricultural engineer specializing in off-world 
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are an agricultural engineer specializing in off-world 
                     farming. Design food production facilities considering:
                     - Hydroponic vs soil-based farming
                     - Artificial lighting needs
@@ -735,8 +796,14 @@ public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePl
                       ""workerHours"": 8000,
                       ""prerequisites"": [""Power supply connection"", ""Water purification system"", ""Atmospheric CO2 scrubbing""],
                       ""detailedSpecification"": ""Vertical farming towers with 12 levels each, producing 3000 calories per person per day through rotation of fast-growing crops. Automated nutrient delivery and harvesting systems minimize labor requirements...""
-                    }")]),
-                new UserMessage([new MessageContent($@"Plan agricultural facilities:
+                    }")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "AgriculturalEngineer",
+                        Content = [
+                            new MessageContent($@"Plan agricultural facilities:
 Population: will grow to target size
 Quantity: {input.Request.Quantity}
 
@@ -745,7 +812,10 @@ Planet:
 - Soil Quality: {input.Planet.Resources.SoilQuality}
 - Organics: {input.Planet.Resources.Organics}
 
-Design food production system.")])
+Design food production system.")
+                        ]
+                    }
+                })
             ],
             options);
         
@@ -796,7 +866,12 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
         
         var response = await _conversationClient.ConverseAsync(
             [
-                new SystemMessage([new MessageContent(@"You are a construction project manager. Organize structures 
+                new ConversationInput(new List<IConversationMessage>
+                {
+                    new SystemMessage
+                    {
+                        Content = [
+                            new MessageContent(@"You are a construction project manager. Organize structures 
                     into construction phases based on prerequisites and efficiency. 
                     
                     Respond **only** with valid JSON.
@@ -837,11 +912,20 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
                       ],
                       ""successFactors"": ""Critical success depends on reliable power generation from day one, establishing closed-loop water recycling, and achieving food self-sufficiency within 6 months."",
                       ""riskAssessment"": ""Primary risks include construction delays due to extreme temperatures, potential equipment failures in high-radiation environment, and dependency on imported materials for first 2 years.""
-                    }")]),
-                new UserMessage([new MessageContent($@"Organize construction timeline:
-Structures: {JsonSerializer.Serialize(plans)}
+                    }")
+                        ]
+                    },
+                    new UserMessage
+                    {
+                        Name = "ProjectManager",
+                        Content = [
+                            new MessageContent($@"Organize construction timeline:
+Structures: {JsonSerializer.Serialize(input.StructurePlans)}
 
-Create phased construction plan.")])
+Create phased construction plan.")
+                        ]
+                    }
+                })
             ],
             options);
         
