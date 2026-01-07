@@ -8,9 +8,9 @@ demos:
       - action: executeTerminalCommand
         terminalId: ollama-server
         insertTypingMode: character-by-character
-        insertTypingSpeed: 75
+        insertTypingSpeed: 50
         autoExecute: true
-        command: ollama serve
+        command: OLLAMA_CONTEXT_LENGTH=8192 ollama serve
     icons:
       start: terminal
       end: ''
@@ -33,7 +33,7 @@ demos:
         command: docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
         terminalId: diagrid-dashboard
         insertTypingMode: character-by-character
-        insertTypingSpeed: 75
+        insertTypingSpeed: 50
     icons:
       start: terminal
       end: ''
