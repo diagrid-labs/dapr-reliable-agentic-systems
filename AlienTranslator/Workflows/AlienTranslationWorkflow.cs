@@ -21,28 +21,33 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
             translation = input.RefinedTranslation;
         }
 
+        var translations = input.Translations.Append(translation).ToList();
+
         var evaluation = await context.CallActivityAsync<Evaluation>(
             nameof(EvaluateTranslationActivity),
             new EvaluateInput(input.AlienText, translation));
 
         var evaluations = input.Evaluations.Append(evaluation).ToList();
+        context.SetCustomStatus($"Evaluations: {evaluations.Count}");
 
         if (evaluation.MeetsStandards && evaluation.OverallQuality >= QUALITY_THRESHOLD)
         {
             return new AlienTranslationWorkflowOutput(
                 input.AlienText.TextId,
+                translations,
                 evaluations,
                 translation,
                 evaluation,
-                input.Evaluations.Count + 1,
+                input.Evaluations.Count,
                 GenerateImprovementSummary(evaluations)
             );
         }
 
-        if (evaluations.Count == MAX_ITERATIONS - 1)
+        if (evaluations.Count == MAX_ITERATIONS)
         {
             return new AlienTranslationWorkflowOutput(
                 input.AlienText.TextId,
+                translations,
                 evaluations,
                 translation,
                 evaluation,
@@ -64,6 +69,7 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
             // add refined translation and evaluation to new record 
             input = new AlienTranslationWorkflowInput(
                 input.AlienText,
+                translations,
                 evaluations,
                 refinedTranslation);
 

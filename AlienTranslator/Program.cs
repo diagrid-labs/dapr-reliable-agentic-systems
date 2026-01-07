@@ -1,5 +1,4 @@
 using Dapr.AI.Conversation.Extensions;
-using Dapr.Client;
 using Dapr.Workflow;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -12,7 +11,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-builder.Services.AddDaprClient();
 builder.Services.AddDaprConversationClient();
 builder.Services.AddDaprWorkflow(options =>
 {
@@ -26,20 +24,16 @@ var app = builder.Build();
 
 app.MapPost("/translate", async (
     AlienText text,
-    DaprWorkflowClient workflowClient,
-    DaprClient daprClient) =>
+    DaprWorkflowClient workflowClient) =>
 {
     var instanceId = $"translation-{text.TextId}";
-    //Console.WriteLine($"LOG Received text for translation: {text}");
-    
-    await daprClient.SaveStateAsync(
-        "statestore",
-        $"text-{text.TextId}",
-        text);
     
     var input = new AlienTranslationWorkflowInput(
         text,
-        new List<Evaluation>());
+        new List<Translation>(),
+        new List<Evaluation>()
+    );
+
     await workflowClient.ScheduleNewWorkflowAsync(
         nameof(AlienTranslationWorkflow),
         instanceId,
@@ -67,42 +61,6 @@ app.MapGet("/translate/{instanceId}", async (
         createdAt = state.CreatedAt,
         completedAt = state.LastUpdatedAt
     });
-});
-
-app.MapGet("/translate/{instanceId}/iteration/{iterationNumber}", async (
-    string instanceId,
-    int iterationNumber,
-    DaprWorkflowClient workflowClient) =>
-{
-    var state = await workflowClient.GetWorkflowStateAsync(instanceId);
-    
-    if (state == null || state.ReadOutputAs<AlienTranslationWorkflowOutput>() == null)
-        return Results.NotFound();
-    
-    var result = state.ReadOutputAs<AlienTranslationWorkflowOutput>()!;
-    var evaluation = result.Evaluations.FirstOrDefault(e => e.IterationNumber == iterationNumber);
-    
-    if (evaluation == null)
-        return Results.NotFound();
-    
-    return Results.Ok(new
-    {
-        evaluation
-    });
-});
-
-app.MapGet("/translations/{textId}", async (
-    string textId,
-    DaprClient daprClient) =>
-{
-    var translation = await daprClient.GetStateAsync<AlienText>(
-        "statestore",
-        textId);
-    
-    if (translation == null)
-        return Results.NotFound();
-    
-    return Results.Ok(translation);
 });
 
 app.Run();

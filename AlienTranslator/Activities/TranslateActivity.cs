@@ -58,7 +58,7 @@ Provide your translation and explain your reasoning for important translation ch
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.75
         };
         
         var response = await _conversationClient.ConverseAsync(

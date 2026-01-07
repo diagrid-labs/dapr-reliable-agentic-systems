@@ -8,6 +8,7 @@ public enum ContextType
 
 public record AlienTranslationWorkflowInput(
     AlienText AlienText,
+    List<Translation> Translations,
     List<Evaluation> Evaluations,
     Translation? RefinedTranslation = null
 );
@@ -42,6 +43,7 @@ public record Evaluation(
 
 public record AlienTranslationWorkflowOutput(
     string TextId,
+    List<Translation> Translations,
     List<Evaluation> Evaluations,
     Translation FinalTranslation,
     Evaluation FinalEvaluation,
