@@ -1,6 +1,6 @@
 version: 1
 common:
-  resourcesPath: Resources
+  resourcesPath: ../Resources
   appLogDestination: fileAndConsole
   daprdLogDestination: fileAndConsole
 apps:

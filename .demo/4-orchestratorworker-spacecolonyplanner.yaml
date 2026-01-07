@@ -42,6 +42,7 @@ demos:
       - action: executeTerminalCommand
         command: cd ..
         autoExecute: true
+        terminalId: dapr-run
     icons:
       start: terminal
       end: ''

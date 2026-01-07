@@ -17,6 +17,8 @@ public class RefineTranslationActivity : WorkflowActivity<RefineInput, Translati
         WorkflowActivityContext context, 
         RefineInput input)
     {
+        Console.WriteLine($"LOG RefineTranslationActivity {input}");
+        
         var systemPrompt = @"You are an expert xenolinguist refining a translation based on 
 detailed editorial feedback. Your goal is to address the specific weaknesses identified 
 while maintaining the strengths of the current translation.

@@ -3,7 +3,7 @@ POST http://localhost:5500/translate
 Content-Type: application/json
 
 {
-  "textId": "VULN-DIPL-001",
+  "textId": "VULN-DIPL-{{$guid}}",
   "alienSpecies": "Vulcan",
   "originalText": "Dif-tor heh smusma. Kal-tor pan shar. Taluhk nash-veh k'dular.",
   "context": "Diplomatic",
@@ -20,7 +20,7 @@ POST http://localhost:5500/translate
 Content-Type: application/json
 
 {
-  "textId": "KLING-LIT-042",
+  "textId": "KLING-LIT-{{$guid}}",
   "alienSpecies": "Klingon",
   "originalText": "Qapla'! qaStaHvIS wa' ram loS SaD Hugh SIjlaH qetbogh loD.",
   "context": "Literary",
@@ -38,7 +38,7 @@ POST http://localhost:5500/translate
 Content-Type: application/json
 
 {
-  "textId": "ROM-CAS-015",
+  "textId": "ROM-CAS-{{$guid}}",
   "alienSpecies": "Romulan",
   "originalText": "Jolan'tru. Mnei sahe nnea. Lhhei s'dena khir.",
   "context": "Casual",

@@ -10,7 +10,7 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
         AlienTranslationWorkflowInput input)
     {
         Translation translation;
-        if (input.Evaluations == null)
+        if (input.Evaluations.Count == 0)
         {
             translation = await context.CallActivityAsync<Translation>(
                 nameof(TranslateActivity),

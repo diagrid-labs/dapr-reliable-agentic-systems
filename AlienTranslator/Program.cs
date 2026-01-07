@@ -30,16 +30,20 @@ app.MapPost("/translate", async (
     DaprClient daprClient) =>
 {
     var instanceId = $"translation-{text.TextId}";
+    //Console.WriteLine($"LOG Received text for translation: {text}");
     
     await daprClient.SaveStateAsync(
         "statestore",
         $"text-{text.TextId}",
         text);
     
+    var input = new AlienTranslationWorkflowInput(
+        text,
+        new List<Evaluation>());
     await workflowClient.ScheduleNewWorkflowAsync(
         nameof(AlienTranslationWorkflow),
         instanceId,
-        text);
+        input);
     
     return Results.Accepted($"/translate/{instanceId}", new { instanceId });
 });
