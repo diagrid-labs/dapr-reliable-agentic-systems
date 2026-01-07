@@ -57,11 +57,19 @@ This is analogous to Picard's careful approach to diplomacy—going through mult
 ### Step 2: Core Models
 **AlienText.cs**
 ```csharp
+public enum ContextType
+{
+    Diplomatic,
+    Scientific,
+    Literary,
+    Casual
+}
+
 public record AlienText(
     string TextId,
     string AlienSpecies,
     string OriginalText,
-    string Context, // "Diplomatic", "Scientific", "Literary", "Casual"
+    ContextType Context,
     Dictionary<string, string> KnownVocabulary, // word -> meaning
     string CulturalNotes
 );
@@ -538,8 +546,17 @@ Example:
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Client;
 using Dapr.Workflow;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure JSON serialization
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNameCaseInsensitive = true;
+    options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+});
 
 builder.Services.AddDaprClient();
 builder.Services.AddDaprConversationClient();
