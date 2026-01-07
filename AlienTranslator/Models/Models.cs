@@ -9,8 +9,7 @@ public enum ContextType
 public record AlienTranslationWorkflowInput(
     AlienText AlienText,
     List<Translation> Translations,
-    List<Evaluation> Evaluations,
-    Translation? RefinedTranslation = null
+    List<Evaluation> Evaluations
 );
 
 public record AlienText(

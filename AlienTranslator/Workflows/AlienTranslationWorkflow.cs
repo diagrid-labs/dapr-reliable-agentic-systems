@@ -14,11 +14,18 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
         {
             translation = await context.CallActivityAsync<Translation>(
                 nameof(TranslateActivity),
-                new TranslateInput(input.AlienText, null, 0));
+                new TranslateInput(input.AlienText, null, input.Evaluations.Count + 1));
 
-        } else
+        }
+        else
         {
-            translation = input.RefinedTranslation;
+            translation = await context.CallActivityAsync<Translation>(
+                nameof(RefineTranslationActivity),
+                new RefineInput(
+                    input.AlienText,
+                    input.Translations.Last(),
+                    input.Evaluations.Last(),
+                    input.Evaluations.Count + 1));
         }
 
         var translations = input.Translations.Append(translation).ToList();
@@ -58,20 +65,11 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
         }
         else
         {
-            var refinedTranslation = await context.CallActivityAsync<Translation>(
-                nameof(RefineTranslationActivity),
-                new RefineInput(
-                    input.AlienText,
-                    translation,
-                    evaluation,
-                    evaluations.Count + 1));
-
-            // add refined translation and evaluation to new record 
+            // Continue to next iteration
             input = new AlienTranslationWorkflowInput(
                 input.AlienText,
                 translations,
-                evaluations,
-                refinedTranslation);
+                evaluations);
 
             context.ContinueAsNew(input);
         }
