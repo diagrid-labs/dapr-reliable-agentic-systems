@@ -16,15 +16,14 @@ The evaluator-optimizer pattern separates translation generation from quality ev
 graph TD
     Start([Workflow Start: AlienText]) --> Check1{First Iteration?}
     Check1 -->|Yes| A1[TranslateActivity]
-    Check1 -->|No| UseRefined[Use Refined Translation]
+    Check1 -->|No| A3[RefineTranslationActivity]
     A1 --> A2[EvaluateTranslationActivity]
-    UseRefined --> A2
+    A3 --> A2
     A2 --> Gate1{Quality ≥ 8.0 AND<br/>Meets Standards?}
     Gate1 -->|Yes| Success([Return Success Result])
     Gate1 -->|No| Gate2{Max Iterations<br/>Reached?}
     Gate2 -->|Yes| MaxReached([Return Best Effort Result])
-    Gate2 -->|No| A3[RefineTranslationActivity]
-    A3 --> Restart[ContinueAsNew<br/>Restart Workflow]
+    Gate2 -->|No| Restart[ContinueAsNew<br/>Restart Workflow]
     Restart -.-> Check1
     
     style Start fill:#e1f5ff
