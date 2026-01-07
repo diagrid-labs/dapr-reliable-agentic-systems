@@ -38,7 +38,7 @@ The probe has **autonomy**—it makes its own decisions about exploration paths 
   - appsettings.json
   - dapr.yaml
   /Workflows
-    - AutonomousAgentWorkflow.cs
+    - SpaceDebrisCleanupWorkflow.cs
   /Activities
     /Tools
       - ScanDebrisFieldActivity.cs
@@ -51,6 +51,7 @@ The probe has **autonomy**—it makes its own decisions about exploration paths 
     /Agent
       - AgentReasoningActivity.cs
   /Models
+    - Enums.cs
     - MissionParameters.cs
     - DebrisField.cs
     - AgentState.cs
@@ -65,15 +66,49 @@ The probe has **autonomy**—it makes its own decisions about exploration paths 
 ```
 
 ### Step 2: Core Models
+**Enums.cs**
+```csharp
+public enum OrbitalZone
+{
+    LEO,  // Low Earth Orbit
+    MEO,  // Medium Earth Orbit
+    GEO   // Geostationary Earth Orbit
+}
+
+public enum DebrisType
+{
+    Satellite,
+    RocketStage,
+    Fragment
+}
+
+public enum ThreatLevel
+{
+    Low,
+    Medium,
+    High,
+    Critical
+}
+
+public enum MissionPhase
+{
+    Planning,
+    Executing,
+    Monitoring,
+    Complete
+}
+```
+
 **MissionParameters.cs**
 ```csharp
 public record MissionParameters(
     string MissionId,
-    string OrbitalZone, // "LEO", "MEO", "GEO"
+    OrbitalZone OrbitalZone,
     int MaxDebrisPieces,
     double FuelBudget, // kg
     int MaxMissionHours,
-    bool RequireHumanApproval // for high-risk maneuvers
+    bool RequireHumanApproval, // for high-risk maneuvers
+    int StepNumber = 0 // Current step in the workflow
 );
 
 public record DebrisField(
@@ -85,15 +120,15 @@ public record DebrisField(
 public record DebrisObject(
     string Id,
     double Mass, // kg
-    string Type, // "Satellite", "Rocket Stage", "Fragment"
+    DebrisType Type,
     double[] Position, // [x, y, z] km
     double[] Velocity, // [vx, vy, vz] km/s
-    string ThreatLevel, // "Low", "Medium", "High", "Critical"
+    ThreatLevel ThreatLevel,
     bool IsFragmented
 );
 
 public record AgentState(
-    string CurrentPhase, // "Planning", "Executing", "Monitoring", "Complete"
+    MissionPhase CurrentPhase,
     double[] Position, // Current position
     double FuelRemaining,
     List<string> CapturedDebris,
@@ -133,132 +168,139 @@ public record MissionResult(
 ```
 
 ### Step 3: Autonomous Agent Workflow
-**AutonomousAgentWorkflow.cs**
+**SpaceDebrisCleanupWorkflow.cs**
 ```csharp
-public class AutonomousAgentWorkflow : Workflow<MissionParameters, MissionResult>
+public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInput, MissionResult>
 {
     private const int MAX_STEPS = 50; // Prevent infinite loops
     
     public override async Task<MissionResult> RunAsync(
         WorkflowContext context, 
-        MissionParameters input)
+        SpaceDebrisCleanupWorkflowInput input)
     {
-        // Initialize agent state
-        var agentState = new AgentState(
-            CurrentPhase: "Planning",
+        // Get or initialize agent state
+        var agentState = input.AgentState ?? new AgentState(
+            CurrentPhase: MissionPhase.Planning,
             Position: new[] { 0.0, 0.0, 0.0 },
-            FuelRemaining: input.FuelBudget,
+            FuelRemaining: input.MissionParameters.FuelBudget,
             CapturedDebris: new List<string>(),
             DecisionHistory: new List<string>(),
-            StepCount: 0,
+            StepCount: input.MissionParameters.StepNumber,
             Memory: new Dictionary<string, object>()
         );
         
-        var decisions = new List<AgentDecision>();
-        var toolCalls = new List<ToolCall>();
+        agentState = agentState with { StepCount = input.MissionParameters.StepNumber };
+        context.SetCustomStatus($"Step: {input.MissionParameters.StepNumber}/{MAX_STEPS}");
         
-        // AUTONOMOUS AGENT LOOP
-        // Agent decides what to do next until mission complete
-        for (int step = 0; step < MAX_STEPS; step++)
+        // Agent reasoning: decide next action
+        var decision = await context.CallActivityAsync<AgentDecision>(
+            nameof(AgentReasoningActivity),
+            new ReasoningInput(input.MissionParameters, agentState, input.ToolCalls));
+        
+        var decisions = input.Decisions.Append(decision).ToList();
+        
+        // Check if agent decided mission is complete
+        if (decision.ChosenAction == "COMPLETE_MISSION")
         {
-            agentState = agentState with { StepCount = step };
+            var finalReport = await context.CallActivityAsync<string>(
+                nameof(GenerateReportActivity),
+                new { agentState, decisions, toolCalls = input.ToolCalls });
             
-            // Agent reasoning: decide next action
-            var decision = await context.CallActivityAsync<AgentDecision>(
-                nameof(AgentReasoningActivity),
-                new ReasoningInput(input, agentState, toolCalls));
-            
-            decisions.Add(decision);
-            
-            // Check if agent decided mission is complete
-            if (decision.ChosenAction == "COMPLETE_MISSION")
-            {
-                var finalReport = await context.CallActivityAsync<string>(
-                    nameof(GenerateReportActivity),
-                    new { agentState, decisions, toolCalls });
-                
-                return new MissionResult(
-                    input.MissionId,
-                    Success: true,
-                    DebrisCaptured: agentState.CapturedDebris.Count,
-                    FuelUsed: input.FuelBudget - agentState.FuelRemaining,
-                    TotalSteps: step + 1,
-                    Decisions: decisions,
-                    ToolCalls: toolCalls,
-                    Summary: finalReport,
-                    LessonsLearned: ExtractLessons(decisions, toolCalls)
-                );
-            }
-            
-            // Execute chosen tool based on agent's decision
-            ToolCall toolCall = decision.ChosenAction switch
-            {
-                "SCAN_DEBRIS_FIELD" => await ExecuteTool<DebrisField>(
-                    context, nameof(ScanDebrisFieldActivity), 
-                    decision.ActionParameters),
-                
-                "ANALYZE_DEBRIS" => await ExecuteTool<DebrisAnalysis>(
-                    context, nameof(AnalyzeDebrisActivity), 
-                    decision.ActionParameters),
-                
-                "MOVE_TO_LOCATION" => await ExecuteTool<NavigationResult>(
-                    context, nameof(MoveToLocationActivity), 
-                    decision.ActionParameters),
-                
-                "CHECK_FUEL" => await ExecuteTool<FuelStatus>(
-                    context, nameof(CheckFuelActivity), 
-                    decision.ActionParameters),
-                
-                "CAPTURE_DEBRIS" => await ExecuteTool<CaptureResult>(
-                    context, nameof(CaptureDebrisActivity), 
-                    decision.ActionParameters),
-                
-                "REQUEST_HUMAN_APPROVAL" => await ExecuteTool<ApprovalResult>(
-                    context, nameof(RequestHumanApprovalActivity), 
-                    decision.ActionParameters),
-                
-                _ => new ToolCall(
-                    "UNKNOWN", 
-                    decision.ActionParameters, 
-                    null, 
-                    false, 
-                    $"Unknown action: {decision.ChosenAction}")
-            };
-            
-            toolCalls.Add(toolCall);
-            
-            // Update agent state based on tool result
-            agentState = UpdateAgentState(agentState, decision, toolCall);
-            
-            // Check for failure conditions
-            if (agentState.FuelRemaining <= 0)
-            {
-                return new MissionResult(
-                    input.MissionId,
-                    Success: false,
-                    DebrisCaptured: agentState.CapturedDebris.Count,
-                    FuelUsed: input.FuelBudget,
-                    TotalSteps: step + 1,
-                    Decisions: decisions,
-                    ToolCalls: toolCalls,
-                    Summary: "Mission aborted - fuel exhausted",
-                    LessonsLearned: ExtractLessons(decisions, toolCalls)
-                );
-            }
+            return new MissionResult(
+                input.MissionParameters.MissionId,
+                Success: true,
+                DebrisCaptured: agentState.CapturedDebris.Count,
+                FuelUsed: input.MissionParameters.FuelBudget - agentState.FuelRemaining,
+                TotalSteps: input.MissionParameters.StepNumber + 1,
+                Decisions: decisions,
+                ToolCalls: input.ToolCalls,
+                Summary: finalReport,
+                LessonsLearned: ExtractLessons(decisions, input.ToolCalls)
+            );
         }
         
-        // Max steps reached
-        return new MissionResult(
-            input.MissionId,
-            Success: false,
-            DebrisCaptured: agentState.CapturedDebris.Count,
-            FuelUsed: input.FuelBudget - agentState.FuelRemaining,
-            TotalSteps: MAX_STEPS,
-            Decisions: decisions,
-            ToolCalls: toolCalls,
-            Summary: "Mission timeout - max steps reached",
-            LessonsLearned: ExtractLessons(decisions, toolCalls)
+        // Execute chosen tool based on agent's decision
+        ToolCall toolCall = decision.ChosenAction switch
+        {
+            "SCAN_DEBRIS_FIELD" => await ExecuteTool<DebrisField>(
+                context, nameof(ScanDebrisFieldActivity), 
+                decision.ActionParameters),
+            
+            "ANALYZE_DEBRIS" => await ExecuteTool<DebrisAnalysis>(
+                context, nameof(AnalyzeDebrisActivity), 
+                decision.ActionParameters),
+            
+            "MOVE_TO_LOCATION" => await ExecuteTool<NavigationResult>(
+                context, nameof(MoveToLocationActivity), 
+                decision.ActionParameters),
+            
+            "CHECK_FUEL" => await ExecuteTool<FuelStatus>(
+                context, nameof(CheckFuelActivity), 
+                decision.ActionParameters),
+            
+            "CAPTURE_DEBRIS" => await ExecuteTool<CaptureResult>(
+                context, nameof(CaptureDebrisActivity), 
+                decision.ActionParameters),
+            
+            "REQUEST_HUMAN_APPROVAL" => await ExecuteTool<ApprovalResult>(
+                context, nameof(RequestHumanApprovalActivity), 
+                decision.ActionParameters),
+            
+            _ => new ToolCall(
+                "UNKNOWN", 
+                decision.ActionParameters, 
+                null, 
+                false, 
+                $"Unknown action: {decision.ChosenAction}")
+        };
+        
+        var toolCalls = input.ToolCalls.Append(toolCall).ToList();
+        
+        // Update agent state based on tool result
+        agentState = UpdateAgentState(agentState, decision, toolCall);
+        
+        // Check for failure conditions
+        if (agentState.FuelRemaining <= 0)
+        {
+            return new MissionResult(
+                input.MissionParameters.MissionId,
+                Success: false,
+                DebrisCaptured: agentState.CapturedDebris.Count,
+                FuelUsed: input.MissionParameters.FuelBudget,
+                TotalSteps: input.MissionParameters.StepNumber + 1,
+                Decisions: decisions,
+                ToolCalls: toolCalls,
+                Summary: "Mission aborted - fuel exhausted",
+                LessonsLearned: ExtractLessons(decisions, toolCalls)
+            );
+        }
+        
+        // Check if max steps reached
+        if (input.MissionParameters.StepNumber + 1 >= MAX_STEPS)
+        {
+            return new MissionResult(
+                input.MissionParameters.MissionId,
+                Success: false,
+                DebrisCaptured: agentState.CapturedDebris.Count,
+                FuelUsed: input.MissionParameters.FuelBudget - agentState.FuelRemaining,
+                TotalSteps: MAX_STEPS,
+                Decisions: decisions,
+                ToolCalls: toolCalls,
+                Summary: "Mission timeout - max steps reached",
+                LessonsLearned: ExtractLessons(decisions, toolCalls)
+            );
+        }
+        
+        // Continue to next step
+        var nextInput = new SpaceDebrisCleanupWorkflowInput(
+            input.MissionParameters with { StepNumber = input.MissionParameters.StepNumber + 1 },
+            agentState,
+            decisions,
+            toolCalls
         );
+        
+        context.ContinueAsNew(nextInput);
+        return null; // This line will never be reached
     }
     
     private async Task<ToolCall> ExecuteTool<TResult>(
@@ -350,6 +392,20 @@ public class AutonomousAgentWorkflow : Workflow<MissionParameters, MissionResult
         }
         
         return lessons;
+    }
+}
+
+public record SpaceDebrisCleanupWorkflowInput(
+    MissionParameters MissionParameters,
+    AgentState? AgentState,
+    List<AgentDecision> Decisions,
+    List<ToolCall> ToolCalls
+)
+{
+    // Constructor for initial workflow start
+    public SpaceDebrisCleanupWorkflowInput(MissionParameters missionParameters)
+        : this(missionParameters, null, new List<AgentDecision>(), new List<ToolCall>())
+    {
     }
 }
 
@@ -707,18 +763,26 @@ public class RequestHumanApprovalActivity : WorkflowActivity<Dictionary<string, 
 ### Step 6: API Endpoints
 **Program.cs**
 ```csharp
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Client;
 using Dapr.Workflow;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure JSON options to handle enum conversion
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
 builder.Services.AddDaprClient();
 builder.Services.AddDaprConversationClient();
 builder.Services.AddDaprWorkflow(options =>
 {
-    options.RegisterWorkflow<AutonomousAgentWorkflow>();
-    options.RegisterActivity<AgentReasoningActivity>();
+    options.RegisterWorkflow<SpaceDebrisCleanupWorkflow>();
+    options.RegisterActivity<AgentReasoningActivity>;
     options.RegisterActivity<ScanDebrisFieldActivity>();
     options.RegisterActivity<AnalyzeDebrisActivity>();
     options.RegisterActivity<CaptureDebrisActivity>();
@@ -736,11 +800,12 @@ app.MapPost("/mission/start", async (
     DaprWorkflowClient workflowClient) =>
 {
     var instanceId = $"mission-{mission.MissionId}";
+    var input = new SpaceDebrisCleanupWorkflowInput(mission);
     
     await workflowClient.ScheduleNewWorkflowAsync(
-        nameof(AutonomousAgentWorkflow),
+        nameof(SpaceDebrisCleanupWorkflow),
         instanceId,
-        mission);
+        input);
     
     return Results.Accepted($"/mission/status/{instanceId}", new { instanceId });
 });
@@ -801,6 +866,7 @@ apps:
 **local.http**
 ```http
 ### Start a LEO cleanup mission
+# Note: String values for enums (orbitalZone) are automatically converted
 POST http://localhost:5500/mission/start
 Content-Type: application/json
 
@@ -813,13 +879,13 @@ Content-Type: application/json
   "requireHumanApproval": true
 }
 
-### Start an aggressive mission
+### Start an aggressive mission with MEO orbit
 POST http://localhost:5500/mission/start
 Content-Type: application/json
 
 {
-  "missionId": "CLEANUP-LEO-002",
-  "orbitalZone": "LEO",
+  "missionId": "CLEANUP-MEO-001",
+  "orbitalZone": "MEO",
   "maxDebrisPieces": 10,
   "fuelBudget": 50.0,
   "maxMissionHours": 4,
