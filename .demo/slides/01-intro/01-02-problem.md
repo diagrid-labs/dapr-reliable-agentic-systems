@@ -3,9 +3,7 @@ theme: default
 layout: default
 ---
 
-## The Problem
-
-### Building Agentic Systems for production is hard
+## Building Agentic Systems for production is hard
 
 - **Long-Running Processes**: Multi-step workflows that span minutes/hours
 - **Distributed Coordination**: Multiple AI services need to work together reliably

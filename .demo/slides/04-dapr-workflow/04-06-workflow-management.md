@@ -8,7 +8,7 @@ layout: default
 ```csharp
 app.MapPost("/start", async (
     Input input,
-    DaprWorkflowClient workflowClient) =>
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var instanceID = await workflowClient.ScheduleNewWorkflowAsync(
         nameof(MyWorkflow),

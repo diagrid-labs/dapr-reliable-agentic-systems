@@ -17,8 +17,18 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-03-programming-model.md
-  - title: How Workflow Enables Reliability
-    id: workflow-enables-reliability
+  - title: Workflow Code
+    id: scene-mk5p8zl8-o6h1
     steps:
       - action: openSlide
-        path: .demo/slides/04-dapr-workflow/04-04-reliability.md
+        path: .demo/slides/04-dapr-workflow/04-04-workflow.md
+  - title: Activity Code
+    id: scene-mk5p912y-q9ce
+    steps:
+      - action: openSlide
+        path: .demo/slides/04-dapr-workflow/04-05-activity.md
+  - title: Workflow Management Code
+    id: scene-mk5p93uy-sfg3
+    steps:
+      - action: openSlide
+        path: .demo/slides/04-dapr-workflow/04-06-workflow-management.md
