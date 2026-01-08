@@ -1,15 +1,16 @@
-title: 2 - Routing - Galactic Anomaly Classifier
+title: 11 - Evaluator Optimizer - Alien Translator
 description: ''
 version: 2
 demos:
-  - id: demo-mjbfmxst-f500
+  - id: demo-mk2jb73h-abcd
     title: Run workflow app
     steps:
       - action: executeTerminalCommand
-        command: cd GalacticAnomalyClassifier
+        command: cd AlienTranslator
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
         terminalId: dapr-run
+        autoExecute: true
       - action: executeTerminalCommand
         command: dapr run -f .
         terminalId: dapr-run
@@ -19,17 +20,17 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: demo-mjbfn04c-bcw8
+  - id: demo-mk2jb84k-efgh
     title: Start workflow
     steps:
       - action: highlight
-        path: GalacticAnomalyClassifier/local.http
+        path: AlienTranslator/local.http
         position: '3'
         highlightWholeLine: true
     icons:
       start: arrow-right
       end: ''
-  - id: demo-mjbfn291-my6n
+  - id: demo-mk2jb91m-ijkl
     title: Stop the workflow app
     steps:
       - action: executeTerminalCommand

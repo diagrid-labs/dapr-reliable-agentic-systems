@@ -1,0 +1,24 @@
+title: 02 Agentic Systems and Issues
+description: ''
+version: 2
+demos:
+  - title: What are Agentic Systems?
+    id: scene-mk5gwh5y-mvrq
+    steps:
+      - action: openSlide
+        path: .demo/slides/02-agentic-systems/02-01-what-are-agents.md
+  - title: The Reality of Building Agents
+    id: scene-mk5gwp1b-88i0
+    steps:
+      - action: openSlide
+        path: .demo/slides/02-agentic-systems/02-02-reality.md
+  - title: Production Challenges
+    id: scene-mk5gwr22-cgwd
+    steps:
+      - action: openSlide
+        path: .demo/slides/02-agentic-systems/02-03-challenges.md
+  - title: Distributed Systems Problems
+    id: scene-mk5gwt42-7tui
+    steps:
+      - action: openSlide
+        path: .demo/slides/02-agentic-systems/02-04-distributed-systems.md

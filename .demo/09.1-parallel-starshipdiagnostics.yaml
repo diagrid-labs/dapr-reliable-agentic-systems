@@ -1,15 +1,16 @@
-title: 1 - Prompt Chaining - AnomalyAnalysis
+title: 9 - Parallel - Starship Diagnostics
 description: ''
 version: 2
 demos:
-  - id: demo-mj9xjndp-gwbi
+  - id: demo-mk1hy63g-rnng
     title: Run workflow app
     steps:
       - action: executeTerminalCommand
-        command: cd AnomalyAnalysis
+        command: cd StarshipDiagnostics
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
         terminalId: dapr-run
+        autoExecute: true
       - action: executeTerminalCommand
         command: dapr run -f .
         terminalId: dapr-run
@@ -19,17 +20,17 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: demo-mj9y3t6q-6rji
+  - id: demo-mk1hy9ru-c0cb
     title: Start workflow
     steps:
       - action: highlight
-        path: AnomalyAnalysis/local.http
+        path: StarshipDiagnostics/local.http
         position: '3'
         highlightWholeLine: true
     icons:
       start: arrow-right
       end: ''
-  - id: demo-mj9xx4f9-5d35
+  - id: demo-mk1hyf5h-37lg
     title: Stop the workflow app
     steps:
       - action: executeTerminalCommand

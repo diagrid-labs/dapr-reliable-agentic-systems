@@ -1,0 +1,24 @@
+title: 10 - Orchestrator-Workers
+description: ''
+version: 2
+demos:
+  - title: Orchestrator-Workers Overview
+    id: scene-mk5h2u59-d6vy
+    steps:
+      - action: openSlide
+        path: .demo/slides/10-orchestrator-workers/10-01-overview.md
+  - title: Orchestrator-Workers Diagram
+    id: scene-mk5h2w37-huua
+    steps:
+      - action: openSlide
+        path: .demo/slides/10-orchestrator-workers/10-02-diagram.md
+  - title: Implementation
+    id: scene-mk5h2z91-ichc
+    steps:
+      - action: openSlide
+        path: .demo/slides/10-orchestrator-workers/10-03-implementation.md
+  - title: Demo - Space Colony Planner
+    id: scene-mk5h32b7-xqky
+    steps:
+      - action: openSlide
+        path: .demo/slides/10-orchestrator-workers/10-04-demo.md

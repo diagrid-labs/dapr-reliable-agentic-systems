@@ -1,12 +1,12 @@
-title: 3 - Parallel - Starship Diagnostics
+title: 10 - Orchestrator Worker - Space Colony Planner
 description: ''
 version: 2
 demos:
-  - id: demo-mk1hy63g-rnng
+  - id: demo-mk2ja73h-pqrs
     title: Run workflow app
     steps:
       - action: executeTerminalCommand
-        command: cd StarshipDiagnostics
+        command: cd SpaceColonyPlanner
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
         terminalId: dapr-run
@@ -20,17 +20,17 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: demo-mk1hy9ru-c0cb
+  - id: demo-mk2ja84k-tuv
     title: Start workflow
     steps:
       - action: highlight
-        path: StarshipDiagnostics/local.http
+        path: SpaceColonyPlanner/local.http
         position: '3'
         highlightWholeLine: true
     icons:
       start: arrow-right
       end: ''
-  - id: demo-mk1hyf5h-37lg
+  - id: demo-mk2ja91m-wxyz
     title: Stop the workflow app
     steps:
       - action: executeTerminalCommand

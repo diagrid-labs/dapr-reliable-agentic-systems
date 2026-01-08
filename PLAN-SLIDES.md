@@ -10,6 +10,8 @@
 
 ## Slide Structure Plan
 
+All slides are based on markdown and require markdown formatting (use ## for headings/titles).
+
 ### 1. Title Slide
 **Content:**
 - Title: "Reliable Agentic Systems Need Durable Execution"
@@ -1025,7 +1027,7 @@ layout: default
 
 ## DemoTime YAML Files
 
-For each presentation section create a DemoTime yaml file using the section numbering and title. Add a scene for each slide in the section. Add a move to each scene that uses the _openSlide_ action to load the corresponding slide file located in the _.demo/slides/<section>_ folder.
+For each presentation section create a DemoTime yaml file using the section numbering and title as the filename. Add a scene for each slide in the section. Add a move to each scene that uses the _openSlide_ action to load the corresponding slide file located in the _.demo/slides/<section>_ folder.
 
 ---
 

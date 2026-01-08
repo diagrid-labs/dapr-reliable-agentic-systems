@@ -1,0 +1,24 @@
+title: 05 Conversation API
+description: ''
+version: 2
+demos:
+  - title: Introducing Conversation API
+    id: scene-mk5gxjku-5doj
+    steps:
+      - action: openSlide
+        path: .demo/slides/05-conversation-api/05-01-introducing.md
+  - title: Conversation API Features
+    id: scene-mk5gxkvl-it8n
+    steps:
+      - action: openSlide
+        path: .demo/slides/05-conversation-api/05-02-features.md
+  - title: Code Example
+    id: scene-mk5gxm6d-bpvh
+    steps:
+      - action: openSlide
+        path: .demo/slides/05-conversation-api/05-03-code-example.md
+  - title: Benefits for Agentic Systems
+    id: conversation-api-benefits
+    steps:
+      - action: openSlide
+        path: .demo/slides/05-conversation-api/05-04-benefits.md

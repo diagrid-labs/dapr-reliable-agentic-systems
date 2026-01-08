@@ -1,0 +1,24 @@
+title: 12 - Autonomous Agent
+description: ''
+version: 2
+demos:
+  - title: Autonomous Agent Overview
+    id: scene-mk5h3g84-mlhm
+    steps:
+      - action: openSlide
+        path: .demo/slides/12-autonomous-agent/12-01-overview.md
+  - title: Autonomous Agent Diagram
+    id: scene-mk5h3i02-q1nn
+    steps:
+      - action: openSlide
+        path: .demo/slides/12-autonomous-agent/12-02-diagram.md
+  - title: Implementation
+    id: scene-mk5h3k6b-dlmq
+    steps:
+      - action: openSlide
+        path: .demo/slides/12-autonomous-agent/12-03-implementation.md
+  - title: Demo - Space Debris Agent
+    id: scene-mk5h3m9a-t5b6
+    steps:
+      - action: openSlide
+        path: .demo/slides/12-autonomous-agent/12-04-demo.md

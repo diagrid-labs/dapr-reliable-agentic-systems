@@ -1,0 +1,24 @@
+title: 13 Summary
+description: ''
+version: 2
+demos:
+  - title: Key Takeaways
+    id: scene-mk5h3rh9-i0up
+    steps:
+      - action: openSlide
+        path: .demo/slides/13-summary/13-01-key-takeaways.md
+  - title: Pattern Selection Summary
+    id: scene-mk5h3tif-cka6
+    steps:
+      - action: openSlide
+        path: .demo/slides/13-summary/13-02-pattern-summary.md
+  - title: Getting Started
+    id: scene-mk5h3v2e-zboh
+    steps:
+      - action: openSlide
+        path: .demo/slides/13-summary/13-03-getting-started.md
+  - title: Questions
+    id: scene-mk5h3wmw-7rk2
+    steps:
+      - action: openSlide
+        path: .demo/slides/13-summary/13-04-questions.md

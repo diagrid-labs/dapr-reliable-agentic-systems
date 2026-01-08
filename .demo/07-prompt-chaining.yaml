@@ -1,0 +1,24 @@
+title: 7 - Prompt Chaining
+description: ''
+version: 2
+demos:
+  - title: Prompt Chaining Overview
+    id: scene-mk5gxxna-6gjk
+    steps:
+      - action: openSlide
+        path: .demo/slides/07-prompt-chaining/07-01-overview.md
+  - title: Prompt Chaining Diagram
+    id: scene-mk5h1vf5-oq14
+    steps:
+      - action: openSlide
+        path: .demo/slides/07-prompt-chaining/07-02-diagram.md
+  - title: Implementation with Dapr
+    id: scene-mk5h1wy7-kmg8
+    steps:
+      - action: openSlide
+        path: .demo/slides/07-prompt-chaining/07-03-implementation.md
+  - title: Demo - Alien Translation
+    id: scene-mk5h1ymh-q6vd
+    steps:
+      - action: openSlide
+        path: .demo/slides/07-prompt-chaining/07-04-demo.md

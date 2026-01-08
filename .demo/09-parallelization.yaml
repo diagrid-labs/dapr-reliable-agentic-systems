@@ -1,0 +1,19 @@
+title: 9 - Parallelization
+description: ''
+version: 2
+demos:
+  - title: Parallelization Overview
+    id: scene-mk5h2kzm-zyv6
+    steps:
+      - action: openSlide
+        path: .demo/slides/09-parallelization/09-01-overview.md
+  - title: Parallelization Diagrams
+    id: scene-mk5h2mjm-mfbj
+    steps:
+      - action: openSlide
+        path: .demo/slides/09-parallelization/09-02-diagrams.md
+  - title: Demo - Parallel Diagnostics
+    id: scene-mk5h2ogm-1p35
+    steps:
+      - action: openSlide
+        path: .demo/slides/09-parallelization/09-03-demo.md

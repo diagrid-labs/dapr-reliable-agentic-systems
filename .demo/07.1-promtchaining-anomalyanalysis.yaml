@@ -1,16 +1,15 @@
-title: 5 - Evaluator Optimizer - Alien Translator
+title: 7 - Prompt Chaining - AnomalyAnalysis
 description: ''
 version: 2
 demos:
-  - id: demo-mk2jb73h-abcd
+  - id: demo-mj9xjndp-gwbi
     title: Run workflow app
     steps:
       - action: executeTerminalCommand
-        command: cd AlienTranslator
+        command: cd AnomalyAnalysis
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
         terminalId: dapr-run
-        autoExecute: true
       - action: executeTerminalCommand
         command: dapr run -f .
         terminalId: dapr-run
@@ -20,17 +19,17 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: demo-mk2jb84k-efgh
+  - id: demo-mj9y3t6q-6rji
     title: Start workflow
     steps:
       - action: highlight
-        path: AlienTranslator/local.http
+        path: AnomalyAnalysis/local.http
         position: '3'
         highlightWholeLine: true
     icons:
       start: arrow-right
       end: ''
-  - id: demo-mk2jb91m-ijkl
+  - id: demo-mj9xx4f9-5d35
     title: Stop the workflow app
     steps:
       - action: executeTerminalCommand

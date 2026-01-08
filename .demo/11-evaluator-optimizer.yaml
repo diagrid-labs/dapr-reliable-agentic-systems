@@ -1,0 +1,24 @@
+title: 11 - Evaluator-Optimizer
+description: ''
+version: 2
+demos:
+  - title: Evaluator-Optimizer Overview
+    id: scene-mk5h3775-lq3a
+    steps:
+      - action: openSlide
+        path: .demo/slides/11-evaluator-optimizer/11-01-overview.md
+  - title: Evaluator-Optimizer Diagram
+    id: scene-mk5h38pt-weqh
+    steps:
+      - action: openSlide
+        path: .demo/slides/11-evaluator-optimizer/11-02-diagram.md
+  - title: Implementation
+    id: scene-mk5h3a62-jmmw
+    steps:
+      - action: openSlide
+        path: .demo/slides/11-evaluator-optimizer/11-03-implementation.md
+  - title: Demo - Alien Translation
+    id: scene-mk5h3bpo-635d
+    steps:
+      - action: openSlide
+        path: .demo/slides/11-evaluator-optimizer/11-04-demo.md

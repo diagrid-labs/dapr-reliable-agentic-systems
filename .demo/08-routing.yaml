@@ -1,0 +1,24 @@
+title: 8 - Routing
+description: ''
+version: 2
+demos:
+  - title: Routing Overview
+    id: scene-mk5h29o6-6qr1
+    steps:
+      - action: openSlide
+        path: .demo/slides/08-routing/08-01-overview.md
+  - title: Routing Diagram
+    id: scene-mk5h2b5e-94a4
+    steps:
+      - action: openSlide
+        path: .demo/slides/08-routing/08-02-diagram.md
+  - title: Implementation
+    id: scene-mk5h2cra-3csw
+    steps:
+      - action: openSlide
+        path: .demo/slides/08-routing/08-03-implementation.md
+  - title: Demo - Anomaly Classification
+    id: scene-mk5h2epa-7cu6
+    steps:
+      - action: openSlide
+        path: .demo/slides/08-routing/08-04-demo.md
