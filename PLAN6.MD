@@ -154,6 +154,11 @@ public record ToolCall(
     string? ErrorMessage
 );
 
+public record HumanApproval(
+    bool Approved,
+    string Reason
+);
+
 public record MissionResult(
     string MissionId,
     bool Success,
@@ -220,39 +225,79 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         }
         
         // Execute chosen tool based on agent's decision
-        ToolCall toolCall = decision.ChosenAction switch
+        ToolCall toolCall;
+        
+        if (decision.ChosenAction == "REQUEST_HUMAN_APPROVAL")
         {
-            "SCAN_DEBRIS_FIELD" => await ExecuteTool<DebrisField>(
-                context, nameof(ScanDebrisFieldActivity), 
-                decision.ActionParameters),
+            // First call the activity to store the approval request
+            await context.CallActivityAsync(
+                nameof(RequestHumanApprovalActivity),
+                decision.ActionParameters);
             
-            "ANALYZE_DEBRIS" => await ExecuteTool<DebrisAnalysis>(
-                context, nameof(AnalyzeDebrisActivity), 
-                decision.ActionParameters),
+            // Wait for external event with 1 minute timeout
+            var approvalTask = context.WaitForExternalEventAsync<HumanApproval>("HumanApproval");
+            var timeoutTask = context.CreateTimer(context.CurrentUtcDateTime.AddMinutes(1), CancellationToken.None);
             
-            "MOVE_TO_LOCATION" => await ExecuteTool<NavigationResult>(
-                context, nameof(MoveToLocationActivity), 
-                decision.ActionParameters),
+            var completedTask = await Task.WhenAny(approvalTask, timeoutTask);
             
-            "CHECK_FUEL" => await ExecuteTool<FuelStatus>(
-                context, nameof(CheckFuelActivity), 
-                decision.ActionParameters),
+            HumanApproval approval;
+            if (completedTask == approvalTask)
+            {
+                approval = await approvalTask;
+            }
+            else
+            {
+                // Timeout - default to disapproved
+                approval = new HumanApproval(
+                    Approved: false,
+                    Reason: "Approval timeout - no response within 1 minute"
+                );
+            }
             
-            "CAPTURE_DEBRIS" => await ExecuteTool<CaptureResult>(
-                context, nameof(CaptureDebrisActivity), 
-                decision.ActionParameters),
-            
-            "REQUEST_HUMAN_APPROVAL" => await ExecuteTool<ApprovalResult>(
-                context, nameof(RequestHumanApprovalActivity), 
-                decision.ActionParameters),
-            
-            _ => new ToolCall(
-                "UNKNOWN", 
-                decision.ActionParameters, 
-                null, 
-                false, 
-                $"Unknown action: {decision.ChosenAction}")
-        };
+            toolCall = new ToolCall(
+                nameof(RequestHumanApprovalActivity),
+                decision.ActionParameters,
+                new ApprovalResult(
+                    approval.Approved,
+                    approval.Reason,
+                    DateTime.UtcNow
+                ),
+                true,
+                null
+            );
+        }
+        else
+        {
+            toolCall = decision.ChosenAction switch
+            {
+                "SCAN_DEBRIS_FIELD" => await ExecuteTool<DebrisField>(
+                    context, nameof(ScanDebrisFieldActivity), 
+                    decision.ActionParameters),
+                
+                "ANALYZE_DEBRIS" => await ExecuteTool<DebrisAnalysis>(
+                    context, nameof(AnalyzeDebrisActivity), 
+                    decision.ActionParameters),
+                
+                "MOVE_TO_LOCATION" => await ExecuteTool<NavigationResult>(
+                    context, nameof(MoveToLocationActivity), 
+                    decision.ActionParameters),
+                
+                "CHECK_FUEL" => await ExecuteTool<FuelStatus>(
+                    context, nameof(CheckFuelActivity), 
+                    decision.ActionParameters),
+                
+                "CAPTURE_DEBRIS" => await ExecuteTool<CaptureResult>(
+                    context, nameof(CaptureDebrisActivity), 
+                    decision.ActionParameters),
+                
+                _ => new ToolCall(
+                    "UNKNOWN", 
+                    decision.ActionParameters, 
+                    null, 
+                    false, 
+                    $"Unknown action: {decision.ChosenAction}")
+            };
+        }
         
         var toolCalls = input.ToolCalls.Append(toolCall).ToList();
         
@@ -481,10 +526,10 @@ Use opening and closing curly braces.
 
 JSON structure that describes the fields:
 {
-  ""reasoning"": ""<your analytical thought process for choosing this action>"",
-  ""chosenAction"": ""<TOOL_NAME from available tools list>"",
-  ""actionParameters"": {<tool-specific parameters as object>},
-  ""expectedOutcome"": ""<what you expect this action to accomplish>""
+  ""reasoning"": ""<string: your analytical thought process for choosing this action>"",
+  ""chosenAction"": ""<string: TOOL_NAME from available tools list>"",
+  ""actionParameters"": {<object: tool-specific parameters>},
+  ""expectedOutcome"": ""<string: what you expect this action to accomplish>""
 }
 
 Example:
@@ -608,21 +653,47 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
                     Use double quotes around all keys and string values.
                     Use opening and closing curly braces.
                     
-                    JSON structure matching DebrisField schema:
+                    JSON structure that describes the fields:
                     {
                       ""debris"": [
                         {
-                          ""id"": ""<unique debris identifier>"",
-                          ""mass"": <mass in kg>,
-                          ""type"": ""<Satellite|Rocket Stage|Fragment>"",
-                          ""position"": [<x km>, <y km>, <z km>],
-                          ""velocity"": [<vx km/s>, <vy km/s>, <vz km/s>],
-                          ""threatLevel"": ""<Low|Medium|High|Critical>"",
-                          ""isFragmented"": <true or false>
+                          ""id"": ""<string: unique debris identifier>"",
+                          ""mass"": <number: mass in kg>,
+                          ""type"": ""<string: Satellite|RocketStage|Fragment>"",
+                          ""position"": [<number: x km>, <number: y km>, <number: z km>],
+                          ""velocity"": [<number: vx km/s>, <number: vy km/s>, <number: vz km/s>],
+                          ""threatLevel"": ""<string: Low|Medium|High|Critical>"",
+                          ""isFragmented"": <boolean: true or false>
                         }
                       ],
-                      ""totalMass"": <sum of all debris mass>,
-                      ""riskLevel"": ""<Low|Medium|High|Critical>""
+                      ""totalMass"": <number: sum of all debris mass>,
+                      ""riskLevel"": ""<string: Low|Medium|High|Critical>""
+                    }
+
+                    Example:
+                    {
+                      ""debris"": [
+                        {
+                          ""id"": ""DEB-001"",
+                          ""mass"": 450.5,
+                          ""type"": ""Satellite"",
+                          ""position"": [1200.0, -450.0, 350.0],
+                          ""velocity"": [7.5, -0.3, 0.1],
+                          ""threatLevel"": ""High"",
+                          ""isFragmented"": false
+                        },
+                        {
+                          ""id"": ""DEB-002"",
+                          ""mass"": 85.2,
+                          ""type"": ""Fragment"",
+                          ""position"": [1180.0, -440.0, 360.0],
+                          ""velocity"": [7.6, -0.5, 0.2],
+                          ""threatLevel"": ""Medium"",
+                          ""isFragmented"": true
+                        }
+                      ],
+                      ""totalMass"": 535.7,
+                      ""riskLevel"": ""High""
                     }")]
                     },
                     new UserMessage
@@ -715,10 +786,8 @@ public class MoveToLocationActivity : WorkflowActivity<Dictionary<string, object
 
 **RequestHumanApprovalActivity.cs**
 ```csharp
-using Dapr.AI.Conversation;
-using Dapr.AI.Conversation.Extensions;
-using Dapr.AI.Conversation.ConversationRoles;
-using System.Text.Json;
+using Dapr.Client;
+using Dapr.Workflow;
 
 public record ApprovalResult(
     bool Approved,
@@ -726,36 +795,29 @@ public record ApprovalResult(
     DateTime ResponseTime
 );
 
-public class RequestHumanApprovalActivity : WorkflowActivity<Dictionary<string, object>, ApprovalResult>
+public class RequestHumanApprovalActivity : WorkflowActivity<Dictionary<string, object>, object>
 {
-    private readonly DaprConversationClient _conversationClient;
+    private readonly DaprClient _daprClient;
     
-    public RequestHumanApprovalActivity(DaprConversationClient conversationClient)
+    public RequestHumanApprovalActivity(DaprClient daprClient)
     {
-        _conversationClient = conversationClient;
+        _daprClient = daprClient;
     }
     
-    public override async Task<ApprovalResult> RunAsync(
+    public override async Task<object> RunAsync(
         WorkflowActivityContext context, 
         Dictionary<string, object> parameters)
     {
         var reason = parameters["reason"].ToString();
         
-        // Store approval request in state for human operator
+        // Store approval request in state for human operator to view
         await _daprClient.SaveStateAsync(
             "statestore",
             $"approval-request-{context.InstanceId}",
-            new { reason, timestamp = DateTime.UtcNow });
+            new { reason, timestamp = DateTime.UtcNow, status = "Pending" });
         
-        // In real system, would wait for human input
-        // For demo, auto-approve after delay
-        await Task.Delay(2000);
-        
-        return new ApprovalResult(
-            Approved: true,
-            HumanResponse: "Approved by Mission Control",
-            ResponseTime: DateTime.UtcNow
-        );
+        // Return immediately - workflow will wait for external event
+        return new { message = "Approval request stored, waiting for human response" };
     }
 }
 ```
@@ -843,6 +905,26 @@ app.MapGet("/mission/{instanceId}/decisions", async (
     return Results.Ok(result.Decisions);
 });
 
+// Send human approval to workflow
+app.MapPost("/mission/{instanceId}/approval", async (
+    string instanceId,
+    HumanApproval approval,
+    DaprWorkflowClient workflowClient) =>
+{
+    var state = await workflowClient.GetWorkflowStateAsync(instanceId);
+    
+    if (state == null)
+        return Results.NotFound();
+    
+    // Raise the HumanApproval event to the workflow
+    await workflowClient.RaiseEventAsync(
+        instanceId,
+        "HumanApproval",
+        approval);
+    
+    return Results.Ok(new { message = "Approval sent to workflow", approval });
+});
+
 app.Run();
 ```
 
@@ -897,6 +979,24 @@ GET http://localhost:5500/mission/status/mission-CLEANUP-LEO-001
 
 ### Get agent decision history
 GET http://localhost:5500/mission/mission-CLEANUP-LEO-001/decisions
+
+### Send human approval (approve)
+POST http://localhost:5500/mission/mission-CLEANUP-LEO-001/approval
+Content-Type: application/json
+
+{
+  "approved": true,
+  "reason": "Mission Control approves high-risk maneuver"
+}
+
+### Send human approval (disapprove)
+POST http://localhost:5500/mission/mission-CLEANUP-LEO-001/approval
+Content-Type: application/json
+
+{
+  "approved": false,
+  "reason": "Too risky - abort maneuver and return to safe distance"
+}
 ```
 
 ## Benefits of Autonomous Agent Pattern
