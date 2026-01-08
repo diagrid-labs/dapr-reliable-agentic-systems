@@ -1,0 +1,11 @@
+version: 1
+common:
+  resourcesPath: ../Resources
+  appLogDestination: fileAndConsole
+  daprdLogDestination: fileAndConsole
+apps:
+  - appID: space-debris-agent
+    appDirPath: .
+    appPort: 5500
+    daprHTTPPort: 3550
+    command: ["dotnet", "run"]

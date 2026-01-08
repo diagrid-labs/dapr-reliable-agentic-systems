@@ -58,12 +58,11 @@ The probe has **autonomy**—it makes its own decisions about exploration paths 
     - AgentDecision.cs
     - MissionResult.cs
     - ToolCall.cs
-  /Resources
-    - statestore.yaml
-    - conversation.yaml
   /Properties
     - launchSettings.json
 ```
+
+There's no need to add a new Resources folder for this demo since an existing folder one level up is used.
 
 ### Step 2: Core Models
 **Enums.cs**
@@ -933,18 +932,23 @@ app.Run();
 ```yaml
 version: 1
 common:
-  resourcesPath: Resources
+  resourcesPath: ../Resources
   appLogDestination: fileAndConsole
   daprdLogDestination: fileAndConsole
 apps:
-  - appID: science-probe-app
+  - appID: space-debris-cleanup-app
     appDirPath: /
     appPort: 5500
     daprHTTPPort: 3550
     command: ["dotnet", "run"]
 ```
 
-### Step 8: Local HTTP Tests
+### Step 8: DemoTime file
+**6-autonomousagent-spacedebris.yaml**
+
+Create a new DemoTime yaml file in the .demo folder to start and stop the `space-debris-cleanup-app` app using the Dapr CLI. Use existing DemoTime yaml files in the .demo folder as a reference.
+
+### Step 9: Local HTTP Tests
 **local.http**
 ```http
 ### Start a LEO cleanup mission

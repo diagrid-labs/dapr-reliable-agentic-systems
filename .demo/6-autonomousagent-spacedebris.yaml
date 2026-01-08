@@ -1,0 +1,44 @@
+title: 6 - Autonomous Agent - Space Debris Cleanup
+description: ''
+version: 2
+demos:
+  - id: demo-space-debris-run
+    title: Run workflow app
+    steps:
+      - action: executeTerminalCommand
+        command: cd SpaceDebrisAgent
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        terminalId: dapr-run
+        autoExecute: true
+      - action: executeTerminalCommand
+        command: dapr run -f .
+        terminalId: dapr-run
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        autoExecute: true
+    icons:
+      start: terminal
+      end: ''
+  - id: demo-space-debris-start
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/local.http
+        position: '3'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
+  - id: demo-space-debris-stop
+    title: Stop the workflow app
+    steps:
+      - action: executeTerminalCommand
+        terminalId: dapr-run
+        command: \u0003
+        autoExecute: true
+      - action: waitForTimeout
+        timeout: 2000
+    icons:
+      start: ''
+      end: close

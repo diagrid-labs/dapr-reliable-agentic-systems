@@ -1,0 +1,50 @@
+### Start a LEO cleanup mission
+# Note: String values for enums (orbitalZone) are automatically converted
+POST http://localhost:5500/mission/start
+Content-Type: application/json
+
+{
+  "missionId": "CLEANUP-LEO-001",
+  "orbitalZone": "LEO",
+  "maxDebrisPieces": 5,
+  "fuelBudget": 100.0,
+  "maxMissionHours": 8,
+  "requireHumanApproval": true
+}
+
+### Start an aggressive mission with MEO orbit
+POST http://localhost:5500/mission/start
+Content-Type: application/json
+
+{
+  "missionId": "CLEANUP-MEO-001",
+  "orbitalZone": "MEO",
+  "maxDebrisPieces": 10,
+  "fuelBudget": 50.0,
+  "maxMissionHours": 4,
+  "requireHumanApproval": false
+}
+
+### Get mission status
+GET http://localhost:5500/mission/status/mission-CLEANUP-LEO-001
+
+### Get agent decision history
+GET http://localhost:5500/mission/mission-CLEANUP-LEO-001/decisions
+
+### Send human approval (approve)
+POST http://localhost:5500/mission/mission-CLEANUP-LEO-001/approval
+Content-Type: application/json
+
+{
+  "approved": true,
+  "reason": "Mission Control approves high-risk maneuver"
+}
+
+### Send human approval (disapprove)
+POST http://localhost:5500/mission/mission-CLEANUP-LEO-001/approval
+Content-Type: application/json
+
+{
+  "approved": false,
+  "reason": "Too risky - abort maneuver and return to safe distance"
+}
