@@ -1010,6 +1010,23 @@ return state;
 - Links to resources
 - Thank you message
 
+## Slide location
+
+Create a new folder named _slides_ in the _.demo_ folder. For each main section in the presentation, create a subfolder in _slides_.For each slide create a markdown file that starts with the section number and slide number, e.g. `01-01-Title.md`, `01-02-Introduction.md`, etc.
+
+Add this front-matter to each slide markdown file:
+
+```markdown
+---
+theme: default
+layout: default
+---
+```
+
+## DemoTime YAML Files
+
+For each presentation section create a DemoTime yaml file using the section numbering and title. Add a scene for each slide in the section. Add a move to each scene that uses the _openSlide_ action to load the corresponding slide file located in the _.demo/slides/<section>_ folder.
+
 ---
 
 ## Presentation Delivery Notes
