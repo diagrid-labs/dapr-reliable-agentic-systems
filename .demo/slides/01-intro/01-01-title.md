@@ -1,14 +1,9 @@
 ---
-theme: default
-layout: default
+layout: intro
 ---
 
-## Reliable Agentic Systems Need Durable Execution
+# Reliable Agentic Systems Need Durable Execution
 
 **Marc Duiker**  
 Developer Advocate @ Diagrid
 
----
-
-Conference/Event Name  
-Date

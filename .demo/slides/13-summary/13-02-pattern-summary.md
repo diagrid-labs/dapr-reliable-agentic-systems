@@ -1,5 +1,4 @@
 ---
-theme: default
 layout: default
 ---
 
@@ -14,6 +13,3 @@ layout: default
 | Evaluator-Optimizer | Iterative refinement | Medium | High | High |
 | Autonomous Agent | Open-ended problems | High | Highest | Highest |
 
-### Decision Framework
-
-Start simple → Add complexity only when measurable improvement

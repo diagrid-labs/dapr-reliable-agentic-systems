@@ -1,5 +1,4 @@
 ---
-theme: default
 layout: default
 ---
 
@@ -12,7 +11,6 @@ layout: default
 ### Decision Criteria
 
 - Task complexity and predictability
-- Required reliability level
 - Latency requirements
 - Cost considerations
 - Human oversight needs

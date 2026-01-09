@@ -12,7 +12,7 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/13-summary/13-02-pattern-summary.md
-  - title: Getting Started
+  - title: Next steps
     id: scene-mk5h3v2e-zboh
     steps:
       - action: openSlide

@@ -1,9 +1,8 @@
 ---
-theme: default
 layout: default
 ---
 
-## What are Agentic Systems?
+# What are Agentic Systems?
 
 ### Definition
 
