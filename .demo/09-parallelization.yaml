@@ -17,3 +17,47 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/09-parallelization/09-03-demo.md
+  - id: scene-mkb2csbu-w72j
+    title: Run workflow app
+    steps:
+      - action: executeTerminalCommand
+        command: cd StarshipDiagnostics
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        terminalId: dapr-run
+        autoExecute: true
+      - action: executeTerminalCommand
+        command: dapr run -f .
+        terminalId: dapr-run
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        autoExecute: true
+    icons:
+      start: terminal
+      end: ''
+  - id: scene-mkb2ctl7-haoq
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: StarshipDiagnostics/local.http
+        position: '3'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
+  - id: scene-mkb2cv2y-avsr
+    title: Stop the workflow app
+    steps:
+      - action: focusTerminal
+        terminalId: dapr-run
+      - action: sendKeybinding
+        keybinding: ctrl+c
+      - action: waitForTimeout
+        timeout: 200
+      - action: executeTerminalCommand
+        command: cd ..
+        autoExecute: true
+        terminalId: dapr-run
+    icons:
+      start: terminal
+      end: ''

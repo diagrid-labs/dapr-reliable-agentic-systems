@@ -22,3 +22,46 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/12-autonomous-agent/12-04-demo.md
+  - id: scene-mkb3njij-6q2c
+    title: Run workflow app
+    steps:
+      - action: executeTerminalCommand
+        command: cd SpaceDebrisAgent
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        terminalId: dapr-run
+        autoExecute: true
+      - action: executeTerminalCommand
+        command: dapr run -f .
+        terminalId: dapr-run
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        autoExecute: true
+    icons:
+      start: terminal
+      end: ''
+  - id: scene-mkb3nkrx-8xbi
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/local.http
+        position: '3'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
+  - id: scene-mkb3nme9-36la
+    title: Stop the workflow app
+    steps:
+      - action: focusTerminal
+        terminalId: dapr-run
+      - action: sendKeybinding
+        keybinding: ctrl+c
+      - action: waitForTimeout
+        timeout: 2000
+      - action: executeTerminalCommand
+        command: cd ..
+        terminalId: dapr-run
+    icons:
+      start: terminal
+      end: close

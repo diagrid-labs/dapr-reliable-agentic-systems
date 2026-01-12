@@ -1,0 +1,34 @@
+title: 13 - Teardown
+description: ''
+version: 2
+demos:
+  - id: demo-mjbfm77j-zjzw
+    title: Stop model
+    steps:
+      - action: focusTerminal
+        terminalId: ollama-run
+      - action: sendKeybinding
+        keybinding: ctrl+d
+    icons:
+      start: terminal
+      end: ''
+  - id: demo-mjbfm0tq-42pc
+    title: Stop Ollama
+    steps:
+      - action: focusTerminal
+        terminalId: ollama-server
+      - action: sendKeybinding
+        keybinding: ctrl+c
+    icons:
+      start: terminal
+      end: ''
+  - id: demo-mjbfmdka-n8p9
+    title: Stop Diagrid Dashboard
+    steps:
+      - action: focusTerminal
+        terminalId: diagrid-dashboard
+      - action: sendKeybinding
+        keybinding: ctrl+c
+    icons:
+      start: terminal
+      end: ''

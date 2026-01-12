@@ -22,3 +22,46 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/07-prompt-chaining/07-04-demo.md
+  - id: scene-mkb26rj8-stv6
+    title: Run workflow app
+    steps:
+      - action: executeTerminalCommand
+        command: cd AnomalyAnalysis
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        terminalId: dapr-run
+      - action: executeTerminalCommand
+        command: dapr run -f .
+        terminalId: dapr-run
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        autoExecute: true
+    icons:
+      start: terminal
+      end: ''
+  - id: scene-mkb26t53-hukh
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/local.http
+        position: '3'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
+  - id: scene-mkb26v5t-dwo0
+    title: Stop the workflow app
+    steps:
+      - action: focusTerminal
+        terminalId: dapr-run
+      - action: sendKeybinding
+        keybinding: ctrl+C
+      - action: waitForTimeout
+        timeout: 200
+      - action: executeTerminalCommand
+        command: cd ..
+        autoExecute: true
+        terminalId: dapr-run
+    icons:
+      start: terminal
+      end: ''

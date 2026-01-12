@@ -22,3 +22,46 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/08-routing/08-04-demo.md
+  - id: scene-mkb28oma-vekm
+    title: Run workflow app
+    steps:
+      - action: executeTerminalCommand
+        command: cd GalacticAnomalyClassifier
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        terminalId: dapr-run
+      - action: executeTerminalCommand
+        command: dapr run -f .
+        terminalId: dapr-run
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        autoExecute: true
+    icons:
+      start: terminal
+      end: ''
+  - id: scene-mkb28qaj-1wp1
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: GalacticAnomalyClassifier/local.http
+        position: '3'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
+  - id: scene-mkb28tio-ohx6
+    title: Stop the workflow app
+    steps:
+      - action: focusTerminal
+        terminalId: dapr-run
+      - action: sendKeybinding
+        keybinding: ctrl+b
+      - action: waitForTimeout
+        timeout: 200
+      - action: executeTerminalCommand
+        command: cd ..
+        autoExecute: true
+        terminalId: dapr-run
+    icons:
+      start: terminal
+      end: ''

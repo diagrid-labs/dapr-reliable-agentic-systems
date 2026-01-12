@@ -22,3 +22,47 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/11-evaluator-optimizer/11-04-demo.md
+  - id: scene-mkb3lue6-4q9l
+    title: Run workflow app
+    steps:
+      - action: executeTerminalCommand
+        command: cd AlienTranslator
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        terminalId: dapr-run
+        autoExecute: true
+      - action: executeTerminalCommand
+        command: dapr run -f .
+        terminalId: dapr-run
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        autoExecute: true
+    icons:
+      start: terminal
+      end: ''
+  - id: scene-mkb3lvzz-oyk7
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: AlienTranslator/local.http
+        position: '3'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
+  - id: scene-mkb3lxd1-ivgu
+    title: Stop the workflow app
+    steps:
+      - action: focusTerminal
+        terminalId: dapr-run
+      - action: sendKeybinding
+        keybinding: ctrl+c
+      - action: waitForTimeout
+        timeout: 200
+      - action: executeTerminalCommand
+        command: cd ..
+        autoExecute: true
+        terminalId: dapr-run
+    icons:
+      start: terminal
+      end: ''

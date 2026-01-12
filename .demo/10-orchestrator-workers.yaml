@@ -22,3 +22,47 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/10-orchestrator-workers/10-04-demo.md
+  - id: scene-mkb32jje-lewc
+    title: Run workflow app
+    steps:
+      - action: executeTerminalCommand
+        command: cd SpaceColonyPlanner
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        terminalId: dapr-run
+        autoExecute: true
+      - action: executeTerminalCommand
+        command: dapr run -f .
+        terminalId: dapr-run
+        insertTypingMode: character-by-character
+        insertTypingSpeed: 75
+        autoExecute: true
+    icons:
+      start: terminal
+      end: ''
+  - id: scene-mkb32l72-xbfd
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: SpaceColonyPlanner/local.http
+        position: '3'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
+  - id: scene-mkb32n34-vuoe
+    title: Stop the workflow app
+    steps:
+      - action: focusTerminal
+        terminalId: dapr-run
+      - action: sendKeybinding
+        keybinding: ctrl+c
+      - action: waitForTimeout
+        timeout: 200
+      - action: executeTerminalCommand
+        command: cd ..
+        autoExecute: true
+        terminalId: dapr-run
+    icons:
+      start: terminal
+      end: ''
