@@ -2,7 +2,7 @@ title: 13 - Teardown
 description: ''
 version: 2
 demos:
-  - id: demo-mjbfm77j-zjzw
+  - id: scene-mkcnyqe1-xk4s
     title: Stop model
     steps:
       - action: focusTerminal
@@ -12,7 +12,7 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: demo-mjbfm0tq-42pc
+  - id: scene-mkcnyrus-dg35
     title: Stop Ollama
     steps:
       - action: focusTerminal
@@ -22,7 +22,7 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: demo-mjbfmdka-n8p9
+  - id: scene-mkcnyubp-94fi
     title: Stop Diagrid Dashboard
     steps:
       - action: focusTerminal

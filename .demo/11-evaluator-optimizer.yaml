@@ -16,12 +16,17 @@ demos:
     id: scene-mk5h3a62-jmmw
     steps:
       - action: openSlide
-        path: .demo/slides/11-evaluator-optimizer/11-03-implementation.md
+        path: .demo/slides/11-evaluator-optimizer/11-03-code-example.md
   - title: Demo - Alien Translation
     id: scene-mk5h3bpo-635d
     steps:
       - action: openSlide
         path: .demo/slides/11-evaluator-optimizer/11-04-demo.md
+  - title: Demo Diagram
+    id: scene-mk5h3c1e-m3n4
+    steps:
+      - action: openSlide
+        path: .demo/slides/11-evaluator-optimizer/11-05-demo-diagram.md
   - id: scene-mkb3lue6-4q9l
     title: Run workflow app
     steps:

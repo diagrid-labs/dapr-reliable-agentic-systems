@@ -2,7 +2,7 @@ title: 6 - Setup
 description: ''
 version: 2
 demos:
-  - id: demo-mjbfm0tq-42pc
+  - id: scene-mkcnxjt6-bakh
     title: Start Ollama
     steps:
       - action: executeTerminalCommand
@@ -14,7 +14,7 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: demo-mjbfm77j-zjzw
+  - id: scene-mkcnxl2j-koo2
     title: Run model
     steps:
       - action: executeTerminalCommand
@@ -26,7 +26,7 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: demo-mjbfmdka-n8p9
+  - id: scene-mkcnxn4m-yue1
     title: Run Diagrid Dashboard
     steps:
       - action: executeTerminalCommand

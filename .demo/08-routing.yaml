@@ -16,12 +16,17 @@ demos:
     id: scene-mk5h2cra-3csw
     steps:
       - action: openSlide
-        path: .demo/slides/08-routing/08-03-implementation.md
+        path: .demo/slides/08-routing/08-03-code-example.md
   - title: Demo - Anomaly Classification
     id: scene-mk5h2epa-7cu6
     steps:
       - action: openSlide
         path: .demo/slides/08-routing/08-04-demo.md
+  - title: Demo Diagram
+    id: scene-mk5h2f1b-e5f6
+    steps:
+      - action: openSlide
+        path: .demo/slides/08-routing/08-05-demo-diagram.md
   - id: scene-mkb28oma-vekm
     title: Run workflow app
     steps:

@@ -16,12 +16,17 @@ demos:
     id: scene-mk5h3k6b-dlmq
     steps:
       - action: openSlide
-        path: .demo/slides/12-autonomous-agent/12-03-implementation.md
+        path: .demo/slides/12-autonomous-agent/12-03-code-example.md
   - title: Demo - Space Debris Agent
     id: scene-mk5h3m9a-t5b6
     steps:
       - action: openSlide
         path: .demo/slides/12-autonomous-agent/12-04-demo.md
+  - title: Demo Diagram
+    id: scene-mk5h3n1f-o5p6
+    steps:
+      - action: openSlide
+        path: .demo/slides/12-autonomous-agent/12-05-demo-diagram.md
   - id: scene-mkb3njij-6q2c
     title: Run workflow app
     steps:

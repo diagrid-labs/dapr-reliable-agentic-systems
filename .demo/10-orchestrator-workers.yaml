@@ -16,12 +16,17 @@ demos:
     id: scene-mk5h2z91-ichc
     steps:
       - action: openSlide
-        path: .demo/slides/10-orchestrator-workers/10-03-implementation.md
+        path: .demo/slides/10-orchestrator-workers/10-03-code-example.md
   - title: Demo - Space Colony Planner
     id: scene-mk5h32b7-xqky
     steps:
       - action: openSlide
         path: .demo/slides/10-orchestrator-workers/10-04-demo.md
+  - title: Demo Diagram
+    id: scene-mk5h331d-k1l2
+    steps:
+      - action: openSlide
+        path: .demo/slides/10-orchestrator-workers/10-05-demo-diagram.md
   - id: scene-mkb32jje-lewc
     title: Run workflow app
     steps:

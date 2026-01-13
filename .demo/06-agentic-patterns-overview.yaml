@@ -2,13 +2,18 @@ title: 6 - Agentic Patterns Overview
 description: ''
 version: 2
 demos:
+  - title: Combining Workflow and LLM
+    id: scene-mk5gxpxx-a1b2
+    steps:
+      - action: openSlide
+        path: .demo/slides/06-combining-workflow-llm/06-01-combining.md
   - title: Common Agentic Patterns
     id: scene-mk5gxqxm-f928
     steps:
       - action: openSlide
-        path: .demo/slides/06-patterns-overview/06-01-patterns-list.md
+        path: .demo/slides/06-combining-workflow-llm/06-02-patterns-list.md
   - title: Pattern Selection Guide
     id: scene-mk5gxsfd-b8yn
     steps:
       - action: openSlide
-        path: .demo/slides/06-patterns-overview/06-02-selection-guide.md
+        path: .demo/slides/06-combining-workflow-llm/06-03-selection-guide.md
