@@ -2,26 +2,30 @@
 layout: default
 ---
 
-## Evaluator-Optimizer
-
-### Pattern Overview
+# Evaluator-Optimizer
 
 Iterative improvement loop with generator and evaluator LLMs
 
-### When to Use
+## When to Use
 
 - Clear evaluation criteria exist
 - Iterative refinement adds value
 - LLM can provide useful feedback
 - Quality more important than speed
 
-### Pros ✅
+## Use Cases
+
+- Literary translation
+- Content quality improvement
+- Code generation with validation
+
+## Pros ✅
 
 - Progressive quality improvement
 - Built-in quality control
 - Mimics human refinement process
 
-### Cons ❌
+## Cons ❌
 
 - Unpredictable iterations
 - High cost and latency

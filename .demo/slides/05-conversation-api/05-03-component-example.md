@@ -2,18 +2,18 @@
 layout: default
 ---
 
-## Component Example
+# Conversation component example
 
 ```yaml
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: openai
+  name: myconversation
 spec:
   type: conversation.openai
   metadata:
   - name: key
-    value: mykey
+    value: <mykey>
   - name: model
     value: gpt-4-turbo
   - name: endpoint

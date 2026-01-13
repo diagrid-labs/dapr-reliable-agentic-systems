@@ -2,9 +2,7 @@
 layout: default
 ---
 
-## Implementation
-
-### Code Example
+# Dapr workflow example
 
 ```csharp
 var classification = await context.CallActivityAsync<string>(
@@ -20,8 +18,6 @@ else if (classification == "TypeB")
     result = await context.CallActivityAsync<Result>(
         nameof(HandleTypeB), input);
 }
+
+return result;
 ```
-
-### Pattern
-
-1. Classify → 2. Route → 3. Handle

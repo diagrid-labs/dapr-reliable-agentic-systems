@@ -2,25 +2,29 @@
 layout: default
 ---
 
-## Parallelization
-
-### Pattern Overview
+# Parallelization
 
 Execute independent tasks concurrently
 
-### Two Variations
+## Two Variations
 
 - **Sectioning** - Break into independent subtasks
 - **Voting** - Same task multiple times for consensus
 
-### Pros ✅
+## Use Cases
+
+- Multi-source analysis
+- Code review with voting
+
+## Pros ✅
 
 - Significantly reduced latency
 - Higher confidence (voting)
 - Better throughput
 
-### Cons ❌
+## Cons ❌
 
 - Increased cost (multiple calls)
 - Requires aggregation logic
 - Tasks must be independent
+

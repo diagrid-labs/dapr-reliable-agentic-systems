@@ -2,7 +2,7 @@
 layout: default
 ---
 
-## Autonomous Agent Diagram
+# Autonomous Agent Diagram
 
 ```mermaid
 graph TD

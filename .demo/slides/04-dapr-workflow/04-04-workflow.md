@@ -2,7 +2,7 @@
 layout: default
 ---
 
-## Workflow example
+# Workflow example
 
 ```csharp
 public class MyWorkflow : Workflow<Input, Output>

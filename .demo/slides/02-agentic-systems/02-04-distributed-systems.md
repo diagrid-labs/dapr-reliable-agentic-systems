@@ -2,13 +2,13 @@
 layout: default
 ---
 
-## Distributed Systems Problems
+# Distributed Systems Problems
 
-### Agentic Systems ARE Distributed Systems
+## Agentic Systems ARE Distributed Systems
 
 They involve communication across LLM providers, services, and data stores
 
-### Familiar Challenges
+## Familiar Challenges
 
 - **Network Reliability** - Calls can fail
 - **Service Availability** - Dependencies can be down
@@ -16,6 +16,6 @@ They involve communication across LLM providers, services, and data stores
 - **Fault Tolerance** - Recovering from failures
 - **Observability** - Understanding system behavior
 
-### Good News
+## Good News
 
 We've been here before with microservices - let's apply what we know!

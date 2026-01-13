@@ -2,7 +2,7 @@
 layout: default
 ---
 
-## Workflow Management example
+# Workflow Management example
 
 ```csharp
 app.MapPost("/start", async (

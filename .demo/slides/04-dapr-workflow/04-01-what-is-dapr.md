@@ -2,13 +2,13 @@
 layout: default
 ---
 
-## What is Dapr?
+# What is Dapr?
 
-### Distributed Application Runtime
+## Distributed Application Runtime
 
 A portable, event-driven runtime for building distributed applications
 
-### Key Facts
+## Key Facts
 
 - **CNCF Graduated Project** - Production-ready and widely adopted
 - **Building Blocks** - Reusable components for distributed apps

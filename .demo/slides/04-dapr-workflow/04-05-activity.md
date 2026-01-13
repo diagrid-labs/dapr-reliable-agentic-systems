@@ -2,7 +2,7 @@
 layout: default
 ---
 
-## Workflow Activity example
+# Workflow Activity example
 
 ```csharp
 public class MyActivity1 : Activity<Input, string>

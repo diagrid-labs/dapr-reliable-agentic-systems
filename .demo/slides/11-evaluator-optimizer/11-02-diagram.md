@@ -2,7 +2,7 @@
 layout: default
 ---
 
-## Evaluator-Optimizer Diagram
+# Evaluator-Optimizer Diagram
 
 ```mermaid
 graph TD
@@ -25,8 +25,4 @@ graph TD
     style Restart fill:#e1f5ff
 ```
 
-### Use Cases
 
-- Literary translation
-- Content quality improvement
-- Code generation with validation

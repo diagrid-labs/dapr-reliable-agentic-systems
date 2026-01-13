@@ -2,9 +2,7 @@
 layout: default
 ---
 
-## Implementation
-
-### Code Example
+# Dapr workflow example
 
 ```csharp
 var state = input;
@@ -26,6 +24,3 @@ for (int step = 0; step < maxSteps; step++)
 }
 ```
 
-### Critical: Guardrails
-
-Timeouts, max steps, cost limits, safety checks

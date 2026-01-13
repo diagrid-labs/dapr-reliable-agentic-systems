@@ -2,9 +2,7 @@
 layout: default
 ---
 
-## Implementation
-
-### Code Example
+# Dapr workflow example
 
 ```csharp
 // Orchestrator decomposes task
@@ -24,7 +22,3 @@ foreach (var task in tasks)
 return await context.CallActivityAsync<Output>(
     nameof(ConsolidateActivity), results);
 ```
-
-### Pattern Flow
-
-Decompose → Execute → Synthesize

@@ -2,26 +2,27 @@
 layout: default
 ---
 
-## Autonomous Agent
-
-### Pattern Overview
+# Autonomous Agent
 
 LLM dynamically directs its own processes and tool usage
 
-### When to Use
+## When to Use
 
 - Open-ended problems
 - Can't predict required steps
 - Need maximum flexibility
-- Working in trusted/sandboxed environments
+  
+## Use Cases
 
-### Pros ✅
+- Coding assistants
+- Research agents
+
+## Pros ✅
 
 - Maximum flexibility
-- Handles unpredictable scenarios
-- Can adapt to unexpected situations
+- Handles open-ended tasks
 
-### Cons ❌
+## Cons ❌
 
 - Highest cost and latency
 - Potential for compounding errors

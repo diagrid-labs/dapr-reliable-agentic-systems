@@ -24,9 +24,3 @@ graph TD
     style End2 fill:#d4edda
     style End3 fill:#d4edda
 ```
-
-### Use Cases
-
-- Customer service routing
-- Content classification
-- Model size optimization

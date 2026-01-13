@@ -2,9 +2,7 @@
 layout: default
 ---
 
-## Implementation with Dapr
-
-### Code Example
+# Dapr workflow example
 
 ```csharp
 var step1 = await context.CallActivityAsync<string>(
@@ -15,10 +13,7 @@ var step2 = await context.CallActivityAsync<string>(
 
 var step3 = await context.CallActivityAsync<Result>(
     nameof(EvaluateTranslationActivity), step2);
+
+return step3;
 ```
 
-### Benefits with Workflow
-
-- Each step automatically checkpointed
-- Restart from failure point
-- No re-execution of expensive LLM calls

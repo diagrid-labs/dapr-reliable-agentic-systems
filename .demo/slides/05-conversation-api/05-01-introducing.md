@@ -2,11 +2,11 @@
 layout: default
 ---
 
-## Dapr Conversation API
+# Dapr Conversation API
 
 Unified interface for LLM providers
 
-### Key Features
+## Key Features
 
 - Abstraction over LLM providers
 - Built-in Prompt Caching

@@ -2,14 +2,13 @@
 layout: default
 ---
 
-## Implementation
-
-### Code Example
+# Dapr workflow example
 
 ```csharp
 var current = input;
-var quality = 0.0;
-var maxIterations = 5;
+double quality = 0.0;
+double threshold = 0.8;
+int maxIterations = 5;
 
 for (int i = 0; i < maxIterations; i++)
 {
@@ -27,6 +26,3 @@ for (int i = 0; i < maxIterations; i++)
 }
 ```
 
-### Guardrails Required
-
-Always set maximum iterations

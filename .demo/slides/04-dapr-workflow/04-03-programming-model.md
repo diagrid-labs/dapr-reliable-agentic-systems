@@ -2,9 +2,9 @@
 layout: default
 ---
 
-## Workflow Programming Model
+# Workflow Programming Model
 
-### Key Components
+## Key Components
 
 - **Workflow Definition** - Orchestration logic
 - **Activities** - Deterministic tasks (where LLM calls happen)

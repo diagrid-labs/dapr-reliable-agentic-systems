@@ -2,14 +2,14 @@
 layout: default
 ---
 
-## Code Example
+# Conversation API code example
 
 
 ```csharp
 var request = new ConversationRequest
 {
     Messages = [
-        new Message { Role = "user", Content = prompt }
+        new Message { Role = "user", Content = "Explain Dapr, the distributed application runtime in simple terms." }
     ]
 };
 

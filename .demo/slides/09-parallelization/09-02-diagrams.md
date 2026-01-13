@@ -2,9 +2,8 @@
 layout: default
 ---
 
-## Parallelization Diagrams
+# Parallelization Diagrams
 
-### Sectioning
 ```mermaid
 graph TD
     Start([Input]) --> Parallel{Parallel Execution}
@@ -23,9 +22,3 @@ graph TD
     style A3 fill:#cfe2ff
     style End fill:#d4edda
 ```
-
-### Use Cases
-
-- Multi-source analysis
-- Guardrails (process + screen)
-- Code review with voting

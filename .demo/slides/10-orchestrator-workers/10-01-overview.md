@@ -2,26 +2,30 @@
 layout: default
 ---
 
-## Orchestrator-Workers
-
-### Pattern Overview
+# Orchestrator-Workers
 
 Central orchestrator dynamically decomposes tasks and delegates to workers
 
-### When to Use
+## When to Use
 
 - Subtasks can't be predicted upfront
 - Dynamic decomposition needed
 - Complex, unpredictable task structures
 
-### Pros ✅
+## Use Cases
+
+- Coding products (multi-file changes)
+- Research tasks
+- Complex planning
+
+## Pros ✅
 
 - Flexible and adaptable
 - Scales to complex problems
 - Clear separation of concerns
 
-### Cons ❌
+## Cons ❌
 
 - Higher complexity
-- More LLM calls (orchestrator + workers)
 - Higher latency and cost
+- High orchestrator dependency

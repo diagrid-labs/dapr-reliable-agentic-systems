@@ -23,8 +23,4 @@ graph TD
     style Gate2 fill:#fff3cd
 ```
 
-### Use Cases
 
-- Multi-step analysis
-- Content generation pipeline
-- Translation with refinement

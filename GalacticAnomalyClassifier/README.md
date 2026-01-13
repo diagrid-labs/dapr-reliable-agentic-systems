@@ -1,4 +1,4 @@
-# Galactic Anomaly Classifier - PLAN2 Implementation
+# Galactic Anomaly Classifier
 
 This project demonstrates **Workflow Routing** using Dapr Workflow to classify and route different types of space anomalies to specialized analysis pipelines.
 

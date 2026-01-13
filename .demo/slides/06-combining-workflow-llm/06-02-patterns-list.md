@@ -2,7 +2,7 @@
 layout: default
 ---
 
-## Common Agentic Patterns
+# Common Agentic Patterns
 
 1. **Prompt Chaining** - Sequential LLM calls
 2. **Routing** - Classification and specialized handlers

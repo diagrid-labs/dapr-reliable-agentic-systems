@@ -2,13 +2,13 @@
 layout: default
 ---
 
-## Dapr Workflow API
+# Dapr Workflow API
 
-### Workflow Engine Overview
+## Workflow Engine Overview
 
 Based on the proven Durable Task Framework
 
-### Key Features
+## Key Features
 
 - **Durable Execution** - Out of the box
 - **Activity Orchestration** - Coordinate multiple tasks
@@ -17,6 +17,6 @@ Based on the proven Durable Task Framework
 - **Sub-workflows** - Compose complex workflows
 - **External Events** - React to outside signals
 
-### Why Use It?
+## Why Use It?
 
 Get enterprise-grade workflow capabilities without complex infrastructure

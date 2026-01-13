@@ -2,7 +2,7 @@
 layout: default
 ---
 
-## Orchestrator-Workers Diagram
+# Orchestrator-Workers Diagram
 
 ```mermaid
 graph TD
@@ -26,8 +26,4 @@ graph TD
     style End fill:#d4edda
 ```
 
-### Use Cases
 
-- Coding products (multi-file changes)
-- Research tasks
-- Complex planning
