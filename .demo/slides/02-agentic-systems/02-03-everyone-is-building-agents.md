@@ -13,7 +13,3 @@ The AI agent landscape is exploding with new tools and frameworks
 - **Code Generation Assistants** - AI pair programming
 - **Content Creation Systems** - Automated writing and editing
 
-## The Promise vs The Reality
-
-- Promise: Autonomous, reliable, intelligent systems
-- Reality: Complex, fragile, expensive to run

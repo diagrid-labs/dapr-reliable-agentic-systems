@@ -101,7 +101,7 @@
   }
 
   h1, h2, h3, h4, h5 {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'SpaceGrotesk', sans-serif;
   }
 
   h1 {
@@ -116,18 +116,20 @@
   }
 
   h2 {
-    @apply text-3xl;
+    @apply text-2xl p-2;
+    color: var(--color-primary);
+    background: var(--color-background);
     padding: 0.2em;
     border-radius: 0.15em;
-    line-height: 1.3;
+    line-height: 1.2;
   }
 
   h3 {
-    @apply text-2xl;
+    @apply text-xl;
   }
 
   h4 {
-    @apply text-xl;
+    @apply text-lg;
   }
 
   h5 {

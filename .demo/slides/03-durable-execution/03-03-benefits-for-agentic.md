@@ -8,4 +8,4 @@ layout: default
 - **Save on LLM Costs** - No re-execution of expensive calls
 - **Predictable Behavior** - Deterministic execution
 - **Built-in Observability** - Full execution history
-- **Simplified Error Handling** - Automatic retry logic
+- **Built-in Error Handling** - Automatic retry logic

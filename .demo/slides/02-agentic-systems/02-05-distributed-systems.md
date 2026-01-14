@@ -2,9 +2,7 @@
 layout: default
 ---
 
-# Distributed Systems Problems
-
-## Agentic Systems ARE Distributed Systems
+# Agentic Systems ARE Distributed Systems
 
 They involve communication across LLM providers, services, and data stores
 

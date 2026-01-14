@@ -2,13 +2,18 @@ title: 03 Durable Execution
 description: ''
 version: 2
 demos:
+  - title: Durable Execution?
+    id: scene-mkduch5l-qf9r
+    steps:
+      - action: openSlide
+        path: .demo/slides/03-durable-execution/03-01-durable-execution.md
   - title: What is Durable Execution?
     id: scene-mk5gwyf9-47ni
     steps:
       - action: openSlide
-        path: .demo/slides/03-durable-execution/03-01-what-is-durable-execution.md
+        path: .demo/slides/03-durable-execution/03-02-what-is-durable-execution.md
   - title: Benefits for Agentic Systems
     id: scene-mk5gwzyb-9ozq
     steps:
       - action: openSlide
-        path: .demo/slides/03-durable-execution/03-02-benefits.md
+        path: .demo/slides/03-durable-execution/03-03-benefits-for-agentic.md

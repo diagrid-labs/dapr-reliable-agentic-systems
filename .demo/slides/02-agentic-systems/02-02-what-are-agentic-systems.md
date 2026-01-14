@@ -4,7 +4,7 @@ layout: default
 
 # What are Agentic Systems?
 
-Agentic AI systems are autonomous software agents that use LLMs to make decisions and take actions.
+Agentic AI systems use LLMs to make decisions and take actions.
 
 ## Key Components
 

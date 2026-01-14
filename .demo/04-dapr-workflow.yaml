@@ -2,33 +2,43 @@ title: 04 Dapr Workflow
 description: ''
 version: 2
 demos:
+  - title: Dapr
+    id: scene-mk5gxc05-li58
+    steps:
+      - action: openSlide
+        path: .demo/slides/04-dapr-workflow/04-01-dapr.md
   - title: What is Dapr?
     id: scene-mk5gxc05-li59
     steps:
       - action: openSlide
-        path: .demo/slides/04-dapr-workflow/04-01-what-is-dapr.md
+        path: .demo/slides/04-dapr-workflow/04-02-what-is-dapr.md
+  - title: Dapr Application Development Framework
+    id: scene-mk5gxc05-li60
+    steps:
+      - action: openSlide
+        path: .demo/slides/04-dapr-workflow/04-03-dapr-app-dev.md
   - title: Dapr Workflow Building Block
     id: scene-mk5gxdnf-idmp
     steps:
       - action: openSlide
-        path: .demo/slides/04-dapr-workflow/04-02-workflow-building-block.md
+        path: .demo/slides/04-dapr-workflow/04-04-dapr-workflow.md
   - title: Workflow Programming Model
     id: scene-mk5gxf0y-1f36
     steps:
       - action: openSlide
-        path: .demo/slides/04-dapr-workflow/04-03-programming-model.md
+        path: .demo/slides/04-dapr-workflow/04-05-workflow-programming-model.md
   - title: Workflow Code
     id: scene-mk5p8zl8-o6h1
     steps:
       - action: openSlide
-        path: .demo/slides/04-dapr-workflow/04-04-workflow.md
+        path: .demo/slides/04-dapr-workflow/04-06-workflow-code.md
   - title: Activity Code
     id: scene-mk5p912y-q9ce
     steps:
       - action: openSlide
-        path: .demo/slides/04-dapr-workflow/04-05-activity.md
+        path: .demo/slides/04-dapr-workflow/04-07-activity-code.md
   - title: Workflow Management Code
     id: scene-mk5p93uy-sfg3
     steps:
       - action: openSlide
-        path: .demo/slides/04-dapr-workflow/04-06-workflow-management.md
+        path: .demo/slides/04-dapr-workflow/04-08-workflow-management.md
