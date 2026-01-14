@@ -89,7 +89,7 @@
   /* background: var(--demotime-background);
   color: var(--demotime-color); */
   font-size: var(--demotime-font-size);
-  font-family: 'OpenSans', sans-serif;
+  font-family: OpenSans, sans-serif;
 
   .slide__content__inner {
     @apply p-8;
@@ -101,7 +101,7 @@
   }
 
   h1, h2, h3, h4, h5 {
-    font-family: 'SpaceGrotesk', sans-serif;
+    font-family: SpaceGrotesk, sans-serif;
   }
 
   h1 {

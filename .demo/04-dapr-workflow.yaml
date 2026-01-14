@@ -25,8 +25,13 @@ demos:
   - title: Workflow Programming Model
     id: scene-mk5gxf0y-1f36
     steps:
-      - action: openSlide
+      - action: markdownPreview
         path: .demo/slides/04-dapr-workflow/04-05-workflow-programming-model.md
+  - title: Workflow Management Code
+    id: scene-mk5p93uy-sfg3
+    steps:
+      - action: openSlide
+        path: .demo/slides/04-dapr-workflow/04-08-workflow-management.md
   - title: Workflow Code
     id: scene-mk5p8zl8-o6h1
     steps:
@@ -37,8 +42,3 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-07-activity-code.md
-  - title: Workflow Management Code
-    id: scene-mk5p93uy-sfg3
-    steps:
-      - action: openSlide
-        path: .demo/slides/04-dapr-workflow/04-08-workflow-management.md

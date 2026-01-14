@@ -2,10 +2,10 @@
 layout: default
 ---
 
-## Prompt Chaining Diagram
+# Prompt Chaining Diagram
 
 ```mermaid
-graph TD
+graph LR
     Start([Input]) --> A1[LLM Call 1]
     A1 --> Gate1{Validation Gate}
     Gate1 -->|Pass| A2[LLM Call 2]

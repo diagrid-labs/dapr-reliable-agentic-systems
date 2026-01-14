@@ -2,11 +2,16 @@ title: 05 Conversation API
 description: ''
 version: 2
 demos:
-  - title: Introducing Conversation API
+  - title: Dapr Conversation API
+    id: scene-mk5gxjku-5dok
+    steps:
+      - action: openSlide
+        path: .demo/slides/05-conversation-api/05-01-conversation-api.md
+  - title: Conversation API Overview
     id: scene-mk5gxjku-5doj
     steps:
       - action: openSlide
-        path: .demo/slides/05-conversation-api/05-01-introducing.md
+        path: .demo/slides/05-conversation-api/05-02-overview.md
   - title: Code example
     id: scene-mk5px71a-k29e
     steps:

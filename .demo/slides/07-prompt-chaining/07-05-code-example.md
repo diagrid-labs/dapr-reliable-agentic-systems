@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# Dapr workflow example
+# Prompt chaining example with Dapr Workflow
 
 ```csharp
 var step1 = await context.CallActivityAsync<string>(
