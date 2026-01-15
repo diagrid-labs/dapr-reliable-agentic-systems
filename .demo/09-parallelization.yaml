@@ -25,6 +25,12 @@ demos:
       - action: openSlide
         path: .demo/slides/09-parallelization/09-01-parallelization.md
         slide: 3
+  - title: Implementation with Dapr
+    id: demo-mkf8h4p0-8jsg
+    steps:
+      - action: openSlide
+        path: .demo/slides/09-parallelization/09-01-parallelization.md
+        slide: 4
   - title: Demo - Parallel Diagnostics
     id: scene-mk5h2ogm-1p35
     steps:
