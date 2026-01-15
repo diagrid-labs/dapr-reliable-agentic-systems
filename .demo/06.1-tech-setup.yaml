@@ -1,12 +1,12 @@
-title: 6 - Tech Setup
+title: 6 - Local Setup
 description: ''
 version: 2
 demos:
   - id: scene-mkdznzw9-f6ir
-    title: Tech setup
+    title: Local setup
     steps:
       - action: openSlide
-        path: .demo/slides/06-combining-workflow-llm/06-03-tech-setup.md
+        path: .demo/slides/06-combining-workflow-llm/06-02-tech-setup.md
   - id: scene-mkcnxjt6-bakh
     title: Start Ollama
     steps:

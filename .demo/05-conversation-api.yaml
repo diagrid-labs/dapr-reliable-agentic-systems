@@ -7,18 +7,22 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/05-conversation-api/05-01-conversation-api.md
+        slide: 1
   - title: Conversation API Overview
     id: scene-mk5gxjku-5doj
     steps:
       - action: openSlide
-        path: .demo/slides/05-conversation-api/05-02-overview.md
+        path: .demo/slides/05-conversation-api/05-01-conversation-api.md
+        slide: 2
   - title: Code example
     id: scene-mk5px71a-k29e
     steps:
       - action: openSlide
-        path: .demo/slides/05-conversation-api/05-02-code-example.md
+        path: .demo/slides/05-conversation-api/05-01-conversation-api.md
+        slide: 3
   - title: Component example
     id: scene-mk5pwq8p-b9lh
     steps:
       - action: openSlide
-        path: .demo/slides/05-conversation-api/05-03-component-example.md
+        path: .demo/slides/05-conversation-api/05-01-conversation-api.md
+        slide: 4

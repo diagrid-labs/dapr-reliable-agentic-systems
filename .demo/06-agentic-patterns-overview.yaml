@@ -6,14 +6,17 @@ demos:
     id: scene-mk5gxpxx-a1b2
     steps:
       - action: openSlide
-        path: .demo/slides/06-combining-workflow-llm/06-01-combining.md
-  - title: Common Agentic Patterns
+        path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
+        slide: 1
+  - title: Benefits
     id: scene-mk5gxqxm-f928
     steps:
       - action: openSlide
-        path: .demo/slides/06-combining-workflow-llm/06-02-patterns-list.md
-  - title: Pattern Selection Guide
+        path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
+        slide: 2
+  - title: Common Patterns
     id: scene-mk5gxsfd-b8yn
     steps:
       - action: openSlide
-        path: .demo/slides/06-combining-workflow-llm/06-03-selection-guide.md
+        path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
+        slide: 3
