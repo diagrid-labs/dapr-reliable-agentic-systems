@@ -1,6 +1,6 @@
 ---
 layout: default
-theme: default
+customTheme: .demo/slides/theme/theme.css
 ---
 
 # What is Durable Execution?

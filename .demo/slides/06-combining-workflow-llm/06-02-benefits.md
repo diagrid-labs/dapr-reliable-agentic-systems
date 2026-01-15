@@ -1,5 +1,6 @@
 ---
 layout: default
+customTheme: .demo/slides/theme/theme.css
 ---
 
 # Benefits of combining workflows and LLMs

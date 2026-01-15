@@ -1,5 +1,6 @@
 ---
 layout: default
+customTheme: .demo/slides/theme/theme.css
 ---
 
 # Workflow Management example

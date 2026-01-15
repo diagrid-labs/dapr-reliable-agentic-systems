@@ -6,27 +6,35 @@ demos:
     id: scene-mk5h2kzm-zyv6
     steps:
       - action: openSlide
-        path: .demo/slides/09-parallelization/09-01-overview.md
+        path: .demo/slides/09-parallelization/09-01-parallelization.md
+        slide: 1
   - title: Parallelization Diagrams
     id: scene-mk5h2mjm-mfbj
     steps:
-      - action: openSlide
+      - action: markdownPreview
         path: .demo/slides/09-parallelization/09-02-diagrams.md
-  - title: Code Example
+  - title: Use Cases
     id: scene-mk5h2nxx-g7h8
     steps:
       - action: openSlide
-        path: .demo/slides/09-parallelization/09-03-code-example.md
+        path: .demo/slides/09-parallelization/09-01-parallelization.md
+        slide: 2
+  - title: Pros and Cons
+    id: demo-mkf8h4p0-8jsf
+    steps:
+      - action: openSlide
+        path: .demo/slides/09-parallelization/09-01-parallelization.md
+        slide: 3
   - title: Demo - Parallel Diagnostics
     id: scene-mk5h2ogm-1p35
     steps:
       - action: openSlide
-        path: .demo/slides/09-parallelization/09-04-demo.md
+        path: .demo/slides/09-parallelization/09-03-demo.md
   - title: Demo Diagram
     id: scene-mk5h2p1c-i9j0
     steps:
-      - action: openSlide
-        path: .demo/slides/09-parallelization/09-05-demo-diagram.md
+      - action: markdownPreview
+        path: .demo/slides/09-parallelization/09-04-demo-diagram.md
   - id: scene-mkb2csbu-w72j
     title: Run workflow app
     steps:

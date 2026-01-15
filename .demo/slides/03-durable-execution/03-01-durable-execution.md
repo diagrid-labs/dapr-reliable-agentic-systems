@@ -1,6 +1,6 @@
 ---
 layout: section
-theme: default
+customTheme: .demo/slides/theme/theme.css
 ---
 
 # Durable Execution

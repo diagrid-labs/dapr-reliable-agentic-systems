@@ -1,5 +1,6 @@
 ---
 layout: default
+customTheme: .demo/slides/theme/theme.css
 ---
 
 # Demo: Spatial Anomaly Analysis System - Prompt Chaining Pattern
