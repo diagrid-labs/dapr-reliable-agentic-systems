@@ -2,5 +2,8 @@
     "demoTime.defaultFileType": "yaml",
     "demoTime.timer": 55,
     "demoTime.customTheme": ".demo/slides/theme/theme.css",
-    "demoTime.debug": false
+    "demoTime.debug": false,
+    "workbench.statusBar.visible": true,
+    "workbench.editor.showTabs": "single",
+    "workbench.activityBar.location": "default"
 }

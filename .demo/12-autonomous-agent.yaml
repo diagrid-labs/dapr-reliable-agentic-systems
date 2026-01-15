@@ -6,27 +6,41 @@ demos:
     id: scene-mk5h3g84-mlhm
     steps:
       - action: openSlide
-        path: .demo/slides/12-autonomous-agent/12-01-overview.md
+        path: .demo/slides/12-autonomous-agent/12-01-autonomous-agent.md
+        slide: 1
   - title: Autonomous Agent Diagram
     id: scene-mk5h3i02-q1nn
     steps:
+      - action: markdownPreview
+        path: .demo/slides/12-autonomous-agent/12-02-diagram.
+  - title: Autonomous Agent Use Cases
+    id: scene-mk5h3k6b-dlme
+    steps:
       - action: openSlide
-        path: .demo/slides/12-autonomous-agent/12-02-diagram.md
-  - title: Implementation
+        path: .demo/slides/12-autonomous-agent/12-01-autonomous-agent.md
+        slide: 2
+  - title: Autonomous Agent Pros and Cons
+    id: scene-mk5h3k6b-dlmf
+    steps:
+      - action: openSlide
+        path: .demo/slides/12-autonomous-agent/12-01-autonomous-agent.md
+        slide: 3
+  - title: Implementation with Dapr
     id: scene-mk5h3k6b-dlmq
     steps:
       - action: openSlide
-        path: .demo/slides/12-autonomous-agent/12-03-code-example.md
+        path: .demo/slides/12-autonomous-agent/12-01-autonomous-agent.md
+        slide: 4
   - title: Demo - Space Debris Agent
     id: scene-mk5h3m9a-t5b6
     steps:
       - action: openSlide
-        path: .demo/slides/12-autonomous-agent/12-04-demo.md
+        path: .demo/slides/12-autonomous-agent/12-03-demo.md
   - title: Demo Diagram
     id: scene-mk5h3n1f-o5p6
     steps:
-      - action: openSlide
-        path: .demo/slides/12-autonomous-agent/12-05-demo-diagram.md
+      - action: markdownPreview
+        path: .demo/slides/12-autonomous-agent/12-04-demo-diagram.md
   - id: scene-mkb3njij-6q2c
     title: Run workflow app
     steps:

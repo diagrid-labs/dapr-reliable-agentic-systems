@@ -6,17 +6,31 @@ demos:
     id: scene-mk5h3775-lq3a
     steps:
       - action: openSlide
-        path: .demo/slides/11-evaluator-optimizer/11-01-overview.md
+        path: .demo/slides/11-evaluator-optimizer/11-01-evaluator-optimizer.md
+        slide: 1
   - title: Evaluator-Optimizer Diagram
     id: scene-mk5h38pt-weqh
     steps:
-      - action: openSlide
+      - action: markdownPreview
         path: .demo/slides/11-evaluator-optimizer/11-02-diagram.md
-  - title: Implementation
+  - title: Evaluator-Optimizer Use Cases
+    id: scene-mk5h3a62-jmmv
+    steps:
+      - action: openSlide
+        path: .demo/slides/11-evaluator-optimizer/11-01-evaluator-optimizer.md
+        slide: 2
+  - title: Evaluator-Optimizer Pros and Cons
     id: scene-mk5h3a62-jmmw
     steps:
       - action: openSlide
-        path: .demo/slides/11-evaluator-optimizer/11-03-code-example.md
+        path: .demo/slides/11-evaluator-optimizer/11-01-evaluator-optimizer.md
+        slide: 3
+  - title: Implementation with Dapr
+    id: scene-mk5h3a62-jmmx
+    steps:
+      - action: openSlide
+        path: .demo/slides/11-evaluator-optimizer/11-01-evaluator-optimizer.md
+        slide: 4
   - title: Demo - Alien Translation
     id: scene-mk5h3bpo-635d
     steps:
@@ -25,7 +39,7 @@ demos:
   - title: Demo Diagram
     id: scene-mk5h3c1e-m3n4
     steps:
-      - action: openSlide
+      - action: markdownPreview
         path: .demo/slides/11-evaluator-optimizer/11-05-demo-diagram.md
   - id: scene-mkb3lue6-4q9l
     title: Run workflow app

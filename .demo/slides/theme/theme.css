@@ -110,7 +110,7 @@
     background: var(--color-primary);
     padding: 0.25em;
     border-radius: 0.15em;
-    line-height: 1.4;
+    line-height: 1.2;
     /* color: var(--demotime-heading-color);
     background: var(--demotime-heading-background); */
   }
@@ -324,5 +324,22 @@
       color: var(--demotime-two-columns-heading-color);
       background: var(--demotime-two-columns-heading-background);
     }
+  }
+
+  code {
+    color: var(--vscode-textPreformat-foreground);
+    background-color: var(--vscode-textPreformat-background);
+    padding: 1px 3px;
+    border-radius: 4px;
+  }
+
+  pre {
+    font-size: 0.8em;
+  }
+
+  pre code {
+    padding: 0 !important;
+    white-space: pre-wrap;
+    background: var(--vscode-editor-background);
   }
 }
