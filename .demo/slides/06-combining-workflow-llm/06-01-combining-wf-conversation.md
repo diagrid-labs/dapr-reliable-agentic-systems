@@ -5,6 +5,8 @@ customTheme: .demo/slides/theme/theme.css
 
 # Combining workflows and LLMs
 
+![Animation](.demo/images/bot-animations-1.gif)
+
 ---
 layout: default
 customTheme: .demo/slides/theme/theme.css

@@ -3,11 +3,12 @@ layout: intro
 customTheme: .demo/slides/theme/theme.css
 ---
 
-# Reliable Agentic Systems Need Durable Execution
+# Reliable Agentic Systems need Durable Execution
 
 **Marc Duiker**  
 Developer Advocate @ Diagrid
 
+![Animation](.demo/images/bot-animations-1.gif)
 
 ---
 theme: default
@@ -25,6 +26,25 @@ customTheme: .demo/slides/theme/theme.css
 - [marcduiker.dev](https://marcduiker.dev)
 
 ![Avatar](.demo/images/marcduiker_dapr_rainbow_eyes.gif)
+
+---
+layout: two-columns
+customTheme: .demo/slides/theme/theme.css
+---
+
+# Q&A, polls & feedback
+
+Use the QR code to:
+
+1. Ask questions 💬
+2. React with emojis 😍
+3. Participate in polls 📊
+4. Access the resources 📚
+5. Give feedback ⭐️
+6. Connect with me! 🤝
+
+::right::
+![QR Code](.demo/images/session-m6ec1e-qr.png)
 
 ---
 layout: default

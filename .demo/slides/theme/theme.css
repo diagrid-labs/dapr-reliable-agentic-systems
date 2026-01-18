@@ -126,6 +126,8 @@
 
   h3 {
     @apply text-xl;
+    color: var(--color-primary);
+    background: var(--color-background);
   }
 
   h4 {

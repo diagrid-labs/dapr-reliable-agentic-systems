@@ -7,6 +7,8 @@ customTheme: .demo/slides/theme/theme.css
 
 Sequential LLM calls where output of one becomes input to the next
 
+![Animation](.demo/images/bot-animations-1.gif)
+
 ---
 layout: default
 customTheme: .demo/slides/theme/theme.css

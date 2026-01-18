@@ -59,6 +59,26 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkb2csbu-w72k
+    title: ParallelDiagnosticsWorkflow
+    steps:
+      - action: highlight
+        path: StarshipDiagnostics/Workflows/ParallelDiagnosticsWorkflow.cs
+        position: '9'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-mkb2csbu-w72l
+    title: HullIntegrityScanActivity
+    steps:
+      - action: highlight
+        path: StarshipDiagnostics/Activities/Scanners/HullIntegrityScanActivity.cs
+        position: '10'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
   - id: scene-mkb2ctl7-haoq
     title: Start workflow
     steps:

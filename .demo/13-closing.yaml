@@ -1,0 +1,24 @@
+title: 13 Closing
+description: ''
+version: 2
+demos:
+  - title: Closing
+    id: scene-mk5h3rh9-i0up
+    steps:
+      - action: openSlide
+        path: .demo/slides/13-closing/13-01-closing.md
+        slide: 1
+  - title: Key Takeaways
+    id: demo-mkjyfc8v-2nof
+    steps:
+      - action: openSlide
+        path: .demo/slides/13-closing/13-01-closing.md
+        slide: 2
+  - title: Feedback & resources
+    id: scene-mk5h3v2e-zboh
+    steps:
+      - action: openSlide
+        path: .demo/slides/13-closing/13-01-closing.md
+        slide: 3
+engageTime:
+  sessionId: m6ec1e

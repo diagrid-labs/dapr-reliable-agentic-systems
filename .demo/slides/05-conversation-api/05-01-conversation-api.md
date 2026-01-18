@@ -5,6 +5,8 @@ customTheme: .demo/slides/theme/theme.css
 
 # Dapr Conversation API
 
+![Animation](.demo/images/bot-animations-3.gif)
+
 ---
 layout: default
 customTheme: .demo/slides/theme/theme.css

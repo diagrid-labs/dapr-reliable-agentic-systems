@@ -7,6 +7,8 @@ customTheme: .demo/slides/theme/theme.css
 
 Iterative improvement loop with generator and evaluator LLMs
 
+![Animation](.demo/images/bot-animations-1.gif)
+
 ---
 layout: default
 customTheme: .demo/slides/theme/theme.css

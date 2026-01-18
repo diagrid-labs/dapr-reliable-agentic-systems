@@ -7,6 +7,8 @@ customTheme: .demo/slides/theme/theme.css
 
 Central orchestrator dynamically decomposes tasks and delegates to workers
 
+![Animation](.demo/images/bot-animations-1.gif)
+
 ---
 layout: default
 customTheme: .demo/slides/theme/theme.css

@@ -7,6 +7,8 @@ customTheme: .demo/slides/theme/theme.css
 
 LLM dynamically directs its own processes and tool usage
 
+![Animation](.demo/images/bot-animations-1.gif)
+
 ---
 layout: default
 customTheme: .demo/slides/theme/theme.css

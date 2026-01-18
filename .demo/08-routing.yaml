@@ -58,6 +58,26 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkb28oma-vekn
+    title: AnomalyRoutingWorkflow
+    steps:
+      - action: highlight
+        path: GalacticAnomalyClassifier/Workflows/AnomalyRoutingWorkflow.cs
+        position: '8'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-mkb28oma-veko
+    title: ClassifyAnomalyActivity
+    steps:
+      - action: highlight
+        path: GalacticAnomalyClassifier/Activities/ClassifyAnomalyActivity.cs
+        position: '10'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
   - id: scene-mkb28qaj-1wp1
     title: Start workflow
     steps:

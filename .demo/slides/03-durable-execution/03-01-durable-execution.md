@@ -5,6 +5,8 @@ customTheme: .demo/slides/theme/theme.css
 
 # Durable Execution
 
+![Animation](.demo/images/bot-animations-2.gif)
+
 ---
 layout: default
 customTheme: .demo/slides/theme/theme.css

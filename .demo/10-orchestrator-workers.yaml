@@ -59,6 +59,26 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkb32jje-lewd
+    title: ColonyOrchestratorWorkflow
+    steps:
+      - action: highlight
+        path: SpaceColonyPlanner/Workflows/ColonyOrchestratorWorkflow.cs
+        position: '8'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-mkb32jje-lewe
+    title: AnalyzePlanetActivity
+    steps:
+      - action: highlight
+        path: SpaceColonyPlanner/Activities/Workers/AnalyzePlanetActivity.cs
+        position: '10'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
   - id: scene-mkb32l72-xbfd
     title: Start workflow
     steps:
