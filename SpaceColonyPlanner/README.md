@@ -1,10 +1,8 @@
 # Space Colony Planner
 
-This demo implements an **orchestrator-worker workflow** using Dapr Workflow for dynamic colony construction planning.
+This demo implements an **orchestrator-worker workflow** using Dapr Workflow for dynamic colony construction planning. The orchestrator analyzes a planet's unique conditions and dynamically determines which specialist workers are needed to create a comprehensive colony construction plan. Different planets require different structures, making this an ideal use case for the orchestrator-worker pattern.
 
-## Overview
-
-The orchestrator analyzes a planet's unique conditions and dynamically determines which specialist workers are needed to create a comprehensive colony construction plan. Different planets require different structures, making this an ideal use case for the orchestrator-worker pattern.
+## Pattern Overview
 
 ## Architecture
 
@@ -49,27 +47,38 @@ graph TD
 
 ### Prerequisites
 
-1. Dapr CLI installed and initialized
-2. Ollama running locally with llama3.2:latest model
-3. .NET 9 SDK
+- Docker Desktop or Podman
+- .NET 9 SDK
+- Dapr CLI
+- Ollama
 
 ### Start Ollama
 
 ```bash
 ollama serve
+ollama run llama3.2:3b
+```
+
+### Start the Diagrid Dev Dashboard
+
+```bash
+docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
 ```
 
 ### Run the Application
 
 ```bash
-dapr run -f .
+cd SpaceColonyPlanner
+dapr run -f dapr.yaml
 ```
 
-### Test the Workflow
+### Test with REST Client
 
-Use the VSCode REST Client with `local.http` to:
-1. POST a colony planning request with planet data
-2. GET the status and results of your colony plan
+Open `local.http` in VS Code and execute the requests to plan different colonies.
+
+### Inspect the Workflow runs
+
+Open the Diagrid Dev Dashboard at `http://localhost:8080` and inspect the workflow executions.
 
 ## Key Features
 

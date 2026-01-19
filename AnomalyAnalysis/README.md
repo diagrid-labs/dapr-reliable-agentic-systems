@@ -1,15 +1,8 @@
 # Data's Spatial Anomaly Analysis System
 
-## Overview
 This application implements Data's Spatial Anomaly Analysis System using Dapr Workflow to orchestrate a prompt chaining pattern. The system analyzes spatial anomalies detected by the USS Enterprise-D's sensors through a sequential 5-stage process.
 
-## Running
-
-1. `ollama serve`
-2. `ollama run phi3:3.8b`
-3. `dapr run -f .`
-4. `docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest`
-5. Make a POST request to ` http://localhost:5500/anomaly/analyze`. See [local.http](./local.http) for example an request.
+## Pattern Overview
 
 ## Architecture
 
@@ -44,11 +37,40 @@ graph TD
   - GenerateRecommendationActivity
   - AlertBridgeActivity (triggered for critical anomalies)
 
-## Dapr Components
+## Running the Demo
 
-- **State Store**: Redis for workflow state and anomaly data
-- **Conversation API**: OpenAI for LLM processing
+### Prerequisites
 
-## Observability
+- Docker Desktop or Podman
+- .NET 9 SDK
+- Dapr CLI
+- Ollama
 
-View workflow execution in the Diagrid Dashboard at http://localhost:8080
+### Start Ollama
+
+```bash
+ollama serve
+ollama run llama3.2:3b
+```
+
+### Start the Diagrid Dev Dashboard
+
+```bash
+docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
+```
+
+### Run the Application
+
+```bash
+cd AnomalyAnalysis
+dapr run -f dapr.yaml
+```
+
+### Test with REST Client
+
+Open `local.http` in VS Code and execute the requests to analyze anomalies.
+
+### Inspect the Workflow runs
+
+Open the Diagrid Dev Dashboard at `http://localhost:8080` and inspect the workflow executions.
+

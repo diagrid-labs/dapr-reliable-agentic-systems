@@ -2,6 +2,8 @@
 
 This project demonstrates **Workflow Routing** using Dapr Workflow to classify and route different types of space anomalies to specialized analysis pipelines.
 
+## Pattern Overview
+
 ## Architecture
 
 ```mermaid
@@ -39,72 +41,42 @@ The system uses a two-stage workflow:
    - **Stellar Phenomenon** → Astrophysics Analysis
    - **Dimensional Tear** → Multiverse Theory Analysis
 
-## Project Structure
+## Running the Demo
 
-```
-GalacticAnomalyClassifier/
-├── Program.cs                              # ASP.NET Core API with endpoints
-├── GalacticAnomalyClassifier.csproj       # Project file
-├── appsettings.json                        # Configuration
-├── dapr.yaml                              # Dapr multi-app configuration
-├── local.http                             # REST client test file
-├── Models/
-│   └── SpaceAnomaly.cs                    # All model classes
-├── Workflows/
-│   └── AnomalyRoutingWorkflow.cs          # Main routing workflow
-├── Activities/
-│   ├── ClassifyAnomalyActivity.cs         # LLM classification
-│   ├── AnalyzeTemporalRiftActivity.cs     # Temporal analysis
-│   ├── AnalyzeDarkMatterActivity.cs       # Dark matter analysis
-│   ├── AnalyzeAlienArtifactActivity.cs    # Artifact analysis
-│   ├── AnalyzeStellarPhenomenonActivity.cs # Stellar analysis
-│   └── AnalyzeDimensionalTearActivity.cs  # Dimensional analysis
-└── Resources/
-    ├── statestore.yaml                    # State store component
-    └── conversation.yaml                  # LLM component (configure API key)
-```
+### Prerequisites
 
-## Prerequisites
-
+- Docker Desktop or Podman
 - .NET 9 SDK
-- Dapr CLI (`dapr init`)
-- OpenAI API key
+- Dapr CLI
+- Ollama
 
-## Configuration
-
-1. Update `Resources/conversation.yaml` with your OpenAI API key:
-```yaml
-metadata:
-  - name: key
-    value: "YOUR_OPENAI_API_KEY"
-```
-
-## Running the Application
-
-From the project directory:
+### Start Ollama
 
 ```bash
-dapr run -f .
+ollama serve
+ollama run llama3.2:3b
 ```
 
-The API will be available at `http://localhost:5500`
+### Start the Diagrid Dev Dashboard
 
-## Testing
+```bash
+docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
+```
 
-Use the VSCode REST Client extension with `local.http` to test various anomaly types:
+### Run the Application
 
-1. Temporal Rift - Tests time distortion classification and analysis
-2. Dark Matter Cluster - Tests gravitational anomaly detection
-3. Alien Artifact - Tests manufactured object identification
-4. Stellar Phenomenon - Tests supernova detection
-5. Dimensional Tear - Tests reality breach analysis
+```bash
+cd GalacticAnomalyClassifier
+dapr run -f dapr.yaml
+```
 
-## API Endpoints
+### Test with REST Client
 
-- `POST /anomaly/analyze` - Submit anomaly for classification and analysis
-- `GET /anomaly/status/{instanceId}` - Get workflow status and results
-- `GET /anomalies/{anomalyId}` - Get specific anomaly data
-- `GET /anomalies/stats` - Get classification statistics
+Open `local.http` in VS Code and execute the requests to classify different anomalies.
+
+### Inspect the Workflow runs
+
+Open the Diagrid Dev Dashboard at `http://localhost:8080` and inspect the workflow executions.
 
 ## Key Features
 
@@ -122,4 +94,3 @@ Use the VSCode REST Client extension with `local.http` to test various anomaly t
 4. **Easy Extension** - Add new anomaly types without affecting existing routes
 5. **Clear Metrics** - Track performance per classification type
 
-See [PLAN2.MD](../PLAN2.MD) for complete implementation details and design rationale.

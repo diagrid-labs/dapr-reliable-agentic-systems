@@ -52,26 +52,39 @@ graph TD
 ## Running the Demo
 
 ### Prerequisites
+
+- Docker Desktop or Podman
 - .NET 9 SDK
 - Dapr CLI
-- Ollama with llama3.2:latest model
+- Ollama
 
 ### Start Ollama
+
 ```bash
 ollama serve
+ollama run llama3.2:3b
+```
+
+### Start the Diagrid Dev Dashboard
+
+```bash
+docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
 ```
 
 ### Run the Application
+
 ```bash
 cd AlienTranslator
 dapr run -f dapr.yaml
 ```
 
 ### Test with REST Client
-Open `local.http` in VS Code and execute the requests to:
-1. Submit alien text for translation
-2. Check translation status and results
-3. View specific iteration details
+
+Open `local.http` in VS Code and execute the requests to translate alien texts.
+
+### Inspect the Workflow runs
+
+Open the Diagrid Dev Dashboard at `http://localhost:8080` and inspect the workflow executions.
 
 ## Benefits
 - ✅ Iterative quality improvement with measurable metrics

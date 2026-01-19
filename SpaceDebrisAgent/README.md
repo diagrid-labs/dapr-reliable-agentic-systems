@@ -11,19 +11,7 @@ This demo implements a fully autonomous agent using Dapr Workflow that controls 
 - **State Persistence**: Continues mission across failures using ContinueAsNew
 - **External Events**: Workflow waits for human approval via RaiseEventAsync
 
-## Running the Demo
-
-1. Start the application:
-   ```bash
-   cd SpaceDebrisAgent
-   dapr run -f .
-   ```
-
-2. Start a mission using the REST client in `local.http`
-
-3. Monitor the agent's autonomous decision-making in the logs
-
-4. When the agent requests approval, send approval/disapproval via the `/approval` endpoint
+## Pattern Overview
 
 ## Architecture
 
@@ -72,9 +60,39 @@ graph TD
 - **Tool Activities**: Scan, Capture, Move, Analyze, CheckFuel, RequestApproval
 - **External Events**: Human approval with 1-minute timeout
 
-## Endpoints
+## Running the Demo
 
-- `POST /mission/start` - Start a new autonomous cleanup mission
-- `GET /mission/status/{instanceId}` - Get mission status and results
-- `GET /mission/{instanceId}/decisions` - View agent's decision history
-- `POST /mission/{instanceId}/approval` - Send human approval to workflow
+### Prerequisites
+
+- Docker Desktop or Podman
+- .NET 9 SDK
+- Dapr CLI
+- Ollama
+
+### Start Ollama
+
+```bash
+ollama serve
+ollama run llama3.2:3b
+```
+
+### Start the Diagrid Dev Dashboard
+
+```bash
+docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
+```
+
+### Run the Application
+
+```bash
+cd SpaceDebrisAgent
+dapr run -f dapr.yaml
+```
+
+### Test with REST Client
+
+Open `local.http` in VS Code and execute the requests to start a cleanup mission.
+
+### Inspect the Workflow runs
+
+Open the Diagrid Dev Dashboard at `http://localhost:8080` and inspect the workflow executions.

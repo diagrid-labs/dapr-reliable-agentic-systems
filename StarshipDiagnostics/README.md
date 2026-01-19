@@ -2,21 +2,13 @@
 
 This demo implements the **parallelization workflow pattern** using Dapr Workflow to perform comprehensive diagnostics on starships like the USS Enterprise-D. The system runs multiple independent scans simultaneously (sectioning) across all major ship systems and uses voting mechanisms to assess critical findings.
 
-## Features
+## Pattern Overview
 
-- **Parallel Scanner Activities**: Five independent diagnostic scans run simultaneously
-  - Hull Integrity Scanner
-  - Reactor Core Scanner
-  - Navigation Systems Scanner
-  - Life Support Scanner
-  - Tactical Systems Scanner
+This demo showcases:
 
-- **Voting Pattern**: Critical findings trigger parallel evaluation by three AI voters
-  - Safety Voter (crew safety perspective)
-  - Severity Voter (technical severity assessment)
-  - Recommendation Voter (cost-benefit analysis)
-
-- **Result Aggregation**: Combines all scan results and votes into a comprehensive diagnostic report
+1. **Sectioning** - Breaking work into independent parallel tasks
+2. **Voting** - Using multiple AI models for consensus on critical decisions
+3. **Aggregation** - Combining parallel results into a unified output
 
 ## Architecture
 
@@ -64,58 +56,57 @@ graph TD
 - **Dapr State Management**: Stores scan results and maintenance history
 - **Dapr Conversation API**: Powers each diagnostic scan and vote using LLMs
 
+
+## Features
+
+- **Parallel Scanner Activities**: Five independent diagnostic scans run simultaneously
+  - Hull Integrity Scanner
+  - Reactor Core Scanner
+  - Navigation Systems Scanner
+  - Life Support Scanner
+  - Tactical Systems Scanner
+
+- **Voting Pattern**: Critical findings trigger parallel evaluation by three AI voters
+  - Safety Voter (crew safety perspective)
+  - Severity Voter (technical severity assessment)
+  - Recommendation Voter (cost-benefit analysis)
+
+- **Result Aggregation**: Combines all scan results and votes into a comprehensive diagnostic report
+
 ## Running the Demo
 
 ### Prerequisites
 
-1. Ensure Dapr is initialized:
-   ```bash
-   dapr init
-   ```
+- Docker Desktop or Podman
+- .NET 9 SDK
+- Dapr CLI
+- Ollama
 
-2. Ensure Ollama is running with the llama3.2:3b model:
-   ```bash
-   ollama run llama3.2:3b
-   ```
-
-### Start the Application
-
-From the StarshipDiagnostics directory:
+### Start Ollama
 
 ```bash
-dapr run -f .
+ollama serve
+ollama run llama3.2:3b
 ```
 
-### Test the Workflow
+### Start the Diagrid Dev Dashboard
 
-Use the VSCode REST Client extension to execute requests from [local.http](local.http):
+```bash
+docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
+```
 
-1. **Diagnose a ship** - POST to `/ship/diagnose`
-2. **Get diagnostic report** - GET `/ship/report/{instanceId}`
-3. **View ship history** - GET `/ship/{shipId}/history`
+### Run the Application
 
-## Benefits of This Pattern
+```bash
+cd StarshipDiagnostics
+dapr run -f dapr.yaml
+```
 
-### Speed Improvements
-- **Sequential**: 5 scans × 3 seconds = 15 seconds
-- **Parallel**: max(scan times) = ~3 seconds
-- **5x faster** for this workload
+### Test with REST Client
 
-### Better Accuracy Through Voting
-- Multiple AI perspectives on critical findings
-- Reduces false positives
-- Provides consensus confidence levels
+Open `local.http` in VS Code and execute the requests to start a diagnostic scan.
 
-### Independent Specialization
-- Each scanner uses optimized prompts
-- Different models can be used per scanner
-- Easy to add new scans without affecting existing ones
+### Inspect the Workflow runs
 
-## Pattern Overview
+Open the Diagrid Dev Dashboard at `http://localhost:8080` and inspect the workflow executions.
 
-This demo showcases:
-1. **Sectioning** - Breaking work into independent parallel tasks
-2. **Voting** - Using multiple AI models for consensus on critical decisions
-3. **Aggregation** - Combining parallel results into a unified output
-
-See [PLAN3.MD](../PLAN3.MD) for the complete implementation details and pattern explanation.
