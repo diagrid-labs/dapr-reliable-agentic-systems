@@ -4,6 +4,43 @@ This project demonstrates **Workflow Routing** using Dapr Workflow to classify a
 
 ## Pattern Overview
 
+The **workflow routing pattern** uses intelligent classification to route requests to specialized handlers. This demo implements a two-stage workflow:
+
+1. **Classification Stage**: An LLM-powered classifier determines the anomaly type from sensor data
+2. **Routing Stage**: Based on classification, routes to one of five specialized analysis activities:
+   - **Temporal Rift** → Quantum Chronodynamics Analysis
+   - **Dark Matter Cluster** → Gravitational Physics Analysis
+   - **Alien Artifact** → Xenoarchaeology Analysis
+   - **Stellar Phenomenon** → Astrophysics Analysis
+   - **Dimensional Tear** → Multiverse Theory Analysis
+
+### Key Features
+
+- **Intelligent Routing**: LLM-powered classification routes to appropriate specialist
+- **Specialized Analysis**: Each anomaly type gets domain-specific analysis
+- **Durable Workflows**: Dapr Workflow ensures reliable execution
+- **State Management**: Anomaly data and results persisted in state store
+- **Observability**: Full workflow tracking and monitoring
+
+### Benefits
+
+- ✅ Specialized optimization - Different models and prompts per route
+- ✅ Better accuracy - Domain-specific expertise for each category
+- ✅ Cost efficiency - Use appropriate model size per complexity
+- ✅ Easy extension - Add new anomaly types without affecting existing routes
+- ✅ Clear metrics - Track performance per classification type
+
+### Drawbacks
+
+- ❌ Additional latency from classification step
+- ❌ Misclassification can route to wrong specialist
+- ❌ More complex to maintain multiple specialized handlers
+- ❌ Requires training data or examples for accurate classification
+
+### When to Use
+
+Use this pattern when you have distinct categories requiring specialized handling, when different routes benefit from different models/prompts, or when you need to optimize cost/latency per category. Ideal for multi-domain systems, tiered support routing, and specialized expert consultation.
+
 ## Architecture
 
 ```mermaid
@@ -30,16 +67,6 @@ graph TD
     style A5 fill:#cfe2ff
     style A6 fill:#cfe2ff
 ```
-
-The system uses a two-stage workflow:
-
-1. **Classification Stage**: An LLM-powered classifier determines the anomaly type from sensor data
-2. **Routing Stage**: Based on classification, routes to one of five specialized analysis activities:
-   - **Temporal Rift** → Quantum Chronodynamics Analysis
-   - **Dark Matter Cluster** → Gravitational Physics Analysis
-   - **Alien Artifact** → Xenoarchaeology Analysis
-   - **Stellar Phenomenon** → Astrophysics Analysis
-   - **Dimensional Tear** → Multiverse Theory Analysis
 
 ## Running the Demo
 
@@ -77,20 +104,4 @@ Open `local.http` in VS Code and execute the requests to classify different anom
 ### Inspect the Workflow runs
 
 Open the Diagrid Dev Dashboard at `http://localhost:8080` and inspect the workflow executions.
-
-## Key Features
-
-- **Intelligent Routing**: LLM-powered classification routes to appropriate specialist
-- **Specialized Analysis**: Each anomaly type gets domain-specific analysis
-- **Durable Workflows**: Dapr Workflow ensures reliable execution
-- **State Management**: Anomaly data and results persisted in state store
-- **Observability**: Full workflow tracking and monitoring
-
-## Benefits of Routing Pattern
-
-1. **Specialized Optimization** - Different models and prompts per route
-2. **Better Accuracy** - Domain-specific expertise for each category
-3. **Cost Efficiency** - Use appropriate model size per complexity
-4. **Easy Extension** - Add new anomaly types without affecting existing routes
-5. **Clear Metrics** - Track performance per classification type
 

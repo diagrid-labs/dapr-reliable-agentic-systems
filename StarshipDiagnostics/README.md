@@ -4,11 +4,44 @@ This demo implements the **parallelization workflow pattern** using Dapr Workflo
 
 ## Pattern Overview
 
-This demo showcases:
+The **parallelization pattern** breaks work into independent parallel tasks for faster execution and uses voting mechanisms for consensus on critical decisions. This demo showcases:
 
 1. **Sectioning** - Breaking work into independent parallel tasks
 2. **Voting** - Using multiple AI models for consensus on critical decisions
 3. **Aggregation** - Combining parallel results into a unified output
+
+### Key Features
+
+- **Parallel Scanner Activities**: Five independent diagnostic scans run simultaneously
+  - Hull Integrity Scanner
+  - Reactor Core Scanner
+  - Navigation Systems Scanner
+  - Life Support Scanner
+  - Tactical Systems Scanner
+- **Voting Pattern**: Critical findings trigger parallel evaluation by three AI voters
+  - Safety Voter (crew safety perspective)
+  - Severity Voter (technical severity assessment)
+  - Recommendation Voter (cost-benefit analysis)
+- **Result Aggregation**: Combines all scan results and votes into a comprehensive diagnostic report
+
+### Benefits
+
+- ✅ Parallel execution dramatically reduces total scan time
+- ✅ Independent scans prevent cross-contamination of results
+- ✅ Voting ensures robust decisions on critical findings
+- ✅ Easy to add new scan types or voters
+- ✅ Workflow orchestration provides reliability and observability
+
+### Drawbacks
+
+- ❌ Resource intensive - multiple LLM calls running concurrently
+- ❌ More expensive than sequential processing
+- ❌ Requires orchestration overhead
+- ❌ Voting can increase latency for critical findings
+
+### When to Use
+
+Use this pattern when tasks are independent and can run in parallel, when you need consensus on critical decisions, or when reducing total execution time is more important than cost. Ideal for comprehensive diagnostics, multi-perspective analysis, and distributed validation.
 
 ## Architecture
 
@@ -52,26 +85,11 @@ graph TD
     style V3 fill:#ffd6cc
 ```
 
+### Implementation Details
+
 - **Dapr Workflow**: Orchestrates parallel execution and voting
 - **Dapr State Management**: Stores scan results and maintenance history
 - **Dapr Conversation API**: Powers each diagnostic scan and vote using LLMs
-
-
-## Features
-
-- **Parallel Scanner Activities**: Five independent diagnostic scans run simultaneously
-  - Hull Integrity Scanner
-  - Reactor Core Scanner
-  - Navigation Systems Scanner
-  - Life Support Scanner
-  - Tactical Systems Scanner
-
-- **Voting Pattern**: Critical findings trigger parallel evaluation by three AI voters
-  - Safety Voter (crew safety perspective)
-  - Severity Voter (technical severity assessment)
-  - Recommendation Voter (cost-benefit analysis)
-
-- **Result Aggregation**: Combines all scan results and votes into a comprehensive diagnostic report
 
 ## Running the Demo
 

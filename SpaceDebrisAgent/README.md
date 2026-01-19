@@ -1,8 +1,18 @@
-# Space Debris Cleanup - Autonomous Agent Demo
+# Space Debris Cleanup - Autonomous Agent Pattern
 
 This demo implements a fully autonomous agent using Dapr Workflow that controls a space debris cleanup mission. The agent makes its own decisions about scanning, analyzing, capturing debris, and requesting human approval for high-risk maneuvers.
 
-## Key Features
+## Pattern Overview
+
+The **autonomous agent pattern** implements a self-directed reasoning loop where an LLM decides which actions to take based on current state and observations. This demo features:
+
+1. **Agent Reasoning Loop** - LLM evaluates state and selects next action
+2. **Tool Execution** - Agent can invoke tools (scan, move, capture, analyze)
+3. **Human-in-the-Loop** - Requests approval for high-risk maneuvers
+4. **State Persistence** - ContinueAsNew pattern maintains mission state
+5. **Error Recovery** - Adapts to tool failures and unexpected situations
+
+### Key Features
 
 - **Autonomous Decision-Making**: Agent uses LLM to reason and choose actions
 - **Tool Usage**: Scan, analyze, navigate, capture debris, check fuel
@@ -11,7 +21,25 @@ This demo implements a fully autonomous agent using Dapr Workflow that controls 
 - **State Persistence**: Continues mission across failures using ContinueAsNew
 - **External Events**: Workflow waits for human approval via RaiseEventAsync
 
-## Pattern Overview
+### Benefits
+
+- ✅ Fully autonomous operation reduces manual intervention
+- ✅ Adapts to dynamic environments and unexpected situations
+- ✅ Human oversight for critical decisions
+- ✅ Resilient to failures with state persistence
+- ✅ Extensible tool library for new capabilities
+
+### Drawbacks
+
+- ❌ Unpredictable behavior - agent makes its own choices
+- ❌ Higher latency from reasoning loop overhead
+- ❌ More expensive due to multiple LLM calls per decision
+- ❌ Requires careful prompt engineering for reliable behavior
+- ❌ Difficult to debug when agent makes unexpected choices
+
+### When to Use
+
+Use this pattern when tasks require autonomous decision-making in dynamic environments, when the sequence of actions cannot be predetermined, or when you need adaptive behavior based on observations. Ideal for robotic control, dynamic task planning, and interactive systems requiring judgment calls.
 
 ## Architecture
 

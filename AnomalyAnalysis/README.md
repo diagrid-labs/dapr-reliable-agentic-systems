@@ -4,6 +4,34 @@ This application implements Data's Spatial Anomaly Analysis System using Dapr Wo
 
 ## Pattern Overview
 
+The **prompt chaining pattern** orchestrates multiple LLM calls in a sequential pipeline, where each stage's output becomes context for the next stage. This demo implements a 5-stage anomaly analysis workflow:
+
+1. **Process Sensor Data** - Validates and normalizes raw sensor readings
+2. **Classify Anomaly** - Categorizes the anomaly type and severity
+3. **Scientific Analysis** - Deep dive into the physical phenomena
+4. **Risk Assessment** - Evaluates potential threats to ship and crew
+5. **Generate Recommendation** - Produces actionable response strategies
+6. **Alert Bridge** (conditional) - Immediate notification for critical anomalies
+
+### Benefits
+
+- ✅ Sequential processing builds rich context across stages
+- ✅ Specialized prompts optimized for each analysis phase
+- ✅ Clear separation of concerns (validation → classification → analysis → recommendations)
+- ✅ Easier debugging and monitoring per stage
+- ✅ Workflow state management ensures reliability and observability
+
+### Drawbacks
+
+- ❌ Higher latency from sequential processing (no parallelization)
+- ❌ Error in early stages blocks later stages
+- ❌ Context window limitations with long chains
+- ❌ More expensive than single LLM call
+
+### When to Use
+
+Use this pattern when analysis requires multiple specialized stages building on each other's output, and when the problem domain benefits from decomposition into distinct reasoning phases. Ideal for complex analysis, decision trees, and multi-step reasoning tasks.
+
 ## Architecture
 
 ```mermaid

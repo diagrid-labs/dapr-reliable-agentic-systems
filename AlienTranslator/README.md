@@ -10,6 +10,24 @@ The evaluator-optimizer pattern separates translation generation from quality ev
 2. **Evaluator** (EvaluateTranslationActivity) - Assesses quality and provides feedback
 3. **Workflow** (EvaluatorOptimizerWorkflow) - Orchestrates the iterative refinement loop
 
+### Benefits
+
+- ✅ Iterative quality improvement with measurable metrics
+- ✅ Specialized LLM roles (translator vs. evaluator)
+- ✅ Detailed feedback loop for targeted refinements
+- ✅ Graceful degradation with max iteration limit
+
+### Drawbacks
+
+- ❌ Higher latency (multiple LLM calls per translation)
+- ❌ More expensive (10+ LLM calls for 5 iterations)
+- ❌ Potential diminishing returns in later iterations
+- ❌ Evaluation subjectivity (LLM can't verify true accuracy)
+
+### When to Use
+
+Use this pattern when quality is more important than speed and iterative refinement demonstrably improves results. Ideal for diplomatic communications, literary translation, and content requiring editorial review.
+
 ## Architecture
 
 ```mermaid
@@ -35,6 +53,7 @@ graph TD
 ```
 
 ### Workflow Logic
+
 1. Generate initial translation
 2. Loop (max 5 iterations):
    - Evaluate current translation
@@ -44,6 +63,7 @@ graph TD
 3. Return final translation with iteration history
 
 ### Quality Metrics
+
 - **Accuracy Score** (0-10): Faithfulness to original meaning
 - **Cultural Nuance Score** (0-10): Preservation of cultural context
 - **Idiomatic Score** (0-10): Natural English readability
@@ -85,18 +105,3 @@ Open `local.http` in VS Code and execute the requests to translate alien texts.
 ### Inspect the Workflow runs
 
 Open the Diagrid Dev Dashboard at `http://localhost:8080` and inspect the workflow executions.
-
-## Benefits
-- ✅ Iterative quality improvement with measurable metrics
-- ✅ Specialized LLM roles (translator vs. evaluator)
-- ✅ Detailed feedback loop for targeted refinements
-- ✅ Graceful degradation with max iteration limit
-
-## Drawbacks
-- ❌ Higher latency (multiple LLM calls per translation)
-- ❌ More expensive (10+ LLM calls for 5 iterations)
-- ❌ Potential diminishing returns in later iterations
-- ❌ Evaluation subjectivity (LLM can't verify true accuracy)
-
-## When to Use
-Use this pattern when quality is more important than speed and iterative refinement demonstrably improves results. Ideal for diplomatic communications, literary translation, and content requiring editorial review.
