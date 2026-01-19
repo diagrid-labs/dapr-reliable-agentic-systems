@@ -32,3 +32,12 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkl5zvcz-5n4u
+    title: Close polls
+    steps:
+      - action: closeEngageTimePoll
+        pollId: 11ctbq
+      - action: closeEngageTimePoll
+        pollId: y1mzx3
+engageTime:
+  sessionId: m6ec1e

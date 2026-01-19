@@ -8,6 +8,16 @@ demos:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-01-dapr.md
         slide: 1
+  - id: scene-mkl5q4nj-ydwe
+    title: Dapr Poll
+    steps:
+      - action: startEngageTimePoll
+        pollId: 11ctbq
+      - action: showEngageTimePoll
+        pollId: 11ctbq
+    icons:
+      start: question
+      end: ''
   - title: What is Dapr?
     id: scene-mk5gxc05-li59
     steps:
@@ -20,12 +30,25 @@ demos:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-01-dapr.md
         slide: 3
+  - title: Workflow engines
+    id: demo-mkl5uika-aned
+    steps:
+      - action: openSlide
+        path: .demo/slides/04-dapr-workflow/04-02-dapr-workflow.md
+        slide: 1
+  - id: scene-mkl5w78i-tha2
+    title: Workflow poll
+    steps:
+      - action: startEngageTimePoll
+        pollId: y1mzx3
+      - action: showEngageTimePoll
+        pollId: y1mzx3
   - title: Dapr Workflow Building Block
     id: scene-mk5gxdnf-idmp
     steps:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-02-dapr-workflow.md
-        slide: 1
+        slide: 2
   - title: Workflow Programming Model
     id: scene-mk5gxf0y-1f36
     steps:
@@ -36,18 +59,18 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-02-dapr-workflow.md
-        slide: 2
+        slide: 3
   - title: Workflow Code
     id: scene-mk5p8zl8-o6h1
     steps:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-02-dapr-workflow.md
-        slide: 3
+        slide: 4
   - title: Activity Code
     id: scene-mk5p912y-q9ce
     steps:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-02-dapr-workflow.md
-        slide: 4
+        slide: 5
 engageTime:
   sessionId: m6ec1e
