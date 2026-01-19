@@ -8,6 +8,14 @@ namespace StarshipDiagnostics.Workflows;
 
 public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
 {
+    private static WorkflowTaskOptions GetDefaultRetryPolicy()
+    {
+        return new WorkflowTaskOptions(
+            new WorkflowRetryPolicy(
+                maxNumberOfAttempts: 5,
+                firstRetryInterval: TimeSpan.FromSeconds(1)));
+    }
+
     public override async Task<DiagnosticReport> RunAsync(
         WorkflowContext context, 
         Starship input)
@@ -17,19 +25,24 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
         {
             context.CallActivityAsync<ScanResult>(
                 nameof(HullIntegrityScanActivity),
-                input),
+                input,
+                GetDefaultRetryPolicy()),
             context.CallActivityAsync<ScanResult>(
                 nameof(ReactorCoreScanActivity),
-                input),
+                input,
+                GetDefaultRetryPolicy()),
             context.CallActivityAsync<ScanResult>(
                 nameof(NavigationScanActivity),
-                input),
+                input,
+                GetDefaultRetryPolicy()),
             context.CallActivityAsync<ScanResult>(
                 nameof(LifeSupportScanActivity),
-                input),
+                input,
+                GetDefaultRetryPolicy()),
             context.CallActivityAsync<ScanResult>(
                 nameof(WeaponsScanActivity),
-                input)
+                input,
+                GetDefaultRetryPolicy())
         };
         
         // Run the scans and wait for all scans to complete
@@ -53,13 +66,16 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
                 {
                     context.CallActivityAsync<KeyValuePair<string, string>>(
                         nameof(SafetyVoterActivity),
-                        finding),
+                        finding,
+                        GetDefaultRetryPolicy()),
                     context.CallActivityAsync<KeyValuePair<string, string>>(
                         nameof(SeverityVoterActivity),
-                        finding),
+                        finding,
+                        GetDefaultRetryPolicy()),
                     context.CallActivityAsync<KeyValuePair<string, string>>(
                         nameof(RecommendationVoterActivity),
-                        finding)
+                        finding,
+                        GetDefaultRetryPolicy())
                 };
                 
                 var votes = await Task.WhenAll(voteTasks);
@@ -82,7 +98,8 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
         var aggregationInput = new AggregateResultsInput(scanResults.ToList(), voteResults);
         var finalReport = await context.CallActivityAsync<DiagnosticReport>(
             nameof(AggregateResultsActivity),
-            aggregationInput);
+            aggregationInput,
+            GetDefaultRetryPolicy());
         
         return finalReport;
     }

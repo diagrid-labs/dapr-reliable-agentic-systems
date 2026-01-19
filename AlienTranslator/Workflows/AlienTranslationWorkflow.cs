@@ -5,6 +5,14 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
     private const int MAX_ITERATIONS = 5;
     private const double QUALITY_THRESHOLD = 8.0;
 
+    private static WorkflowTaskOptions GetDefaultRetryPolicy()
+    {
+        return new WorkflowTaskOptions(
+            new WorkflowRetryPolicy(
+                maxNumberOfAttempts: 5,
+                firstRetryInterval: TimeSpan.FromSeconds(1)));
+    }
+
     public override async Task<AlienTranslationWorkflowOutput> RunAsync(
         WorkflowContext context,
         AlienTranslationWorkflowInput input)
@@ -14,7 +22,8 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
         {
             translation = await context.CallActivityAsync<Translation>(
                 nameof(TranslateActivity),
-                new TranslateInput(input.AlienText, null, input.Evaluations.Count + 1));
+                new TranslateInput(input.AlienText, null, input.Evaluations.Count + 1),
+                GetDefaultRetryPolicy());
 
         }
         else
@@ -25,14 +34,16 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
                     input.AlienText,
                     input.Translations.Last(),
                     input.Evaluations.Last(),
-                    input.Evaluations.Count + 1));
+                    input.Evaluations.Count + 1),
+                GetDefaultRetryPolicy());
         }
 
         var translations = input.Translations.Append(translation).ToList();
 
         var evaluation = await context.CallActivityAsync<Evaluation>(
             nameof(EvaluateTranslationActivity),
-            new EvaluateInput(input.AlienText, translation));
+            new EvaluateInput(input.AlienText, translation),
+            GetDefaultRetryPolicy());
 
         var evaluations = input.Evaluations.Append(evaluation).ToList();
         context.SetCustomStatus($"Evaluations: {evaluations.Count}");

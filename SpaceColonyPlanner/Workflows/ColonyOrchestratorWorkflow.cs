@@ -7,6 +7,14 @@ namespace SpaceColonyPlanner.Workflows;
 
 public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPlan>
 {
+    private static WorkflowTaskOptions GetDefaultRetryPolicy()
+    {
+        return new WorkflowTaskOptions(
+            new WorkflowRetryPolicy(
+                maxNumberOfAttempts: 5,
+                firstRetryInterval: TimeSpan.FromSeconds(1)));
+    }
+
     public override async Task<ColonyMasterPlan> RunAsync(
         WorkflowContext context, 
         ColonyRequest input)
@@ -14,13 +22,15 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
         // Step 1: Analyze planet to understand constraints
         var planetAnalysis = await context.CallActivityAsync<PlanetAnalysis>(
             nameof(AnalyzePlanetActivity),
-            input.Planet);
+            input.Planet,
+            GetDefaultRetryPolicy());
         
         // Step 2: Orchestrator determines what structures are needed
         // This is DYNAMIC - different planets need different structures
         var structureRequests = await context.CallActivityAsync<List<StructureRequest>>(
             nameof(DetermineStructuresActivity),
-            new DetermineStructuresInput(input.Planet, input.Requirements, planetAnalysis));
+            new DetermineStructuresInput(input.Planet, input.Requirements, planetAnalysis),
+            GetDefaultRetryPolicy());
         
         // Step 3: Dynamically spawn worker tasks for each structure type
         // The orchestrator doesn't know ahead of time how many workers needed!
@@ -47,7 +57,7 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
             );
             
             workerTasks.Add(
-                context.CallActivityAsync<StructurePlan>(workerActivity, workerInput)
+                context.CallActivityAsync<StructurePlan>(workerActivity, workerInput, GetDefaultRetryPolicy())
             );
         }
         
@@ -57,12 +67,14 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
         // Step 4: Synthesize individual plans into master plan
         var masterPlan = await context.CallActivityAsync<ColonyMasterPlan>(
             nameof(SynthesizePlanActivity),
-            new SynthesizePlanInput(input.Planet.PlanetId, structurePlans.ToList()));
+            new SynthesizePlanInput(input.Planet.PlanetId, structurePlans.ToList()),
+            GetDefaultRetryPolicy());
         
         // Step 5: Optimize construction timeline
         var optimizedPlan = await context.CallActivityAsync<ColonyMasterPlan>(
             nameof(OptimizeTimelineActivity),
-            masterPlan);
+            masterPlan,
+            GetDefaultRetryPolicy());
         
         return optimizedPlan;
     }

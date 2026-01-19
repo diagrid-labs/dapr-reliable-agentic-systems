@@ -9,6 +9,14 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
 {
     private const int MAX_STEPS = 50; // Prevent infinite loops
     
+    private static WorkflowTaskOptions GetDefaultRetryPolicy()
+    {
+        return new WorkflowTaskOptions(
+            new WorkflowRetryPolicy(
+                maxNumberOfAttempts: 5,
+                firstRetryInterval: TimeSpan.FromSeconds(1)));
+    }
+    
     public override async Task<MissionResult> RunAsync(
         WorkflowContext context, 
         SpaceDebrisCleanupWorkflowInput input)
@@ -30,7 +38,8 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         // Agent reasoning: decide next action
         var decision = await context.CallActivityAsync<AgentDecision>(
             nameof(AgentReasoningActivity),
-            new ReasoningInput(input.MissionParameters, agentState, input.ToolCalls));
+            new ReasoningInput(input.MissionParameters, agentState, input.ToolCalls),
+            GetDefaultRetryPolicy());
         
         var decisions = input.Decisions.Append(decision).ToList();
         
@@ -39,7 +48,8 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         {
             var finalReport = await context.CallActivityAsync<string>(
                 nameof(GenerateReportActivity),
-                new { agentState, decisions, toolCalls = input.ToolCalls });
+                new { agentState, decisions, toolCalls = input.ToolCalls },
+                GetDefaultRetryPolicy());
             
             return new MissionResult(
                 input.MissionParameters.MissionId,
@@ -62,7 +72,8 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             // First call the activity to store the approval request
             await context.CallActivityAsync(
                 nameof(RequestHumanApprovalActivity),
-                decision.ActionParameters);
+                decision.ActionParameters,
+                GetDefaultRetryPolicy());
             
             // Wait for external event with 1 minute timeout
             var approvalTask = context.WaitForExternalEventAsync<HumanApproval>("HumanApproval");
@@ -187,7 +198,8 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         {
             var result = await context.CallActivityAsync<TResult>(
                 activityName,
-                parameters);
+                parameters,
+                GetDefaultRetryPolicy());
             
             return new ToolCall(
                 activityName,

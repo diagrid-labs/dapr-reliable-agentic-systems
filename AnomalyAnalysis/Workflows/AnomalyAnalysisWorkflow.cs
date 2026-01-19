@@ -6,6 +6,14 @@ namespace AnomalyAnalysis.Workflows;
 
 public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
 {
+    private static WorkflowTaskOptions GetDefaultRetryPolicy()
+    {
+        return new WorkflowTaskOptions(
+            new WorkflowRetryPolicy(
+                maxNumberOfAttempts: 5,
+                firstRetryInterval: TimeSpan.FromSeconds(1)));
+    }
+
     public override async Task<AnalysisResult> RunAsync(
         WorkflowContext context,
         SpatialAnomaly input)
@@ -15,7 +23,8 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         // Stage 1: Process Sensor Data
         var processedData = await context.CallActivityAsync<string>(
             nameof(ProcessSensorDataActivity),
-            input.RawSensorData);
+            input.RawSensorData,
+            GetDefaultRetryPolicy());
         
         stages.Add(new AnalysisStage(
             nameof(ProcessSensorDataActivity), 
@@ -33,7 +42,8 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         // Stage 2: Classify Anomaly
         var anomalyType = await context.CallActivityAsync<string>(
             nameof(ClassifyAnomalyActivity),
-            processedData);
+            processedData,
+            GetDefaultRetryPolicy());
         
         stages.Add(new AnalysisStage(
             nameof(ClassifyAnomalyActivity), 
@@ -45,7 +55,8 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         // Stage 3: Scientific Analysis
         var scientificAnalysis = await context.CallActivityAsync<string>(
             nameof(ScientificAnalysisActivity),
-            new ScientificAnalysisInput(processedData, anomalyType));
+            new ScientificAnalysisInput(processedData, anomalyType),
+            GetDefaultRetryPolicy());
         
         stages.Add(new AnalysisStage(
             nameof(ScientificAnalysisActivity),
@@ -57,7 +68,8 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         // Stage 4: Risk Assessment
         var riskLevel = await context.CallActivityAsync<string>(
             nameof(RiskAssessmentActivity),
-            new RiskAssessmentInput(anomalyType, scientificAnalysis));
+            new RiskAssessmentInput(anomalyType, scientificAnalysis),
+            GetDefaultRetryPolicy());
         
         stages.Add(new AnalysisStage(
             nameof(RiskAssessmentActivity),
@@ -71,7 +83,8 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         {
             await context.CallActivityAsync(
                 nameof(AlertBridgeActivity),
-                input.AnomalyId);
+                input.AnomalyId,
+                GetDefaultRetryPolicy());
         }
         
         // Stage 5: Generate Tactical Recommendation
@@ -81,7 +94,8 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
                 anomalyType,
                 scientificAnalysis,
                 riskLevel
-            ));
+            ),
+            GetDefaultRetryPolicy());
         
         stages.Add(new AnalysisStage(
             nameof(GenerateRecommendationActivity),
