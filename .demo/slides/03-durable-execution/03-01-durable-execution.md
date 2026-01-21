@@ -28,8 +28,8 @@ customTheme: .demo/slides/theme/theme.css
 
 # Why Durable Execution Matters for AI Agents
 
-- **Resume from Last Checkpoint** - Not from scratch!
+- **Resume from Last Checkpoint** - Not from the start
 - **Save on LLM Costs** - No re-execution of expensive calls
 - **Predictable Behavior** - Deterministic execution
 - **Built-in Observability** - Full execution history
-- **Built-in Error Handling** - Automatic retry logic
+- **Built-in Resiliency** - Automatic retry logic
