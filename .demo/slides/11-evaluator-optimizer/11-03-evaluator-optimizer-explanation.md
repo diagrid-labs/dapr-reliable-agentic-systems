@@ -1,15 +1,4 @@
 ---
-layout: section
-customTheme: .demo/slides/theme/theme.css
----
-
-# Evaluator-Optimizer
-
-Iterative improvement loop with generator and evaluator LLMs
-
-![Animation](.demo/images/bot-animations-1.gif)
-
----
 layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
@@ -30,9 +19,6 @@ customTheme: .demo/slides/theme/theme.css
 - Code generation with validation
 
 ---
-layout: default
-customTheme: .demo/slides/theme/theme.css
----
 
 # Evaluator-Optimizer
 
@@ -48,9 +34,6 @@ customTheme: .demo/slides/theme/theme.css
 - High cost and latency
 - Risk of infinite loops
 
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Evaluator-Optimizer with Dapr workflow

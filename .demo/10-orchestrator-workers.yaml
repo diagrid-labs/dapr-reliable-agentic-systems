@@ -6,8 +6,7 @@ demos:
     id: scene-mk5h2u59-d6vy
     steps:
       - action: openSlide
-        path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers.md
-        slide: 1
+        path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers-intro.md
   - title: Orchestrator-Workers Diagram
     id: scene-mk5h2w37-huua
     steps:
@@ -17,30 +16,30 @@ demos:
     id: scene-mk5h2z91-ichb
     steps:
       - action: openSlide
-        path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers.md
-        slide: 2
-  - title: Orchestrator-Workers Pros and Cons
-    id: scene-mk5h2z91-ichc
-    steps:
-      - action: openSlide
-        path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers.md
-        slide: 3
-  - title: Implementation with Dapr
-    id: scene-mk5h2z91-ichd
-    steps:
-      - action: openSlide
-        path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers.md
-        slide: 4
+        path: .demo/slides/10-orchestrator-workers/10-03-orchestrator-workers-explanation.md
+        slide: 1
+  # - title: Orchestrator-Workers Pros and Cons
+  #   id: scene-mk5h2z91-ichc
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers-explanation.md
+  #       slide: 2
+  # - title: Implementation with Dapr
+  #   id: scene-mk5h2z91-ichd
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers-explanation.md
+  #       slide: 3
   - title: Demo - Space Colony Planner
     id: scene-mk5h32b7-xqky
     steps:
       - action: openSlide
-        path: .demo/slides/10-orchestrator-workers/10-03-demo.md
+        path: .demo/slides/10-orchestrator-workers/10-04-demo.md
   - title: Demo Diagram
     id: scene-mk5h331d-k1l2
     steps:
       - action: markdownPreview
-        path: .demo/slides/10-orchestrator-workers/10-04-demo-diagram.md
+        path: .demo/slides/10-orchestrator-workers/10-05-demo-diagram.md
   - id: scene-mkb32jje-lewc
     title: Run workflow app
     steps:

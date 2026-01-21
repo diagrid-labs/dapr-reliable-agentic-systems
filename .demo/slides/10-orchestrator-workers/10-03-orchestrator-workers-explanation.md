@@ -1,15 +1,4 @@
 ---
-layout: section
-customTheme: .demo/slides/theme/theme.css
----
-
-# Orchestrator-Workers
-
-Central orchestrator dynamically decomposes tasks and delegates to workers
-
-![Animation](.demo/images/bot-animations-1.gif)
-
----
 layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
@@ -29,9 +18,6 @@ customTheme: .demo/slides/theme/theme.css
 - Complex planning
 
 ---
-layout: default
-customTheme: .demo/slides/theme/theme.css
----
 
 # Orchestrator-Workers
 
@@ -47,9 +33,6 @@ customTheme: .demo/slides/theme/theme.css
 - Higher latency and cost
 - High orchestrator dependency
 
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Orchestrator-Workers using Dapr workflow
