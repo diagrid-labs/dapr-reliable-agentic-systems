@@ -1,15 +1,4 @@
 ---
-layout: section
-customTheme: .demo/slides/theme/theme.css
----
-
-# Parallelization
-
-Execute independent tasks concurrently
-
-![Animation](.demo/images/bot-animations-1.gif)
-
----
 layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
@@ -27,9 +16,6 @@ customTheme: .demo/slides/theme/theme.css
 - Code review with voting
 
 ---
-layout: default
-customTheme: .demo/slides/theme/theme.css
----
 
 # Parallelization
 
@@ -45,9 +31,6 @@ customTheme: .demo/slides/theme/theme.css
 - Requires aggregation logic
 - Tasks must be independent
 
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Dapr workflow example
