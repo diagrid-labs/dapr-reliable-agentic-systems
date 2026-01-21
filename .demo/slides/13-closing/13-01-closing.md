@@ -21,6 +21,7 @@ customTheme: .demo/slides/theme/theme.css
 ### 5. Understand the agentic patterns and when to use them
 ### 6. Agentic patterns aren't mutually exclusive, combine where needed
 ### 7. Start simple, add complexity when needed
+
 ---
 layout: two-columns
 customTheme: .demo/slides/theme/theme.css
@@ -34,7 +35,9 @@ Use the QR code to:
 2. Access resources 📚
 3. Connect with me! 🤝
 
-![Dapr Community Supporter](.demo/images/dapr-community-supporter-badge-anim.gif)
+<!-- ![Dapr Community Supporter](.demo/images/dapr-community-supporter-badge-anim.gif) -->
+
+![Picard waving](.demo/images/picard-waving.gif)
 
 ::right::
 ![QR Code](.demo/images/session-m6ec1e-feedback-qr.png)

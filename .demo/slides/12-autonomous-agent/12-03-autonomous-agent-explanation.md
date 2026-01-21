@@ -1,15 +1,4 @@
 ---
-layout: section
-customTheme: .demo/slides/theme/theme.css
----
-
-# Autonomous Agent
-
-LLM dynamically directs its own processes and tool usage
-
-![Animation](.demo/images/bot-animations-1.gif)
-
----
 layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
@@ -28,9 +17,6 @@ customTheme: .demo/slides/theme/theme.css
 - Research agents
 
 ---
-layout: default
-customTheme: .demo/slides/theme/theme.css
----
 
 # Autonomous Agent
 
@@ -46,9 +32,6 @@ customTheme: .demo/slides/theme/theme.css
 - Less predictable
 - Requires extensive testing
 
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Autonomous Agent with Dapr workflow
