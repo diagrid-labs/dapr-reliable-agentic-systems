@@ -13,25 +13,25 @@ demos:
         command: workbench.action.terminal.killAll
         disabled: true
       - action: setPresentationView
-  - title: Bio
-    id: scene-mk5iuh1a-kw4m
-    steps:
-      - action: openSlide
-        path: .demo/slides/01-intro/01-01-intro.md
-        slide: 2
-      - action: executeVSCodeCommand
-        command: demo-time.startCountdown
-  - title: EngageTime
-    id: scene-mk5iuh1a-kw4n
-    steps:
-      - action: openSlide
-        path: .demo/slides/01-intro/01-01-intro.md
-        slide: 3
-  - title: Problem
-    id: scene-mk5iuh1a-kw4o
-    steps:
-      - action: openSlide
-        path: .demo/slides/01-intro/01-01-intro.md
-        slide: 4
+  # - title: Bio
+  #   id: scene-mk5iuh1a-kw4m
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/01-intro/01-01-intro.md
+  #       slide: 2
+  #     - action: executeVSCodeCommand
+  #       command: demo-time.startCountdown
+  # - title: EngageTime
+  #   id: scene-mk5iuh1a-kw4n
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/01-intro/01-01-intro.md
+  #       slide: 3
+  # - title: Problem
+  #   id: scene-mk5iuh1a-kw4o
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/01-intro/01-01-intro.md
+  #       slide: 4
 engageTime:
   sessionId: m6ec1e

@@ -8,15 +8,15 @@ demos:
       - action: openSlide
         path: .demo/slides/03-durable-execution/03-01-durable-execution.md
         slide: 1
-  - title: What is Durable Execution?
-    id: scene-mk5gwyf9-47ni
-    steps:
-      - action: openSlide
-        path: .demo/slides/03-durable-execution/03-01-durable-execution.md
-        slide: 2
-  - title: Benefits for Agentic Systems
-    id: scene-mk5gwzyb-9ozq
-    steps:
-      - action: openSlide
-        path: .demo/slides/03-durable-execution/03-01-durable-execution.md
-        slide: 3
+  # - title: What is Durable Execution?
+  #   id: scene-mk5gwyf9-47ni
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/03-durable-execution/03-01-durable-execution.md
+  #       slide: 2
+  # - title: Benefits for Agentic Systems
+  #   id: scene-mk5gwzyb-9ozq
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/03-durable-execution/03-01-durable-execution.md
+  #       slide: 3

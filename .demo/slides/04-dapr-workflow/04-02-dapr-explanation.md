@@ -1,22 +1,10 @@
 ---
-layout: section
-customTheme: .demo/slides/theme/theme.css
----
-
-# Dapr
-
-![Animation](.demo/images/bot-animations-3.gif)
-
----
 layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
 
 ![Dapr website](.demo/images/dapr-website.png)
 
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 ![Dapr Application Development Framework](.demo/images/dapr-app-dev-platform.png)

@@ -8,27 +8,27 @@ demos:
       - action: openSlide
         path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
         slide: 1
-  - title: What are Agentic Systems?
-    id: scene-mk5gwh5y-mvrq
-    steps:
-      - action: openSlide
-        path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
-        slide: 2
-  - title: The Reality of Building Agents
-    id: scene-mk5gwp1b-88i0
-    steps:
-      - action: openSlide
-        path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
-        slide: 3
-  - title: Production Challenges
-    id: scene-mk5gwr22-cgwd
-    steps:
-      - action: openSlide
-        path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
-        slide: 4
-  - title: Distributed Systems Problems
-    id: scene-mk5gwt42-7tui
-    steps:
-      - action: openSlide
-        path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
-        slide: 5
+  # - title: What are Agentic Systems?
+  #   id: scene-mk5gwh5y-mvrq
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
+  #       slide: 2
+  # - title: Everyone is Building Agents
+  #   id: scene-mk5gwp1b-88i0
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
+  #       slide: 3
+  # - title: Production Challenges
+  #   id: scene-mk5gwr22-cgwd
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
+  #       slide: 4
+  # - title: Distributed Systems Problems
+  #   id: scene-mk5gwt42-7tui
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
+  #       slide: 5

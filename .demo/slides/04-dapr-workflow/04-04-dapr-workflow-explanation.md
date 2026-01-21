@@ -1,13 +1,4 @@
 ---
-layout: section
-customTheme: .demo/slides/theme/theme.css
----
-
-# Workflow Engines
-
-![Animation](.demo/images/bot-animations-3.gif)
-
----
 layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
@@ -19,9 +10,6 @@ customTheme: .demo/slides/theme/theme.css
 - Workflows are stateful, and should be deterministic.
 - Activities contain non-deterministic code.
 
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Workflow Management example
@@ -40,9 +28,6 @@ app.MapPost("/start", async (
 
 ```
 
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Workflow example
@@ -64,9 +49,6 @@ public class MyWorkflow : Workflow<Input, Output>
 }
 ```
 
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Workflow Activity example

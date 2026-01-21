@@ -8,21 +8,21 @@ demos:
       - action: openSlide
         path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
         slide: 1
-  - title: Benefits
-    id: scene-mk5gxqxm-f928
-    steps:
-      - action: openSlide
-        path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
-        slide: 2
-  - title: Common Patterns
-    id: scene-mk5gxsfd-b8yn
-    steps:
-      - action: openSlide
-        path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
-        slide: 3
-  - title: Engage
-    id: scene-mknt5gtw-53x4
-    steps:
-      - action: openSlide
-        path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
-        slide: 4
+  # - title: Benefits
+  #   id: scene-mk5gxqxm-f928
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
+  #       slide: 2
+  # - title: Common Patterns
+  #   id: scene-mk5gxsfd-b8yn
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
+  #       slide: 3
+  # - title: Engage
+  #   id: scene-mknt5gtw-53x4
+  #   steps:
+  #     - action: openSlide
+  #       path: .demo/slides/06-combining-workflow-llm/06-01-combining-wf-conversation.md
+  #       slide: 4
