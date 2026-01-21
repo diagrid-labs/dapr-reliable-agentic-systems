@@ -6,8 +6,7 @@ demos:
     id: scene-mk5gxxna-6gjl
     steps:
       - action: openSlide
-        path: .demo/slides/07-prompt-chaining/07-01-prompt-chaining.md
-        slide: 1
+        path: .demo/slides/07-prompt-chaining/07-01-prompt-chaining-intro.md
   - title: Prompt Chaining Diagram
     id: scene-mk5gxxna-6gjk
     steps:
@@ -17,30 +16,18 @@ demos:
     id: scene-mk5h1vf5-oq14
     steps:
       - action: openSlide
-        path: .demo/slides/07-prompt-chaining/07-01-prompt-chaining.md
-        slide: 2
-  - title: Prompt Chaining Pros and Cons
-    id: scene-mk5h1vf5-oq15
-    steps:
-      - action: openSlide
-        path: .demo/slides/07-prompt-chaining/07-01-prompt-chaining.md
-        slide: 3
-  - title: Implementation with Dapr
-    id: scene-mk5h1wy7-kmg8
-    steps:
-      - action: openSlide
-        path: .demo/slides/07-prompt-chaining/07-01-prompt-chaining.md
-        slide: 4
-  - title: Demo - Alien Translation
+        path: .demo/slides/07-prompt-chaining/07-03-prompt-chaining-explanation.md
+        slide: 1
+  - title: Demo - Spatial Anomaly Analysis System
     id: scene-mk5h1ymh-q6vd
     steps:
       - action: openSlide
-        path: .demo/slides/07-prompt-chaining/07-03-demo.md
+        path: .demo/slides/07-prompt-chaining/07-04-demo.md
   - title: Demo Diagram
     id: scene-mk5h1z1a-c3d4
     steps:
       - action: markdownPreview
-        path: .demo/slides/07-prompt-chaining/07-04-demo-diagram.md
+        path: .demo/slides/07-prompt-chaining/07-05-demo-diagram.md
   - id: scene-mkb26rj8-stv6
     title: Run workflow app
     steps:
