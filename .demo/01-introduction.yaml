@@ -10,9 +10,9 @@ demos:
         slide: 1
       - action: startEngageTimeSession
       - action: executeVSCodeCommand
-        command: workbench.action.closeSidebar
-      - action: executeVSCodeCommand
         command: workbench.action.terminal.killAll
+        disabled: true
+      - action: setPresentationView
   - title: Bio
     id: scene-mk5iuh1a-kw4m
     steps:

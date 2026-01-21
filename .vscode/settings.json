@@ -1,9 +1,17 @@
 {
     "demoTime.defaultFileType": "yaml",
+    "demoTime.presentationViewToggles": [
+        //"statusBar",
+        //"tabs",
+        //"activityBar",
+        "sideBar",
+        "panel"],
     "demoTime.timer": 55,
     "demoTime.customTheme": ".demo/slides/theme/theme.css",
     "demoTime.debug": false,
     "workbench.statusBar.visible": true,
     "workbench.editor.showTabs": "single",
-    "workbench.activityBar.location": "default"
+    "workbench.activityBar.location": "default",
+    "demoTime.previousEnabled": true,
+    "demoTime.nextActionBehaviour": "currentPosition"
 }

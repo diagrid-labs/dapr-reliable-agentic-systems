@@ -25,11 +25,24 @@ layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
 
-# Common Agentic Patterns
+# Common Agentic Patterns & Demo Projects
 
-1. **Prompt Chaining** - Sequential LLM calls
-2. **Routing** - Classification and specialized handlers
-3. **Parallelization** - Concurrent execution
-4. **Orchestrator-Workers** - Dynamic task decomposition
-5. **Evaluator-Optimizer** - Iterative refinement
-6. **Autonomous Agent** - Self-directed execution
+| | Pattern | Demo Project |
+|-|---------|-------------|
+|1| **Prompt Chaining** | [AnomalyAnalysis](AnomalyAnalysis/README.md) |
+|2| **Routing** | [GalacticAnomalyClassifier](GalacticAnomalyClassifier/README.md) |
+|3| **Parallelizatio**n | [StarshipDiagnostics](StarshipDiagnostics/README.md) |
+|4| **Orchestrator-Workers** | [SpaceColonyPlanner](SpaceColonyPlanner/README.md) |
+|5| **Evaluator-Optimizer** | [AlienTranslator](AlienTranslator/README.md) |
+|6| **Autonomous Agent** | [SpaceDebrisAgent](SpaceDebrisAgent/README.md) |
+
+
+---
+layout: two-columns
+customTheme: .demo/slides/theme/theme.css
+---
+
+![Enterprise warp](.demo/images/enterprise-warp.gif)
+
+::right::
+![Engage](.demo/images/picard-engage.gif)
