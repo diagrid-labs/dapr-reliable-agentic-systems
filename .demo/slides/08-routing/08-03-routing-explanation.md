@@ -1,15 +1,4 @@
 ---
-layout: section
-customTheme: .demo/slides/theme/theme.css
----
-
-# Routing
-
-Classify input and route to specialized handlers
-
-![Animation](.demo/images/bot-animations-1.gif)
-
----
 layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
@@ -29,9 +18,6 @@ customTheme: .demo/slides/theme/theme.css
 - Model size optimization
 
 ---
-layout: default
-customTheme: .demo/slides/theme/theme.css
----
 
 # Routing
 
@@ -45,9 +31,6 @@ customTheme: .demo/slides/theme/theme.css
 - Classification adds latency
 - Classification accuracy depends on routing decisions
 
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Routing with Dapr workflow
