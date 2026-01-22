@@ -72,7 +72,7 @@ demos:
     steps:
       - action: highlight
         path: StarshipDiagnostics/local.http
-        position: '3'
+        position: '2'
         highlightWholeLine: true
     icons:
       start: arrow-right

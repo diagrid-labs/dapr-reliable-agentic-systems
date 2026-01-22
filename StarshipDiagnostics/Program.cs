@@ -39,7 +39,7 @@ app.MapPost("/ship/diagnose", async (
     DaprWorkflowClient workflowClient,
     DaprClient daprClient) =>
 {
-    var instanceId = $"diagnostic-{ship.ShipId}-{DateTime.UtcNow.Ticks}";
+    var instanceId = $"DIAG-{ship.ShipId}-{DateTime.UtcNow.Ticks}";
     
     // Store ship data
     await daprClient.SaveStateAsync(
@@ -70,8 +70,9 @@ app.MapGet("/ship/report/{instanceId}", async (
     {
         instanceId,
         status = state.RuntimeStatus.ToString(),
-        output = state.ReadOutputAs<DiagnosticReport>(),
-        createdAt = state.CreatedAt
+        result = state.ReadOutputAs<DiagnosticReport>(),
+        createdAt = state.CreatedAt,
+        lastUpdatedAt = state.LastUpdatedAt
     });
 });
 

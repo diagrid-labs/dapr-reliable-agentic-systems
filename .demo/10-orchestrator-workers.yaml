@@ -61,7 +61,7 @@ demos:
     title: AnalyzePlanetActivity
     steps:
       - action: highlight
-        path: SpaceColonyPlanner/Activities/Workers/AnalyzePlanetActivity.cs
+        path: SpaceColonyPlanner/Activities/Analysis/AnalyzePlanetActivity.cs
         position: '10'
         highlightWholeLine: true
     icons:

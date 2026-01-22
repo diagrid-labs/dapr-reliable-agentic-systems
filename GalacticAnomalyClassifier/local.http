@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ### Get analysis status for temporal rift
-@instanceId={{$TemporalRiftRequest.body.$.instanceId}}
+@instanceId={{TemporalRiftRequest.response.body.$.instanceId}}
 GET http://localhost:5500/anomaly/status/{{instanceId}}
 
 ### Analyze dark matter cluster

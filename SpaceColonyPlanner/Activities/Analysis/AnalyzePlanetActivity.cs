@@ -22,7 +22,7 @@ public class AnalyzePlanetActivity : WorkflowActivity<Planet, PlanetAnalysis>
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f
+            Temperature = 0.7
         };
         
         var response = await _conversationClient.ConverseAsync(
