@@ -23,12 +23,6 @@ demos:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-02-dapr-explanation.md
         slide: 1
-  # - title: Dapr Application Development Framework
-  #   id: scene-mk5gxc05-li60
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/04-dapr-workflow/04-02-dapr-explanation.md
-  #       slide: 2
   - title: Workflow engines
     id: demo-mkl5uika-aned
     steps:
@@ -47,28 +41,10 @@ demos:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-04-dapr-workflow-explanation.md
         slide: 1
-  # - title: Workflow Management Code
-  #   id: scene-mk5p93uy-sfg3
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/04-dapr-workflow/04-04-dapr-workflow-explanation.md
-  #       slide: 2
-  # - title: Workflow Code
-  #   id: scene-mk5p8zl8-o6h1
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/04-dapr-workflow/04-04-dapr-workflow-explanation.md
-  #       slide: 3
-  # - title: Activity Code
-  #   id: scene-mk5p912y-q9ce
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/04-dapr-workflow/04-04-dapr-workflow-explanation.md
-  #       slide: 4
-  - title: Workflow Programming Model
+  - title: Workflow Sequence Diagram
     id: scene-mk5gxf0y-1f36
     steps:
       - action: markdownPreview
-        path: .demo/slides/04-dapr-workflow/04-05-workflow-programming-model.md
+        path: .demo/slides/04-dapr-workflow/04-05-workflow-sequence-diagram.md
 engageTime:
   sessionId: m6ec1e

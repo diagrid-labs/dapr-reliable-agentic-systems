@@ -31,18 +31,19 @@ customTheme: .demo/slides/theme/theme.css
 |-|---------|-------------|
 |1| **Prompt Chaining** | [AnomalyAnalysis](AnomalyAnalysis/README.md) |
 |2| **Routing** | [GalacticAnomalyClassifier](GalacticAnomalyClassifier/README.md) |
-|3| **Parallelizatio**n | [StarshipDiagnostics](StarshipDiagnostics/README.md) |
+|3| **Parallelization** | [StarshipDiagnostics](StarshipDiagnostics/README.md) |
 |4| **Orchestrator-Workers** | [SpaceColonyPlanner](SpaceColonyPlanner/README.md) |
 |5| **Evaluator-Optimizer** | [AlienTranslator](AlienTranslator/README.md) |
 |6| **Autonomous Agent** | [SpaceDebrisAgent](SpaceDebrisAgent/README.md) |
-
 
 ---
 layout: two-columns
 customTheme: .demo/slides/theme/theme.css
 ---
 
-![Enterprise warp](.demo/images/enterprise-warp.gif)
+# Demo theme
+
+![Engage](.demo/images/picard-engage.gif)
 
 ::right::
-![Engage](.demo/images/picard-engage.gif)
+![Enterprise warp](.demo/images/enterprise-warp.gif)

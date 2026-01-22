@@ -119,7 +119,7 @@ img, .intro img, .section img {
     background: var(--demotime-heading-background); */
   }
 
-  h2 {
+  h2, dt-show h2 {
     @apply text-2xl p-2;
     color: var(--color-primary);
     background: var(--color-background);
@@ -165,6 +165,7 @@ img, .intro img, .section img {
 
     li {
       @apply mb-2;
+      line-height: 1.5em;
     }
 
     ul,

@@ -3,7 +3,7 @@ layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
 
-# Workflow Programming Model
+# Workflow Sequence Diagram
 
 ```mermaid
 sequenceDiagram
@@ -20,7 +20,7 @@ sequenceDiagram
     Engine-->>Client: Return Workflow ID
     Engine->>Workflow: Execute Orchestration
     Workflow->>Engine: Schedule Activity
-    Engine->>Activity: Execute Task
+    Engine->>Activity: Execute Activity
     Activity-->>Engine: Return Result
     Engine-->>Workflow: Activity Result
     Workflow-->>Engine: Workflow Complete
