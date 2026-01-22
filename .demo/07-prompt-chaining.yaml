@@ -45,6 +45,13 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkpe5m83-bjuh
+    title: Program.cs
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/Program.cs
+        position: '10'
+        highlightWholeLine: true
   - id: scene-mkb26rj9-stw7
     title: AnomalyAnalysisWorkflow
     steps:

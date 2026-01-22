@@ -20,5 +20,5 @@ Content-Type: application/json
 
 ### Get instance status
 @instanceId= {{analyzeRequest.response.body.$.instanceId}}
-GET http://localhost:3550/v1.0/workflows/dapr/{{instanceId}}
+GET http://localhost:5500/anomaly/status/{{instanceId}}
 
