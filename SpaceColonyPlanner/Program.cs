@@ -43,7 +43,7 @@ app.MapPost("/colony/plan", async (
     DaprWorkflowClient workflowClient,
     DaprClient daprClient) =>
 {
-    var instanceId = $"colony-{request.Planet.PlanetId}-{DateTime.UtcNow.Ticks}";
+    var instanceId = $"COLO-{request.Planet.PlanetId}-{DateTime.UtcNow.Ticks}";
     
     // Save planet data
     await daprClient.SaveStateAsync(
@@ -75,7 +75,8 @@ app.MapGet("/colony/plan/{instanceId}", async (
         instanceId,
         status = state.RuntimeStatus.ToString(),
         plan = state.ReadOutputAs<ColonyMasterPlan>(),
-        createdAt = state.CreatedAt
+        createdAt = state.CreatedAt,
+        lastUpdatedAt = state.LastUpdatedAt
     });
 });
 
