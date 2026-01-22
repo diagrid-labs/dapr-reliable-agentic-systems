@@ -5,6 +5,7 @@ demos:
   - title: Parallelization Overview
     id: scene-mk5h2kzm-zyv6
     steps:
+      - action: setPresentationView
       - action: openSlide
         path: .demo/slides/09-parallelization/09-01-parallelization-intro.md
   - title: Parallelization Diagrams
@@ -18,18 +19,6 @@ demos:
       - action: openSlide
         path: .demo/slides/09-parallelization/09-03-parallelization-explanation.md
         slide: 1
-  # - title: Pros and Cons
-  #   id: demo-mkf8h4p0-8jsf
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/09-parallelization/09-03-parallelization-explanation.md
-  #       slide: 2
-  # - title: Implementation with Dapr
-  #   id: demo-mkf8h4p0-8jsg
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/09-parallelization/09-03-parallelization-explanation.md
-  #       slide: 3
   - title: Demo - Parallel Diagnostics
     id: scene-mk5h2ogm-1p35
     steps:

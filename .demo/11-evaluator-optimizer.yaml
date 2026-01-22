@@ -5,6 +5,7 @@ demos:
   - title: Evaluator-Optimizer Overview
     id: scene-mk5h3775-lq3a
     steps:
+      - action: setPresentationView
       - action: openSlide
         path: .demo/slides/11-evaluator-optimizer/11-01-evaluator-optimizer-intro.md
   - title: Evaluator-Optimizer Diagram
@@ -18,18 +19,6 @@ demos:
       - action: openSlide
         path: .demo/slides/11-evaluator-optimizer/11-03-evaluator-optimizer-explanation.md
         slide: 1
-  # - title: Evaluator-Optimizer Pros and Cons
-  #   id: scene-mk5h3a62-jmmw
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/11-evaluator-optimizer/11-03-evaluator-optimizer-explanation.md
-  #       slide: 2
-  # - title: Implementation with Dapr
-  #   id: scene-mk5h3a62-jmmx
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/11-evaluator-optimizer/11-03-evaluator-optimizer-explanation.md
-  #       slide: 3
   - title: Demo - Alien Translation
     id: scene-mk5h3bpo-635d
     steps:

@@ -5,6 +5,7 @@ demos:
   - title: Autonomous Agent Overview
     id: scene-mk5h3g84-mlhm
     steps:
+      - action: setPresentationView
       - action: openSlide
         path: .demo/slides/12-autonomous-agent/12-01-autonomous-agent-intro.md
   - title: Autonomous Agent Diagram
@@ -18,18 +19,6 @@ demos:
       - action: openSlide
         path: .demo/slides/12-autonomous-agent/12-03-autonomous-agent-explanation.md
         slide: 1
-  # - title: Autonomous Agent Pros and Cons
-  #   id: scene-mk5h3k6b-dlmf
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/12-autonomous-agent/12-03-autonomous-agent-explanation.md
-  #       slide: 2
-  # - title: Implementation with Dapr
-  #   id: scene-mk5h3k6b-dlmq
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/12-autonomous-agent/12-03-autonomous-agent-explanation.md
-  #       slide: 3
   - title: Demo - Space Debris Agent
     id: scene-mk5h3m9a-t5b6
     steps:

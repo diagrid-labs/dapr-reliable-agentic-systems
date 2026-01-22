@@ -7,9 +7,7 @@ customTheme: .demo/slides/theme/theme.css
 
 ## When to Use
 
-- Task can be decomposed into fixed subtasks
-- Trade latency for higher accuracy
-- Each step needs focused attention
+- Task can be decomposed into a fixed number of subtasks
 
 ## Use Cases
 

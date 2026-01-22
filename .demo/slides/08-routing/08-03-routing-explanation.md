@@ -8,8 +8,6 @@ customTheme: .demo/slides/theme/theme.css
 ## When to Use
 
 - Distinct categories better handled separately
-- Classification can be accurate
-- Separation of concerns needed
 
 ## Use Cases
 

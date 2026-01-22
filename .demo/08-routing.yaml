@@ -2,9 +2,10 @@ title: 8 - Routing
 description: ''
 version: 2
 demos:
-  - title: Routing 
+  - title: Routing
     id: scene-mk5h29o6-6qr1
     steps:
+      - action: setPresentationView
       - action: openSlide
         path: .demo/slides/08-routing/08-01-routing-intro.md
   - title: Routing Diagram
@@ -18,18 +19,6 @@ demos:
       - action: openSlide
         path: .demo/slides/08-routing/08-03-routing-explanation.md
         slide: 1
-  # - title: Routing Pros and Cons
-  #   id: scene-mk5h2b5e-94a5
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/08-routing/08-03-routing-explanation.md
-  #       slide: 3
-  # - title: Implementation with Dapr
-  #   id: scene-mk5h2cra-3csw
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/08-routing/08-03-routing-explanation.md
-  #       slide: 4
   - title: Demo - Anomaly Classification
     id: scene-mk5h2epa-7cu6
     steps:

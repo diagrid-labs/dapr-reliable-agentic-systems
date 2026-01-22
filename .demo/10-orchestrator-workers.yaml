@@ -5,6 +5,7 @@ demos:
   - title: Orchestrator-Workers Overview
     id: scene-mk5h2u59-d6vy
     steps:
+      - action: setPresentationView
       - action: openSlide
         path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers-intro.md
   - title: Orchestrator-Workers Diagram
@@ -18,18 +19,6 @@ demos:
       - action: openSlide
         path: .demo/slides/10-orchestrator-workers/10-03-orchestrator-workers-explanation.md
         slide: 1
-  # - title: Orchestrator-Workers Pros and Cons
-  #   id: scene-mk5h2z91-ichc
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers-explanation.md
-  #       slide: 2
-  # - title: Implementation with Dapr
-  #   id: scene-mk5h2z91-ichd
-  #   steps:
-  #     - action: openSlide
-  #       path: .demo/slides/10-orchestrator-workers/10-01-orchestrator-workers-explanation.md
-  #       slide: 3
   - title: Demo - Space Colony Planner
     id: scene-mk5h32b7-xqky
     steps:
