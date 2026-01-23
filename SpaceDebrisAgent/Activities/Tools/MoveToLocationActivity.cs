@@ -1,5 +1,6 @@
 using Dapr.Workflow;
 using SpaceDebrisAgent.Models;
+using System.Text.Json;
 
 namespace SpaceDebrisAgent.Activities.Tools;
 
@@ -9,9 +10,9 @@ public class MoveToLocationActivity : WorkflowActivity<Dictionary<string, object
         WorkflowActivityContext context, 
         Dictionary<string, object> parameters)
     {
-        var targetX = Convert.ToDouble(parameters["x"]);
-        var targetY = Convert.ToDouble(parameters["y"]);
-        var targetZ = Convert.ToDouble(parameters["z"]);
+        var targetX = ((JsonElement)parameters["x"]).GetDouble();
+        var targetY = ((JsonElement)parameters["y"]).GetDouble();
+        var targetZ = ((JsonElement)parameters["z"]).GetDouble();
         
         var newPosition = new[] { targetX, targetY, targetZ };
         

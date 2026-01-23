@@ -81,14 +81,7 @@ public record SpaceDebrisCleanupWorkflowInput(
     AgentState? AgentState,
     List<AgentDecision> Decisions,
     List<ToolCall> ToolCalls
-)
-{
-    // Constructor for initial workflow start
-    public SpaceDebrisCleanupWorkflowInput(MissionParameters missionParameters)
-        : this(missionParameters, null, new List<AgentDecision>(), new List<ToolCall>())
-    {
-    }
-}
+);
 
 public record CaptureResult(
     string DebrisId,

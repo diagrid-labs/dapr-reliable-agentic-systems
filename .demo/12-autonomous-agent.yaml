@@ -62,7 +62,7 @@ demos:
     steps:
       - action: highlight
         path: SpaceDebrisAgent/Activities/Agent/AgentReasoningActivity.cs
-        position: '5'
+        position: '10'
         highlightWholeLine: true
     icons:
       start: code

@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Configure JSON options to handle enum conversion
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
+    options.SerializerOptions.PropertyNameCaseInsensitive = true;
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
@@ -38,8 +39,12 @@ app.MapPost("/mission/start", async (
     MissionParameters mission,
     DaprWorkflowClient workflowClient) =>
 {
-    var instanceId = $"mission-{mission.MissionId}";
-    var input = new SpaceDebrisCleanupWorkflowInput(mission);
+    var instanceId = $"CLEAN-{mission.MissionId}";
+    var input = new SpaceDebrisCleanupWorkflowInput(
+        mission,
+        null,
+        new List<AgentDecision>(),
+        new List<ToolCall>());
     
     await workflowClient.ScheduleNewWorkflowAsync(
         nameof(SpaceDebrisCleanupWorkflow),

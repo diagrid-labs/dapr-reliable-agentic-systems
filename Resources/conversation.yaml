@@ -8,5 +8,5 @@ spec:
   metadata:
   - name: model
     value: llama3.2:3b
-  - name: cacheTTL
-    value: 1m
+  # - name: cacheTTL
+  #   value: 5m

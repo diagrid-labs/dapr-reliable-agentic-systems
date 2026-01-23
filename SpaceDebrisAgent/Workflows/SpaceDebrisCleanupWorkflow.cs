@@ -75,18 +75,13 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 decision.ActionParameters,
                 GetDefaultRetryPolicy());
             
-            // Wait for external event with 1 minute timeout
-            var approvalTask = context.WaitForExternalEventAsync<HumanApproval>("HumanApproval");
-            var timeoutTask = context.CreateTimer(context.CurrentUtcDateTime.AddMinutes(1), CancellationToken.None);
-            
-            var completedTask = await Task.WhenAny(approvalTask, timeoutTask);
-            
             HumanApproval approval;
-            if (completedTask == approvalTask)
+            try
             {
-                approval = await approvalTask;
+                // Wait for external event with 5 minute timeout
+                approval = await context.WaitForExternalEventAsync<HumanApproval>("HumanApproval", TimeSpan.FromMinutes(5));
             }
-            else
+            catch (TaskCanceledException)
             {
                 // Timeout - default to disapproved
                 approval = new HumanApproval(
@@ -94,7 +89,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                     Reason: "Approval timeout - no response within 1 minute"
                 );
             }
-            
+
             toolCall = new ToolCall(
                 nameof(RequestHumanApprovalActivity),
                 decision.ActionParameters,

@@ -42,3 +42,8 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkqthaom-gju9
+    title: Conversation component
+    steps:
+      - action: open
+        path: Resources/conversation.yaml

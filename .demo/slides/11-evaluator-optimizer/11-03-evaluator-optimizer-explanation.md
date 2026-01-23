@@ -7,10 +7,8 @@ customTheme: .demo/slides/theme/theme.css
 
 ## When to Use
 
-- Clear evaluation criteria exist
 - Iterative refinement adds value
-- LLM can provide useful feedback
-- Quality more important than speed
+- Clear evaluation criteria exist
 
 ## Use Cases
 
@@ -25,14 +23,12 @@ customTheme: .demo/slides/theme/theme.css
 ## Pros ✅
 
 - Progressive quality improvement
-- Built-in quality control
 - Mimics human refinement process
 
 ## Cons ❌
 
 - Unpredictable iterations
 - High cost and latency
-- Risk of infinite loops
 
 ---
 
