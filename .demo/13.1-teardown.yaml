@@ -5,7 +5,7 @@ demos:
   - id: scene-mkcnyqe1-xk4s
     title: Stop model
     steps:
-      - action: focusTerminal
+      - action: openTerminal
         terminalId: ollama-run
       - action: sendKeybinding
         keybinding: ctrl+d
@@ -15,7 +15,7 @@ demos:
   - id: scene-mkcnyrus-dg35
     title: Stop Ollama
     steps:
-      - action: focusTerminal
+      - action: openTerminal
         terminalId: ollama-server
       - action: sendKeybinding
         keybinding: ctrl+c
@@ -25,7 +25,7 @@ demos:
   - id: scene-mkcnyubp-94fi
     title: Stop Diagrid Dashboard
     steps:
-      - action: focusTerminal
+      - action: openTerminal
         terminalId: diagrid-dashboard
       - action: sendKeybinding
         keybinding: ctrl+c

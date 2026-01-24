@@ -14,12 +14,11 @@ customTheme: .demo/slides/theme/theme.css
 
 # What is Durable Execution?
 
-Automatic state persistence that enables code to run to completion despite failures.
+Automatic state persistence that enables code to run to completion even if the process that runs the code fails. A new process will pick up where the previous one left off.
 
-- **Automatic State Persistence** - No manual checkpointing
-- **Transparent Recovery** - Automatic resume from failures
+- **Automatic State Persistence** - Workflow state is automatically checkpointed
+- **Built-in Recovery** - Automatic & configurable retry logic
 - **Replay Mechanism** - Deterministic re-execution
-- **Timeline Preservation** - Complete execution history
 
 ---
 layout: default
