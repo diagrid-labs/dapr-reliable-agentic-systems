@@ -7,6 +7,7 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/04-dapr-workflow/04-01-dapr-intro.md
+      - action: setPresentationView
   - id: scene-mkl5q4nj-ydwe
     title: Dapr Poll
     steps:

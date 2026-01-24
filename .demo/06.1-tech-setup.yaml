@@ -7,6 +7,7 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/06-combining-workflow-llm/06-02-tech-setup.md
+      - action: setPresentationView
   - id: scene-mkcnxjt6-bakh
     title: Start Ollama
     steps:
