@@ -14,21 +14,21 @@ customTheme: .demo/slides/theme/theme.css
 
 # What are Agentic Systems?
 
-Agentic AI systems use LLMs to make decisions and take actions.
+Agentic systems use LLMs to make decisions and take actions.
 
 ## Key Components
 
-- **LLMs** - Language understanding and generation
-- **Memory** - State and context management
+- **Reasoning & Planning** - Breaking down tasks, decision making, and strategy formulation
+- **Memory** - Context & knowledge management
 - **Tools** - Ability to interact with external systems
-- **Planning** - Multi-step reasoning and strategy
+- **Orchestration** - Coordinating multiple steps
 
 ---
 layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
 
-# Everyone is Building Agents
+# Everyone is building Agent Frameworks
 
 The AI agent landscape is exploding with new tools and frameworks.
 
@@ -45,7 +45,7 @@ layout: section
 customTheme: .demo/slides/theme/theme.css
 ---
 
-## Do you need an Agent Framework?
+## Do you need an Agent Framework to build Agentic Systems?
 
 ---
 layout: default
@@ -66,4 +66,4 @@ They involve communication across LLM providers, services, and data stores
 
 ## Good News
 
-We've been here before with microservices - let's apply what we know!
+We've been here before with microservices! Let's apply what we know and use existing tools and patterns.

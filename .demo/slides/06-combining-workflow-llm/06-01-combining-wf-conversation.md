@@ -14,6 +14,7 @@ customTheme: .demo/slides/theme/theme.css
 
 # Benefits of combining workflows and LLMs
 
+- Workflow engines have been around for decades.
 - Workflows typically provide more deterministic control over task execution.
 - Workflows also provide structured error handling, retries, and management.
 - LLMs provide flexibility, and natural language understanding.
