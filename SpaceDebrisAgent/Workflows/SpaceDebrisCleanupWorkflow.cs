@@ -66,10 +66,9 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         
         // Execute chosen tool based on agent's decision
         ToolCall toolCall;
-        
         if (decision.ChosenAction == "REQUEST_HUMAN_APPROVAL")
         {
-            // First call the activity to store the approval request
+            // First call the activity to signal human approval is needed
             await context.CallActivityAsync(
                 nameof(RequestHumanApprovalActivity),
                 decision.ActionParameters,
@@ -86,12 +85,12 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 // Timeout - default to disapproved
                 approval = new HumanApproval(
                     Approved: false,
-                    Reason: "Approval timeout - no response within 1 minute"
+                    Reason: "Approval timeout - no response within 5 minutes"
                 );
             }
 
             toolCall = new ToolCall(
-                nameof(RequestHumanApprovalActivity),
+                "HUMAN_APPROVAL",
                 decision.ActionParameters,
                 new ApprovalResult(
                     approval.Approved,
@@ -101,6 +100,21 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 true,
                 null
             );
+
+            if (!approval.Approved)
+            {
+                return new MissionResult(
+                    input.MissionParameters.MissionId,
+                    Success: false,
+                    DebrisCaptured: agentState.CapturedDebris.Count,
+                    FuelUsed: input.MissionParameters.FuelBudget,
+                    TotalSteps: input.MissionParameters.StepNumber + 1,
+                    Decisions: decisions,
+                    ToolCalls: input.ToolCalls,
+                    Summary: "Mission aborted - human disapproval received",
+                    LessonsLearned: ExtractLessons(decisions, input.ToolCalls)
+                );
+            }
         }
         else
         {
@@ -127,17 +141,16 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                     decision.ActionParameters),
                 
                 _ => new ToolCall(
-                    "UNKNOWN", 
-                    decision.ActionParameters, 
-                    null, 
-                    false, 
+                    "UNKNOWN",
+                    decision.ActionParameters,
+                    "unknown",
+                    false,
                     $"Unknown action: {decision.ChosenAction}")
             };
         }
-        
+
         var toolCalls = input.ToolCalls.Append(toolCall).ToList();
-        
-        // Update agent state based on tool result
+
         agentState = UpdateAgentState(agentState, decision, toolCall);
         
         // Check for failure conditions
@@ -236,8 +249,10 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         else if (toolCall.ToolName == nameof(CaptureDebrisActivity) && toolCall.Success)
         {
             var captureResult = (CaptureResult)toolCall.Result;
-            var captured = new List<string>(newState.CapturedDebris);
-            captured.Add(captureResult.DebrisId);
+            var captured = new List<string>(newState.CapturedDebris)
+            {
+                captureResult.DebrisId
+            };
             newState = newState with 
             { 
                 CapturedDebris = captured,
@@ -246,8 +261,10 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         }
         
         // Add decision to history
-        var history = new List<string>(newState.DecisionHistory);
-        history.Add($"Step {decision.StepNumber}: {decision.ChosenAction}");
+        var history = new List<string>(newState.DecisionHistory)
+        {
+            $"Step {decision.StepNumber}: {decision.ChosenAction}"
+        };
         newState = newState with { DecisionHistory = history };
         
         return newState;
