@@ -25,16 +25,12 @@ layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
 
-# Diagrid Dev Dashboard
-
 ![Diagrid Dev Dashboard](.demo/images/diagrid-dev-dashboard.png)
 
 ---
 layout: default
 customTheme: .demo/slides/theme/theme.css
 ---
-
-# Diagrid Catalyst
 
 ![Diagrid Catalyst](.demo/images/diagrid-catalyst.png)
 

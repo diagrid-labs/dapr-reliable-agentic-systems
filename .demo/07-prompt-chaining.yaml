@@ -99,3 +99,9 @@ demos:
     icons:
       start: terminal
       end: ''
+  - title: Prompt Chaining Pros/Cons
+    id: scene-mkvn3xcf-9jlo
+    steps:
+      - action: setPresentationView
+      - action: openSlide
+        path: .demo/slides/07-prompt-chaining/07-06-prompt-chaining-final.md

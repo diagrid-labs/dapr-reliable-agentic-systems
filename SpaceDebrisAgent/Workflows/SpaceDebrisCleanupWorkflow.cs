@@ -31,7 +31,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             StepCount: input.MissionParameters.StepNumber,
             Memory: new Dictionary<string, object>()
         );
-        
+
         agentState = agentState with { StepCount = input.MissionParameters.StepNumber };
         context.SetCustomStatus($"Step: {input.MissionParameters.StepNumber}/{MAX_STEPS}");
         
@@ -63,7 +63,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 LessonsLearned: ExtractLessons(decisions, input.ToolCalls)
             );
         }
-        
+
         // Execute chosen tool based on agent's decision
         ToolCall toolCall;
         if (decision.ChosenAction == "REQUEST_HUMAN_APPROVAL")
@@ -152,7 +152,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         var toolCalls = input.ToolCalls.Append(toolCall).ToList();
 
         agentState = UpdateAgentState(agentState, decision, toolCall);
-        
+
         // Check for failure conditions
         if (agentState.FuelRemaining <= 0)
         {
@@ -168,7 +168,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 LessonsLearned: ExtractLessons(decisions, toolCalls)
             );
         }
-        
+
         // Check if max steps reached
         if (input.MissionParameters.StepNumber + 1 >= MAX_STEPS)
         {
@@ -184,7 +184,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 LessonsLearned: ExtractLessons(decisions, toolCalls)
             );
         }
-        
+
         // Continue to next step
         var nextInput = new SpaceDebrisCleanupWorkflowInput(
             input.MissionParameters with { StepNumber = input.MissionParameters.StepNumber + 1 },
@@ -192,8 +192,9 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             decisions,
             toolCalls
         );
-        
+
         context.ContinueAsNew(nextInput);
+
         return null!; // This line will never be reached
     }
     

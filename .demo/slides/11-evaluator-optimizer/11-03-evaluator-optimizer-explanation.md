@@ -17,20 +17,6 @@ customTheme: .demo/slides/theme/theme.css
 
 ---
 
-# Evaluator-Optimizer
-
-## Pros ✅
-
-- Progressive quality improvement
-- Mimics human refinement process
-
-## Cons ❌
-
-- Unpredictable iterations
-- Higher cost and latency
-
----
-
 # Evaluator-Optimizer with Dapr workflow
 
 ```csharp

@@ -13,21 +13,7 @@ customTheme: .demo/slides/theme/theme.css
 ## Use Cases
 
 - Multi-source analysis
-- Code review with voting
-
----
-
-# Parallelization
-
-## Pros ✅
-
-- Higher throughput
-- Higher confidence (voting)
-
-## Cons ❌
-
-- Tasks must be independent
-- Requires aggregation logic
+- Code review with voting on different aspects
 
 ---
 

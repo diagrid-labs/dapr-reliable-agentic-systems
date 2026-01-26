@@ -92,3 +92,9 @@ demos:
     icons:
       start: terminal
       end: ''
+  - title: Routing Pros/Cons
+    id: scene-mkvn6ew2-ymgs
+    steps:
+      - action: setPresentationView
+      - action: openSlide
+        path: .demo/slides/08-routing/08-06-routing-final.md

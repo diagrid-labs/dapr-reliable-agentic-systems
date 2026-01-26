@@ -7,30 +7,14 @@ customTheme: .demo/slides/theme/theme.css
 
 ## When to Use
 
-- Subtasks can't be predicted upfront
-- Dynamic decomposition needed
+- Dynamic decomposition needed (different subtasks per task)
 - Complex, unpredictable task structures
 
 ## Use Cases
 
-- Coding products (multi-file changes)
+- Coding agents (multi-file changes)
 - Research tasks
 - Complex planning
-
----
-
-# Orchestrator-Workers
-
-## Pros ✅
-
-- Flexible and adaptable
-- Scales to complex problems
-- Clear separation of concerns
-
-## Cons ❌
-
-- Higher complexity
-- High orchestrator dependency
 
 ---
 

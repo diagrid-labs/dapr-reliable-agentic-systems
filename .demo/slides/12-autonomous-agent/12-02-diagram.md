@@ -7,9 +7,8 @@ customTheme: .demo/slides/theme/theme.css
 
 ```mermaid
 graph TD
-    Start([User Input/Goal]) --> A1[Agent LLM]
-    A1 --> A2[Reasoning & Planning]
-    A2 --> Gate{Decision}
+    Start([User Input/Goal]) --> A1[Reasoning & Planning LLM]
+    A1 --> Gate{Decision}
     Gate -->|Use Tool| A3[Select & Execute Tool]
     Gate -->|Goal Achieved| End([Complete])
     Gate -->|Max Steps| End

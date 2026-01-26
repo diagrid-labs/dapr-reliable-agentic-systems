@@ -10,27 +10,11 @@ customTheme: .demo/slides/theme/theme.css
 - Open-ended problems
 - Can't predict required steps
 - Need maximum flexibility
-  
+
 ## Use Cases
 
 - Coding assistants
 - Research agents
-
----
-
-# Autonomous Agent
-
-## Pros ✅
-
-- Maximum flexibility
-- Handles open-ended tasks
-
-## Cons ❌
-
-- Highest cost and latency
-- Potential for compounding errors
-- Less predictable
-- Requires extensive testing
 
 ---
 

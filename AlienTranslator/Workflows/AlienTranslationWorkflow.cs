@@ -77,10 +77,10 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
         else
         {
             // Continue to next iteration
-            input = new AlienTranslationWorkflowInput(
-                input.AlienText,
-                translations,
-                evaluations);
+            input = input with {
+                 Translations = translations,
+                 Evaluations = evaluations
+            };
 
             context.ContinueAsNew(input);
         }

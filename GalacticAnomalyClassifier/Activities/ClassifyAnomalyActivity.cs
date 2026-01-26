@@ -79,8 +79,6 @@ Measurements: {string.Join(", ", input.Measurements.Select(m => $"{m.Key}={m.Val
                 })
             ],
             conversationOptions);
-        
-        Console.WriteLine($"Classification Response: {response.Outputs.First().Choices.First().Message.Content}");
 
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
