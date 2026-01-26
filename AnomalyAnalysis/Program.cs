@@ -31,12 +31,12 @@ app.MapPost("/anomaly/analyze", async (
     DaprWorkflowClient workflowClient,
     DaprClient daprClient) =>
 {
-    var instanceId = $"anomaly-{anomaly.AnomalyId}";
+    var instanceId = $"ANOM-{anomaly.AnomalyId}";
     
     // Store original anomaly data
     await daprClient.SaveStateAsync(
-        "statestore", 
-        $"anomaly-{anomaly.AnomalyId}", 
+        "statestore",
+        instanceId,
         anomaly);
     
     // Start workflow

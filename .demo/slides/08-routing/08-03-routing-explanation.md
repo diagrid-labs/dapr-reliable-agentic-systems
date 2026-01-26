@@ -13,7 +13,6 @@ customTheme: .demo/slides/theme/theme.css
 
 - Customer service routing
 - Content classification
-- Model size optimization
 
 ---
 

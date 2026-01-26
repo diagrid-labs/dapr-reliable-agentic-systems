@@ -21,15 +21,13 @@ customTheme: .demo/slides/theme/theme.css
 
 ## Pros ✅
 
-- Significantly reduced latency
+- Higher throughput
 - Higher confidence (voting)
-- Better throughput
 
 ## Cons ❌
 
-- Increased cost (multiple calls)
-- Requires aggregation logic
 - Tasks must be independent
+- Requires aggregation logic
 
 ---
 

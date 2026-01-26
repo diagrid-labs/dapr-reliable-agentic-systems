@@ -17,7 +17,7 @@ sequenceDiagram
     end
 
     Client->>Engine: Start/Manage Workflow
-    Engine-->>Client: Return Workflow ID
+    Engine-->>Client: Return Instance ID
     Engine->>Workflow: Execute Orchestration
     Workflow->>Engine: Schedule Activity
     Engine->>Activity: Execute Activity

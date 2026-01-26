@@ -30,7 +30,6 @@ customTheme: .demo/slides/theme/theme.css
 ## Cons ❌
 
 - Higher complexity
-- Higher latency and cost
 - High orchestrator dependency
 
 ---

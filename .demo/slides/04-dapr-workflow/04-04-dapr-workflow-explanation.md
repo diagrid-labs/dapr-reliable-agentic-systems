@@ -6,7 +6,7 @@ customTheme: .demo/slides/theme/theme.css
 # Dapr Workflow
 
 - Dapr sidecar contains a workflow engine, inspired by the Durable Task Framework.
-- Workflows are defined in code, using familiar programming constructs.
+- Workflows are defined in code.
 - Workflows are stateful, and should be deterministic.
 - Activities are the the building blocks of a workflow, they contain non-deterministic code.
 
@@ -77,6 +77,12 @@ public class MyActivity1 : Activity<Input, string>
     {
         var response = await CallLLMAsync(input);
         return response;
+    }
+
+    private Task<string> CallLLMAsync(Input input)
+    {
+        // Call to external LLM service
+        ...
     }
 }
 ```

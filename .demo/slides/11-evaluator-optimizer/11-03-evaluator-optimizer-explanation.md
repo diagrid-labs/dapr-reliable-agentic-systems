@@ -12,7 +12,6 @@ customTheme: .demo/slides/theme/theme.css
 
 ## Use Cases
 
-- Literary translation
 - Content quality improvement
 - Code generation with validation
 
@@ -28,7 +27,7 @@ customTheme: .demo/slides/theme/theme.css
 ## Cons ❌
 
 - Unpredictable iterations
-- High cost and latency
+- Higher cost and latency
 
 ---
 

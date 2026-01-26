@@ -40,6 +40,11 @@ The AI agent landscape is exploding with new tools and frameworks.
 - Crew AI
 - Dapr Agents
 
+---
+layout: section
+customTheme: .demo/slides/theme/theme.css
+---
+
 ## Do you need an Agent Framework?
 
 ---

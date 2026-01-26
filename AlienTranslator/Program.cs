@@ -26,7 +26,7 @@ app.MapPost("/translate", async (
     AlienText text,
     DaprWorkflowClient workflowClient) =>
 {
-    var instanceId = $"translation-{text.TextId}";
+    var instanceId = $"TRANS-{text.TextId}";
     
     var input = new AlienTranslationWorkflowInput(
         text,

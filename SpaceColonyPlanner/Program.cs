@@ -33,6 +33,7 @@ builder.Services.AddDaprWorkflow(options =>
     options.RegisterActivity<PlanMiningFacilityActivity>();
     options.RegisterActivity<PlanResearchLabActivity>();
     options.RegisterActivity<PlanDefenseSystemActivity>();
+    options.RegisterActivity<UnknownStructureActivity>();
 });
 
 var app = builder.Build();

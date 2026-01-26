@@ -8,8 +8,7 @@ customTheme: .demo/slides/theme/theme.css
 ```mermaid
 graph TD
     Start([Input]) --> A1[Orchestrator LLM]
-    A1 --> A2[Determine Tasks]
-    A2 --> Router{Dynamic Routing}
+    A1 --> Router{Dynamic Routing}
     Router -.->|Task 1| W1[Worker LLM 1]
     Router -.->|Task 2| W2[Worker LLM 2]
     Router -.->|Task 3| W3[Worker LLM 3]

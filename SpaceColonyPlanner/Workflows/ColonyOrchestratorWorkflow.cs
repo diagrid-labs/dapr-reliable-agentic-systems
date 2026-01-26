@@ -47,7 +47,7 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
                 "MiningFacility" => nameof(PlanMiningFacilityActivity),
                 "ResearchLab" => nameof(PlanResearchLabActivity),
                 "DefenseSystem" => nameof(PlanDefenseSystemActivity),
-                _ => throw new InvalidOperationException($"Unknown structure type: {request.StructureType}")
+                _ => nameof(UnknownStructureActivity)
             };
             
             var workerInput = new WorkerInput(
