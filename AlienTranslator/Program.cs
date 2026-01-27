@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
 using System.Text.Json;
@@ -23,8 +24,8 @@ builder.Services.AddDaprWorkflow(options =>
 var app = builder.Build();
 
 app.MapPost("/translate", async (
-    AlienText text,
-    DaprWorkflowClient workflowClient) =>
+    [FromBody] AlienText text,
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var instanceId = $"TRANS-{text.TextId}";
     
@@ -44,7 +45,7 @@ app.MapPost("/translate", async (
 
 app.MapGet("/translate/{instanceId}", async (
     string instanceId,
-    DaprWorkflowClient workflowClient) =>
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Dapr.Client;
 using Dapr.Workflow;
 using Dapr.AI.Conversation.Extensions;
@@ -23,9 +24,9 @@ builder.Services.AddDaprWorkflow(options =>
 var app = builder.Build();
 
 app.MapPost("/anomaly/analyze", async (
-    SpaceAnomaly anomaly,
-    DaprWorkflowClient workflowClient,
-    DaprClient daprClient) =>
+    [FromBody] SpaceAnomaly anomaly,
+    [FromServices] DaprWorkflowClient workflowClient,
+    [FromServices] DaprClient daprClient) =>
 {
     await daprClient.SaveStateAsync(
         "statestore", 
@@ -42,7 +43,7 @@ app.MapPost("/anomaly/analyze", async (
 
 app.MapGet("/anomaly/status/{instanceId}", async (
     string instanceId,
-    DaprWorkflowClient workflowClient) =>
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     
@@ -61,7 +62,7 @@ app.MapGet("/anomaly/status/{instanceId}", async (
 
 app.MapGet("/anomalies/{anomalyId}", async (
     string anomalyId,
-    DaprClient daprClient) =>
+    [FromServices] DaprClient daprClient) =>
 {
     var result = await daprClient.GetStateAsync<AnalysisResult>(
         "statestore",
@@ -73,7 +74,7 @@ app.MapGet("/anomalies/{anomalyId}", async (
     return Results.Ok(result);
 });
 
-app.MapGet("/anomalies/stats", (DaprClient daprClient) =>
+app.MapGet("/anomalies/stats", ([FromServices] DaprClient daprClient) =>
 {
     return Results.Ok(new
     {

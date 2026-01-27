@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Client;
 using Dapr.Workflow;
@@ -40,9 +41,9 @@ var app = builder.Build();
 
 // Plan a new colony
 app.MapPost("/colony/plan", async (
-    ColonyRequest request,
-    DaprWorkflowClient workflowClient,
-    DaprClient daprClient) =>
+    [FromBody] ColonyRequest request,
+    [FromServices] DaprWorkflowClient workflowClient,
+    [FromServices] DaprClient daprClient) =>
 {
     var instanceId = $"COLO-{request.Planet.PlanetId}-{DateTime.UtcNow.Ticks}";
     
@@ -64,7 +65,7 @@ app.MapPost("/colony/plan", async (
 // Get colony plan
 app.MapGet("/colony/plan/{instanceId}", async (
     string instanceId,
-    DaprWorkflowClient workflowClient) =>
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     

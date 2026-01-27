@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Dapr.Client;
 using Dapr.Workflow;
 using Dapr.AI.Conversation.Extensions;
@@ -35,9 +36,9 @@ var app = builder.Build();
 
 // Start diagnostic scan
 app.MapPost("/ship/diagnose", async (
-    Starship ship,
-    DaprWorkflowClient workflowClient,
-    DaprClient daprClient) =>
+    [FromBody] Starship ship,
+    [FromServices] DaprWorkflowClient workflowClient,
+    [FromServices] DaprClient daprClient) =>
 {
     var instanceId = $"DIAG-{ship.ShipId}-{DateTime.UtcNow.Ticks}";
     
@@ -59,7 +60,7 @@ app.MapPost("/ship/diagnose", async (
 // Get diagnostic report
 app.MapGet("/ship/report/{instanceId}", async (
     string instanceId,
-    DaprWorkflowClient workflowClient) =>
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     
@@ -79,7 +80,7 @@ app.MapGet("/ship/report/{instanceId}", async (
 // Get ship maintenance history
 app.MapGet("/ship/{shipId}/history", async (
     string shipId,
-    DaprClient daprClient) =>
+    [FromServices] DaprClient daprClient) =>
 {
     // Query all diagnostics for this ship
     var shipData = await daprClient.GetStateAsync<Starship>(

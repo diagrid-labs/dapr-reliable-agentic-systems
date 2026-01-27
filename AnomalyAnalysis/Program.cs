@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Dapr.Client;
 using Dapr.Workflow;
 using AnomalyAnalysis.Models;
@@ -27,9 +28,9 @@ var app = builder.Build();
 
 // Start analyzing a spatial anomaly
 app.MapPost("/anomaly/analyze", async (
-    SpatialAnomaly anomaly,
-    DaprWorkflowClient workflowClient,
-    DaprClient daprClient) =>
+    [FromBody] SpatialAnomaly anomaly,
+    [FromServices] DaprWorkflowClient workflowClient,
+    [FromServices] DaprClient daprClient) =>
 {
     var instanceId = $"ANOM-{anomaly.AnomalyId}";
     
@@ -51,7 +52,7 @@ app.MapPost("/anomaly/analyze", async (
 // Get analysis status
 app.MapGet("/anomaly/status/{instanceId}", async (
     string instanceId,
-    DaprWorkflowClient workflowClient) =>
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     

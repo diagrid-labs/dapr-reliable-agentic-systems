@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Dapr.AI.Conversation.Extensions;
@@ -36,8 +37,8 @@ var app = builder.Build();
 
 // Start autonomous cleanup mission
 app.MapPost("/mission/start", async (
-    MissionParameters mission,
-    DaprWorkflowClient workflowClient) =>
+    [FromBody] MissionParameters mission,
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var instanceId = $"CLEAN-{mission.MissionId}";
     var input = new SpaceDebrisCleanupWorkflowInput(
@@ -57,7 +58,7 @@ app.MapPost("/mission/start", async (
 // Get mission status
 app.MapGet("/mission/status/{instanceId}", async (
     string instanceId,
-    DaprWorkflowClient workflowClient) =>
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     
@@ -76,7 +77,7 @@ app.MapGet("/mission/status/{instanceId}", async (
 // Get agent's decision history
 app.MapGet("/mission/{instanceId}/decisions", async (
     string instanceId,
-    DaprWorkflowClient workflowClient) =>
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     
@@ -90,8 +91,8 @@ app.MapGet("/mission/{instanceId}/decisions", async (
 // Send human approval to workflow
 app.MapPost("/mission/{instanceId}/approval", async (
     string instanceId,
-    HumanApproval approval,
-    DaprWorkflowClient workflowClient) =>
+    [FromBody] HumanApproval approval,
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     

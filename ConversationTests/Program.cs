@@ -1,8 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using Dapr.AspNetCore;
 using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.AI.Conversation.Extensions;
-using Microsoft.AspNetCore.Mvc;
 using AnomalyAnalysis.Models;
 using Google.Protobuf.WellKnownTypes;
 using Google.Protobuf;
@@ -18,7 +18,7 @@ var app = builder.Build();
 // Start analyzing a spatial anomaly
 app.MapPost("/test", async (
     [FromBody] SpatialAnomaly spatialAnomaly,
-    DaprConversationClient conversationClient) =>
+    [FromServices] DaprConversationClient conversationClient) =>
 {
     var conversationOptions = new ConversationOptions("conversation")
         {

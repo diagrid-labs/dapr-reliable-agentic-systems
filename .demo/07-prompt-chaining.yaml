@@ -51,7 +51,7 @@ demos:
     steps:
       - action: highlight
         path: AnomalyAnalysis/Program.cs
-        position: '10'
+        position: '11'
         highlightWholeLine: true
   - id: scene-mkb26rj9-stw7
     title: AnomalyAnalysisWorkflow
