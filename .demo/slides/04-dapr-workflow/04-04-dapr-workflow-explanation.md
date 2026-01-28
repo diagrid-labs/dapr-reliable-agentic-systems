@@ -5,9 +5,9 @@ customTheme: .demo/slides/theme/theme.css
 
 # Dapr Workflow
 
-- Dapr sidecar contains a workflow engine, inspired by the Durable Task Framework.
+- Dapr has a built-in workflow engine, inspired by the Durable Task Framework.
 - Workflows are defined in code.
-- Workflows are stateful, and should be deterministic.
+- Workflows are stateful, and (should be) deterministic.
 - Activities are the the building blocks of a workflow, they contain non-deterministic code.
 
 ```mermaid
@@ -23,8 +23,6 @@ graph LR
     style Start fill:#e1f5ff
     style End fill:#d4edda
 ```
-
-
 
 ---
 
