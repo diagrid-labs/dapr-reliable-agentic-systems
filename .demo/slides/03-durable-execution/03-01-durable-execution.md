@@ -18,7 +18,6 @@ Durable Execution enables code to run to completion even if the process that run
 
 - **Automatic State Persistence** - Workflow state is automatically checkpointed
 - **Replay Mechanism** - Deterministic re-execution
-- **Built-in Recovery** - Automatic & configurable retry logic
 
 ---
 layout: default

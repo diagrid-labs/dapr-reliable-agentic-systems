@@ -38,7 +38,7 @@ The AI agent landscape is exploding with new tools and frameworks.
 - OpenAI Agents
 - LangGraph
 - Crew AI
-- Dapr Agents
+- **Dapr Agents**
 
 ---
 layout: section
@@ -54,7 +54,7 @@ customTheme: .demo/slides/theme/theme.css
 
 # Agentic Systems ARE Distributed Systems
 
-They involve communication across LLM providers, services, and data stores
+They involve communication across services (LLMs), message brokers, and data stores.
 
 ## Familiar Challenges
 
