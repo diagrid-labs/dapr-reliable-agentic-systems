@@ -13,4 +13,3 @@ customTheme: .demo/slides/theme/theme.css
 ## Cons ❌
 
 - Tasks must be independent
-- Requires aggregation logic

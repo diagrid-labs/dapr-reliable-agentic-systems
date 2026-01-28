@@ -9,6 +9,9 @@ demos:
         terminalId: ollama-run
       - action: sendKeybinding
         keybinding: ctrl+d
+      - action: executeTerminalCommand
+        command: clear
+        terminalId: ollama-run
     icons:
       start: terminal
       end: ''
@@ -19,6 +22,9 @@ demos:
         terminalId: ollama-server
       - action: sendKeybinding
         keybinding: ctrl+c
+      - action: executeTerminalCommand
+        command: clear
+        terminalId: ollama-server
     icons:
       start: terminal
       end: ''
@@ -29,6 +35,9 @@ demos:
         terminalId: diagrid-dashboard
       - action: sendKeybinding
         keybinding: ctrl+c
+      - action: executeTerminalCommand
+        command: clear
+        terminalId: diagrid-dashboard
     icons:
       start: terminal
       end: ''
