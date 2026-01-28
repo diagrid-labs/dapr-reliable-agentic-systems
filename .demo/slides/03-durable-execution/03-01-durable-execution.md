@@ -17,8 +17,8 @@ customTheme: .demo/slides/theme/theme.css
 Durable Execution enables code to run to completion even if the process that runs the code fails. A new process will pick up where the previous one left off.
 
 - **Automatic State Persistence** - Workflow state is automatically checkpointed
-- **Built-in Recovery** - Automatic & configurable retry logic
 - **Replay Mechanism** - Deterministic re-execution
+- **Built-in Recovery** - Automatic & configurable retry logic
 
 ---
 layout: default

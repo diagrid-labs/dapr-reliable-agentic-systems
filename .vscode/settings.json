@@ -6,7 +6,7 @@
         //"activityBar",
         "sideBar",
         "panel"],
-    "demoTime.timer": 55,
+    "demoTime.timer": 59,
     "demoTime.customTheme": ".demo/slides/theme/theme.css",
     "demoTime.debug": false,
     "workbench.statusBar.visible": true,

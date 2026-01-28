@@ -8,4 +8,4 @@ customTheme: .demo/slides/theme/theme.css
 **Marc Duiker**  
 Developer Advocate @ Diagrid
 
-![Animation](.demo/images/bot-animations-1.gif)
+![Animation](.demo/images/bot-animations-0.gif)
