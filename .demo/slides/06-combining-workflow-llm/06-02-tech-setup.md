@@ -11,4 +11,4 @@ customTheme: .demo/slides/theme/theme.css
    - Redis
    - Diagrid Dev Dashboard
 - .NET 9 Web Apps
-- Ollama LLM server with Llama3 model(3B parameters)
+- Ollama LLM server with Llama3.2 model (3B parameters)

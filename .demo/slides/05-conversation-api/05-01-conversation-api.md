@@ -22,15 +22,25 @@ customTheme: .demo/slides/theme/theme.css
 # Conversation API code example
 
 ```csharp
-var request = new ConversationRequest
-{
-    Messages = [
-        new Message { Role = "user", Content = "Explain Dapr, the distributed application runtime in simple terms." }
-    ]
-};
-
-var response = await daprClient.ConversationAsync(
-    "myconversation", request);
+var response = await _conversationClient.ConverseAsync(
+  [
+    new ConversationInput(new List<IConversationMessage>
+    {
+      new SystemMessage
+      {
+        Content = [new MessageContent(@"You are a English to Klingon translator.")]
+      },
+      new UserMessage
+      {
+        Content = [new MessageContent($"Translate this to Klingon: {message}")]
+      }
+    })
+  ],
+  new ConversationOptions("myconversation")
+  {
+    Temperature = 0.7
+  }
+);
 ```
 
 ---
