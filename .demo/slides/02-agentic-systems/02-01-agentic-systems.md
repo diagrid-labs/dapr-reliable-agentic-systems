@@ -45,7 +45,7 @@ layout: section
 customTheme: .demo/slides/theme/theme.css
 ---
 
-## Do you need an agent framework to build agentic systems?
+## Do you **need** an agent framework to build agentic systems?
 
 ---
 layout: default
@@ -66,4 +66,4 @@ They involve communication across services (LLMs), message brokers, and data sto
 
 ## Good News
 
-We've been here before with microservices! Let's apply what we know and use existing concepts and patterns.
+We've been here before with microservices! Let's apply what we know and use existing tools, concepts and patterns.
