@@ -2,7 +2,7 @@
     "demoTime.defaultFileType": "yaml",
     "demoTime.presentationViewToggles": [
         //"statusBar",
-        //"tabs",
+        "tabs",
         //"activityBar",
         "sideBar",
         "panel"],

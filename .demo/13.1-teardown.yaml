@@ -2,6 +2,10 @@ title: 13 - Teardown
 description: ''
 version: 2
 demos:
+  - id: scene-mkzcz747-65xt
+    title: Unset presentation view
+    steps:
+      - action: unsetPresentationView
   - id: scene-mkcnyqe1-xk4s
     title: Stop model
     steps:
