@@ -3,6 +3,7 @@ using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
 using GalacticAnomalyClassifier.Models;
+using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
 namespace GalacticAnomalyClassifier.Activities;
@@ -29,7 +30,8 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -46,27 +48,13 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
                             - Defensive mechanisms or traps
                             - Cultural and scientific value
                             - Safe extraction procedures
-                            
-                            Respond **only** with valid JSON.
-                            Do not include explanations, comments, or text outside the JSON object.
-                            Ensure the JSON is syntactically correct and can be parsed without errors.
-                            Use double quotes around all keys and string values.
-                            Use opening and closing curly braces.
-                            
+
                             JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis of the alien artifact>"",
-                              ""xenoarchaeologyData"": <A dictionary<string, string> with relevant artifacts data, use scientific E notation where necessary (for example 1.5e-35)>,
-                              ""extractionProcedures"": ""<list of extraction procedures>"",
+                              ""xenoarchaeologyData"": ""<JSON-encoded string of a dictionary<string, string> with relevant artifacts data, use scientific E notation where necessary (for example 1.5e-35)>"",
+                              ""extractionProcedures"": [""<extraction procedure>""],
                               ""hostilityIndicator"": ""<SAFE, CAUTION, DANGEROUS, LETHAL>""
-                            }
-
-                            Example:
-                            {
-                              ""analysis"": ""The artifact appears to be a communication device from an advanced civilization..."",
-                              ""xenoarchaeologyData"": { ""frequencyRange"": ""1.5e9 Hz"", ""materialComposition"": ""Unobtanium"" },
-                              ""extractionProcedures"": [""Use magnetic containment field"", ""Avoid direct contact""],
-                              ""hostilityIndicator"": ""CAUTION""
                             }
                             ")
                         ]
@@ -82,18 +70,43 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
             ],
             conversationOptions);
         
-        Console.WriteLine($"Analyze Alien Artifact Response: {response.Outputs.First().Choices.First().Message.Content}");
-
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
         return new ArtifactAnalysis(
             json.GetProperty("analysis").GetString()!,
             JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("xenoarchaeologyData").GetRawText())!,
+                json.GetProperty("xenoarchaeologyData").GetString()!)!,
             JsonSerializer.Deserialize<List<string>>(
                 json.GetProperty("extractionProcedures").GetRawText())!,
             json.GetProperty("hostilityIndicator").GetString()!
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var stringArrayType = new Struct();
+        stringArrayType.Fields.Add("type", Value.ForString("array"));
+        stringArrayType.Fields.Add("items", Value.ForStruct(stringType));
+
+        var properties = new Struct();
+        properties.Fields.Add("analysis", Value.ForStruct(stringType));
+        properties.Fields.Add("xenoarchaeologyData", Value.ForStruct(stringType));
+        properties.Fields.Add("extractionProcedures", Value.ForStruct(stringArrayType));
+        properties.Fields.Add("hostilityIndicator", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("analysis"),
+            Value.ForString("xenoarchaeologyData"),
+            Value.ForString("extractionProcedures"),
+            Value.ForString("hostilityIndicator")));
+
+        return responseFormat;
     }
 }

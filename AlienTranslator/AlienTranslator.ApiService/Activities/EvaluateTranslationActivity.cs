@@ -2,6 +2,7 @@ using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.Workflow;
+using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
 public class EvaluateTranslationActivity : WorkflowActivity<EvaluateInput, Evaluation>
@@ -46,12 +47,6 @@ Translation (Iteration {input.CurrentTranslation.IterationNumber}):
 Translator's Reasoning:
 {input.CurrentTranslation.TranslatorReasoning}
 
-Respond **only** with valid JSON.
-Do not include explanations, comments, or text outside the JSON object.
-Ensure the JSON is syntactically correct and can be parsed without errors.
-Use double quotes around all keys and string values.
-Use opening and closing curly braces.
-
 JSON structure that describes the fields:
 {{
   ""accuracyScore"": <0-10 numeric score>,
@@ -62,23 +57,12 @@ JSON structure that describes the fields:
   ""weaknesses"": [""<specific weakness 1>"", ""<specific weakness 2>""],
   ""detailedFeedback"": ""<comprehensive actionable feedback>"",
   ""meetsStandards"": <true or false boolean>
-}}
-
-Example:
-{{
-  ""accuracyScore"": 8.5,
-  ""culturalNuanceScore"": 7.0,
-  ""idiomaticScore"": 9.0,
-  ""overallQuality"": 8.0,
-  ""strengths"": [""Excellent handling of formal greeting conventions"", ""Natural English phrasing"", ""Preserved philosophical references""],
-  ""weaknesses"": [""IDIC reference could be more explicit"", ""Cultural context of longevity greeting slightly understated""],
-  ""detailedFeedback"": ""The translation successfully captures the formal diplomatic tone and core meaning. However, the IDIC philosophy reference would benefit from more explicit treatment to ensure non-Vulcan readers understand its significance. Consider expanding the greeting's emphasis on longevity as a core Vulcan value."",
-  ""meetsStandards"": true
 }}";
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.3
+            Temperature = 0.3,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -114,5 +98,46 @@ Example:
             json.GetProperty("detailedFeedback").GetString()!,
             json.GetProperty("meetsStandards").GetBoolean()
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var numberType = new Struct();
+        numberType.Fields.Add("type", Value.ForString("number"));
+
+        var booleanType = new Struct();
+        booleanType.Fields.Add("type", Value.ForString("boolean"));
+
+        var stringArrayType = new Struct();
+        stringArrayType.Fields.Add("type", Value.ForString("array"));
+        stringArrayType.Fields.Add("items", Value.ForStruct(stringType));
+
+        var properties = new Struct();
+        properties.Fields.Add("accuracyScore", Value.ForStruct(numberType));
+        properties.Fields.Add("culturalNuanceScore", Value.ForStruct(numberType));
+        properties.Fields.Add("idiomaticScore", Value.ForStruct(numberType));
+        properties.Fields.Add("overallQuality", Value.ForStruct(numberType));
+        properties.Fields.Add("strengths", Value.ForStruct(stringArrayType));
+        properties.Fields.Add("weaknesses", Value.ForStruct(stringArrayType));
+        properties.Fields.Add("detailedFeedback", Value.ForStruct(stringType));
+        properties.Fields.Add("meetsStandards", Value.ForStruct(booleanType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("accuracyScore"),
+            Value.ForString("culturalNuanceScore"),
+            Value.ForString("idiomaticScore"),
+            Value.ForString("overallQuality"),
+            Value.ForString("strengths"),
+            Value.ForString("weaknesses"),
+            Value.ForString("detailedFeedback"),
+            Value.ForString("meetsStandards")));
+
+        return responseFormat;
     }
 }

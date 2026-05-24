@@ -22,7 +22,8 @@ public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePl
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f
+            Temperature = 0.7f,
+            ResponseFormat = StructurePlanSchema.Get()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -38,13 +39,7 @@ public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePl
                     - Artificial lighting needs
                     - Water recycling systems
                     - Calorie production per person
-                    
-                    Respond **only** with valid JSON.
-                    Do not include explanations, comments, or text outside the JSON object.
-                    Ensure the JSON is syntactically correct and can be parsed without errors.
-                    Use double quotes around all keys and string values.
-                    Use opening and closing curly braces.
-                    
+
                     JSON structure that describes the fields:
                     {
                       ""structureType"": ""<structure type>"",
@@ -54,17 +49,6 @@ public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePl
                       ""workerHours"": <number>,
                       ""prerequisites"": [""<prerequisite1>"", ""<prerequisite2>""],
                       ""detailedSpecification"": ""<full specification text>""
-                    }
-
-                    Example:
-                    {
-                      ""structureType"": ""Agriculture"",
-                      ""quantity"": 4,
-                      ""materials"": [""Hydroponic growth chambers"", ""LED grow lights"", ""Water recirculation systems"", ""Climate control units"", ""Seed vault""],
-                      ""constructionDays"": 120,
-                      ""workerHours"": 8000,
-                      ""prerequisites"": [""Power supply connection"", ""Water purification system"", ""Atmospheric CO2 scrubbing""],
-                      ""detailedSpecification"": ""Vertical farming towers with 12 levels each, producing 3000 calories per person per day through rotation of fast-growing crops. Automated nutrient delivery and harvesting systems minimize labor requirements...""
                     }")
                         ]
                     },

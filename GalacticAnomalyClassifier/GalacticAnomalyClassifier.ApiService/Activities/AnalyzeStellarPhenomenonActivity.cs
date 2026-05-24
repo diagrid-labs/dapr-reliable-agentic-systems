@@ -3,6 +3,7 @@ using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
 using GalacticAnomalyClassifier.Models;
+using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
 namespace GalacticAnomalyClassifier.Activities;
@@ -29,7 +30,8 @@ public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, S
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -46,27 +48,13 @@ public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, S
                             - Scientific observation opportunities
                             - Safe observation distance
                             - Duration and evolution predictions
-                            
-                            Respond **only** with valid JSON.
-                            Do not include explanations, comments, or text outside the JSON object.
-                            Ensure the JSON is syntactically correct and can be parsed without errors.
-                            Use double quotes around all keys and string values.
-                            Use opening and closing curly braces.
 
                             JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis of the stellar event>"",
-                              ""astrophysicsData"": <A dictionary<string, string> with relevant astrophysics data, use scientific E notation where necessary (for example 1.5e-35)>,
-                              ""observationProtocols"": ""<list of observation protocols>"",
+                              ""astrophysicsData"": ""<JSON-encoded string of a dictionary<string, string> with relevant astrophysics data, use scientific E notation where necessary (for example 1.5e-35)>"",
+                              ""observationProtocols"": [""<observation protocol>""],
                               ""radiationLevel"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
-                            }
-
-                            Example:
-                            {
-                              ""analysis"": ""The stellar phenomenon appears to be a Type II supernova with an estimated energy output of 1.0e44 joules..."",
-                              ""astrophysicsData"": { ""peakLuminosity"": ""3.5e9 L☉"", ""radiationFlux"": ""2.1e-3 W/m²"" },
-                              ""observationProtocols"": [""Maintain distance of at least 5 light-years"", ""Use gamma-ray detectors""],
-                              ""radiationLevel"": ""HIGH""
                             }
                             ")
                         ]
@@ -82,18 +70,43 @@ public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, S
             ],
             conversationOptions);
         
-        Console.WriteLine($"Analyze Stellar Phenomenon Response: {response.Outputs.First().Choices.First().Message.Content}");
-
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
         return new StellarAnalysis(
             json.GetProperty("analysis").GetString()!,
             JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("astrophysicsData").GetRawText())!,
+                json.GetProperty("astrophysicsData").GetString()!)!,
             JsonSerializer.Deserialize<List<string>>(
                 json.GetProperty("observationProtocols").GetRawText())!,
             json.GetProperty("radiationLevel").GetString()!
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var stringArrayType = new Struct();
+        stringArrayType.Fields.Add("type", Value.ForString("array"));
+        stringArrayType.Fields.Add("items", Value.ForStruct(stringType));
+
+        var properties = new Struct();
+        properties.Fields.Add("analysis", Value.ForStruct(stringType));
+        properties.Fields.Add("astrophysicsData", Value.ForStruct(stringType));
+        properties.Fields.Add("observationProtocols", Value.ForStruct(stringArrayType));
+        properties.Fields.Add("radiationLevel", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("analysis"),
+            Value.ForString("astrophysicsData"),
+            Value.ForString("observationProtocols"),
+            Value.ForString("radiationLevel")));
+
+        return responseFormat;
     }
 }

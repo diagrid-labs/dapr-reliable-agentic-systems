@@ -24,7 +24,8 @@ public class HullIntegrityScanActivity : WorkflowActivity<Starship, ScanResult>
 
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = ScanResultSchema.Get()
         };
 
         var response = await _conversationClient.ConverseAsync(
@@ -40,28 +41,13 @@ public class HullIntegrityScanActivity : WorkflowActivity<Starship, ScanResult>
                             - Corrosion from space radiation
                             - Structural weak points
 
-                            Respond **only** with valid JSON.
-                            Do not include explanations, comments, or text outside the JSON object.
-                            Ensure the JSON is syntactically correct and can be parsed without errors.
-                            Use double quotes around all keys and string values.
-                            Use opening and closing curly braces.
-
-                            JSON structure that describes the fields:
+                            Respond with the following JSON structure:
                             {
                               ""status"": ""<OK|WARNING|CRITICAL>"",
                               ""healthPercentage"": <0-100>,
                               ""issues"": [""<issue1>"", ""<issue2>""],
                               ""recommendations"": [""<rec1>"", ""<rec2>""],
                               ""detailedAnalysis"": ""<full analysis text>""
-                            }
-
-                            Example:
-                            {
-                              ""status"": ""WARNING"",
-                              ""healthPercentage"": 78,
-                              ""issues"": [""Minor micrometeorite impacts on sections 7-12"", ""Stress fractures detected near warp nacelle mounts""],
-                              ""recommendations"": [""Schedule hull plating replacement for sections 7-12"", ""Reinforce structural supports before next FTL jump""],
-                              ""detailedAnalysis"": ""Hull integrity assessment reveals moderate wear consistent with 15 years of deep space operations. Primary concerns are concentrated in high-stress areas...""
                             }")
                         ]
                     },

@@ -2,6 +2,7 @@ using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
+using Google.Protobuf.WellKnownTypes;
 using SpaceDebrisAgent.Models;
 using System.Text.Json;
 
@@ -25,7 +26,8 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
         
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -34,15 +36,9 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
                 {
                     new SystemMessage
                     {
-                        Content = [new MessageContent(@"Generate a realistic space debris field scan result. 
+                        Content = [new MessageContent(@"Generate a realistic space debris field scan result.
                     Include 3-8 debris objects with varied types, masses, and threat levels.
-                    
-                    Respond **only** with valid JSON.
-                    Do not include explanations, comments, or text outside the JSON object.
-                    Ensure the JSON is syntactically correct and can be parsed without errors.
-                    Use double quotes around all keys and string values.
-                    Use opening and closing curly braces.
-                    
+
                     JSON structure that describes the fields:
                     {
                       ""debris"": [
@@ -58,32 +54,6 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
                       ],
                       ""totalMass"": <number: sum of all debris mass>,
                       ""riskLevel"": ""<string: Low|Medium|High|Critical>""
-                    }
-
-                    Example:
-                    {
-                      ""debris"": [
-                        {
-                          ""id"": ""DEB-001"",
-                          ""mass"": 450.5,
-                          ""type"": ""Satellite"",
-                          ""position"": [1200.0, -450.0, 350.0],
-                          ""velocity"": [7.5, -0.3, 0.1],
-                          ""threatLevel"": ""High"",
-                          ""isFragmented"": false
-                        },
-                        {
-                          ""id"": ""DEB-002"",
-                          ""mass"": 85.2,
-                          ""type"": ""Fragment"",
-                          ""position"": [1180.0, -440.0, 360.0],
-                          ""velocity"": [7.6, -0.5, 0.2],
-                          ""threatLevel"": ""Medium"",
-                          ""isFragmented"": true
-                        }
-                      ],
-                      ""totalMass"": 535.7,
-                      ""riskLevel"": ""High""
                     }")]
                     },
                     new UserMessage
@@ -97,5 +67,61 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
         
         return JsonSerializer.Deserialize<DebrisField>(
             response.Outputs.First().Choices.First().Message.Content)!;
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var numberType = new Struct();
+        numberType.Fields.Add("type", Value.ForString("number"));
+
+        var booleanType = new Struct();
+        booleanType.Fields.Add("type", Value.ForString("boolean"));
+
+        var numberArrayType = new Struct();
+        numberArrayType.Fields.Add("type", Value.ForString("array"));
+        numberArrayType.Fields.Add("items", Value.ForStruct(numberType));
+
+        var debrisProps = new Struct();
+        debrisProps.Fields.Add("id", Value.ForStruct(stringType));
+        debrisProps.Fields.Add("mass", Value.ForStruct(numberType));
+        debrisProps.Fields.Add("type", Value.ForStruct(stringType));
+        debrisProps.Fields.Add("position", Value.ForStruct(numberArrayType));
+        debrisProps.Fields.Add("velocity", Value.ForStruct(numberArrayType));
+        debrisProps.Fields.Add("threatLevel", Value.ForStruct(stringType));
+        debrisProps.Fields.Add("isFragmented", Value.ForStruct(booleanType));
+
+        var debrisItemType = new Struct();
+        debrisItemType.Fields.Add("type", Value.ForString("object"));
+        debrisItemType.Fields.Add("properties", Value.ForStruct(debrisProps));
+        debrisItemType.Fields.Add("required", Value.ForList(
+            Value.ForString("id"),
+            Value.ForString("mass"),
+            Value.ForString("type"),
+            Value.ForString("position"),
+            Value.ForString("velocity"),
+            Value.ForString("threatLevel"),
+            Value.ForString("isFragmented")));
+
+        var debrisArrayType = new Struct();
+        debrisArrayType.Fields.Add("type", Value.ForString("array"));
+        debrisArrayType.Fields.Add("items", Value.ForStruct(debrisItemType));
+
+        var properties = new Struct();
+        properties.Fields.Add("debris", Value.ForStruct(debrisArrayType));
+        properties.Fields.Add("totalMass", Value.ForStruct(numberType));
+        properties.Fields.Add("riskLevel", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("debris"),
+            Value.ForString("totalMass"),
+            Value.ForString("riskLevel")));
+
+        return responseFormat;
     }
 }

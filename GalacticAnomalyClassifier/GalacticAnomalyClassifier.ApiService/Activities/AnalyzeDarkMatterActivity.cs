@@ -3,6 +3,7 @@ using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
 using GalacticAnomalyClassifier.Models;
+using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
 namespace GalacticAnomalyClassifier.Activities;
@@ -29,7 +30,8 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -45,27 +47,13 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
                             - Exotic matter harvesting potential
                             - Black hole formation risk
                             - Energy extraction possibilities
-                            
-                            Respond **only** with valid JSON.
-                            Do not include explanations, comments, or text outside the JSON object.
-                            Ensure the JSON is syntactically correct and can be parsed without errors.
-                            Use double quotes around all keys and string values.
-                            Use opening and closing curly braces.
 
                             JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis of the dark matter cluster>"",
-                              ""gravitationalData"": <A dictionary<string, string> with relevant gravitational data, use scientific E notation where necessary (for example 1.5e-35)>,
-                              ""harvestingOpportunities"": ""<list of harvesting opportunities>"",
+                              ""gravitationalData"": ""<JSON-encoded string of a dictionary<string, string> with relevant gravitational data, use scientific E notation where necessary (for example 1.5e-35)>"",
+                              ""harvestingOpportunities"": [""<harvesting opportunity>""],
                               ""collapseProbability"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
-                            }
-
-                            Example:
-                            {
-                              ""analysis"": ""The dark matter cluster exhibits a high mass concentration with significant gravitational lensing effects..."",
-                              ""gravitationalData"": { ""massDensity"": ""2.5e10 solar masses per cubic parsec"", ""lensingEffect"": ""Strong"" },
-                              ""harvestingOpportunities"": [""Exotic particle extraction"", ""Dark energy conversion""],
-                              ""collapseProbability"": ""MEDIUM""
                             }
                             ")
                         ]
@@ -81,18 +69,43 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
             ],
             conversationOptions);
         
-        Console.WriteLine($"Analyze Dark Matter Response: {response.Outputs.First().Choices.First().Message.Content}");
-
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
         return new DarkMatterAnalysis(
             json.GetProperty("analysis").GetString()!,
             JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("gravitationalData").GetRawText())!,
+                json.GetProperty("gravitationalData").GetString()!)!,
             JsonSerializer.Deserialize<List<string>>(
                 json.GetProperty("harvestingOpportunities").GetRawText())!,
             json.GetProperty("collapseProbability").GetString()!
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var stringArrayType = new Struct();
+        stringArrayType.Fields.Add("type", Value.ForString("array"));
+        stringArrayType.Fields.Add("items", Value.ForStruct(stringType));
+
+        var properties = new Struct();
+        properties.Fields.Add("analysis", Value.ForStruct(stringType));
+        properties.Fields.Add("gravitationalData", Value.ForStruct(stringType));
+        properties.Fields.Add("harvestingOpportunities", Value.ForStruct(stringArrayType));
+        properties.Fields.Add("collapseProbability", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("analysis"),
+            Value.ForString("gravitationalData"),
+            Value.ForString("harvestingOpportunities"),
+            Value.ForString("collapseProbability")));
+
+        return responseFormat;
     }
 }

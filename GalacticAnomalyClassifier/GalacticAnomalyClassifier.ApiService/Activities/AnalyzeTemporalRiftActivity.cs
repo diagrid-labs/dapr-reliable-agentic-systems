@@ -3,6 +3,7 @@ using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
 using GalacticAnomalyClassifier.Models;
+using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
 namespace GalacticAnomalyClassifier.Activities;
@@ -29,7 +30,8 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -46,27 +48,13 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
                             - Temporal radiation levels
                             - Safe approach vectors
                             - Potential for time travel research
-                            
-                            Respond **only** with valid JSON.
-                            Do not include explanations, comments, or text outside the JSON object.
-                            Ensure the JSON is syntactically correct and can be parsed without errors.
-                            Use double quotes around all keys and string values.
-                            Use opening and closing curly braces.
 
                             JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis>"",
-                              ""quantumMetrics"": <A dictionary<string, string> with relevant quantum metrics, use scientific E notation where necessary (for example 1.5e-35)>,
-                              ""safetyProtocols"": ""<list of safety protocols>"",
+                              ""quantumMetrics"": ""<JSON-encoded string of a dictionary<string, string> with relevant quantum metrics, use scientific E notation where necessary (for example 1.5e-35)>"",
+                              ""safetyProtocols"": [""<safety protocol>""],
                               ""timelineStability"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
-                            }
-
-                            Example:
-                            {
-                              ""analysis"": ""The temporal rift exhibits moderate timeline divergence with potential causality violations..."",
-                              ""quantumMetrics"": { ""divergenceIndex"": ""2.3e1"", ""radiationLevel"": ""5.6e-4 Sv/h"" },
-                              ""safetyProtocols"": [""Establish temporal anchors"", ""Deploy chronal dampeners""],
-                              ""timelineStability"": ""MEDIUM""
                             }
                             ")
                         ]
@@ -82,18 +70,43 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
             ],
             conversationOptions);
         
-        Console.WriteLine($"Analyze Temporal Rift Response: {response.Outputs.First().Choices.First().Message.Content}");
-
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
         return new TemporalAnalysis(
             json.GetProperty("analysis").GetString()!,
             JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("quantumMetrics").GetRawText())!,
+                json.GetProperty("quantumMetrics").GetString()!)!,
             JsonSerializer.Deserialize<List<string>>(
                 json.GetProperty("safetyProtocols").GetRawText())!,
             json.GetProperty("timelineStability").GetString()!
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var stringArrayType = new Struct();
+        stringArrayType.Fields.Add("type", Value.ForString("array"));
+        stringArrayType.Fields.Add("items", Value.ForStruct(stringType));
+
+        var properties = new Struct();
+        properties.Fields.Add("analysis", Value.ForStruct(stringType));
+        properties.Fields.Add("quantumMetrics", Value.ForStruct(stringType));
+        properties.Fields.Add("safetyProtocols", Value.ForStruct(stringArrayType));
+        properties.Fields.Add("timelineStability", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("analysis"),
+            Value.ForString("quantumMetrics"),
+            Value.ForString("safetyProtocols"),
+            Value.ForString("timelineStability")));
+
+        return responseFormat;
     }
 }

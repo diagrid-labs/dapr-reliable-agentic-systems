@@ -3,6 +3,7 @@ using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
 using GalacticAnomalyClassifier.Models;
+using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
 namespace GalacticAnomalyClassifier.Activities;
@@ -29,7 +30,8 @@ public class AnalyzeDimensionalTearActivity : WorkflowActivity<SpaceAnomaly, Dim
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -46,27 +48,13 @@ public class AnalyzeDimensionalTearActivity : WorkflowActivity<SpaceAnomaly, Dim
                             - Containment and sealing procedures
                             - Research and exploration potential
                             - Stability of local spacetime fabric
-                            
-                            Respond **only** with valid JSON.
-                            Do not include explanations, comments, or text outside the JSON object.
-                            Ensure the JSON is syntactically correct and can be parsed without errors.
-                            Use double quotes around all keys and string values.
-                            Use opening and closing curly braces.
 
                             JSON structure that describes the fields:
                             {
                               ""analysis"": ""<detailed technical analysis of the dimensional tear>"",
-                              ""multiverseMetrics"": <A dictionary<string, string> with relevant multiverse data, use scientific E notation where necessary (for example 1.5e-35)>,
-                              ""containmentProcedures"": ""<list of containment procedures>"",
+                              ""multiverseMetrics"": ""<JSON-encoded string of a dictionary<string, string> with relevant multiverse data, use scientific E notation where necessary (for example 1.5e-35)>"",
+                              ""containmentProcedures"": [""<containment procedure>""],
                               ""spacetimeTearSeverity"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
-                            }
-
-                            Example:
-                            {
-                              ""analysis"": ""The dimensional tear exhibits high instability with significant cross-dimensional contamination risk..."",
-                              ""multiverseMetrics"": { ""tearSize"": ""3.2e3 meters"", ""contaminationLevel"": ""7.5e2 particles per cubic meter"" },
-                              ""containmentProcedures"": [""Deploy quantum stabilizers"", ""Establish dimensional anchor points""],
-                              ""spacetimeTearSeverity"": ""HIGH""
                             }
                             ")
                         ]
@@ -82,18 +70,43 @@ public class AnalyzeDimensionalTearActivity : WorkflowActivity<SpaceAnomaly, Dim
             ],
             conversationOptions);
         
-        Console.WriteLine($"Analyze Dimensional Tear Response: {response.Outputs.First().Choices.First().Message.Content}");
-
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
         return new DimensionalAnalysis(
             json.GetProperty("analysis").GetString()!,
             JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("multiverseMetrics").GetRawText())!,
+                json.GetProperty("multiverseMetrics").GetString()!)!,
             JsonSerializer.Deserialize<List<string>>(
                 json.GetProperty("containmentProcedures").GetRawText())!,
             json.GetProperty("spacetimeTearSeverity").GetString()!
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var stringArrayType = new Struct();
+        stringArrayType.Fields.Add("type", Value.ForString("array"));
+        stringArrayType.Fields.Add("items", Value.ForStruct(stringType));
+
+        var properties = new Struct();
+        properties.Fields.Add("analysis", Value.ForStruct(stringType));
+        properties.Fields.Add("multiverseMetrics", Value.ForStruct(stringType));
+        properties.Fields.Add("containmentProcedures", Value.ForStruct(stringArrayType));
+        properties.Fields.Add("spacetimeTearSeverity", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("analysis"),
+            Value.ForString("multiverseMetrics"),
+            Value.ForString("containmentProcedures"),
+            Value.ForString("spacetimeTearSeverity")));
+
+        return responseFormat;
     }
 }

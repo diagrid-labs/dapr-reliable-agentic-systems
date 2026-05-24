@@ -22,7 +22,8 @@ public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePla
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f
+            Temperature = 0.7f,
+            ResponseFormat = StructurePlanSchema.Get()
         };
 
         var response = await _conversationClient.ConverseAsync(
@@ -38,13 +39,7 @@ public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePla
                     - Nuclear (if uranium available)
                     - Geothermal (if volcanic activity)
                     - Fusion (most reliable but complex)
-                    
-                    Respond **only** with valid JSON.
-                    Do not include explanations, comments, or text outside the JSON object.
-                    Ensure the JSON is syntactically correct and can be parsed without errors.
-                    Use double quotes around all keys and string values.
-                    Use opening and closing curly braces.
-                    
+
                     JSON structure that describes the fields:
                     {
                       ""structureType"": ""<structure type>"",
@@ -54,17 +49,6 @@ public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePla
                       ""workerHours"": <number>,
                       ""prerequisites"": [""<prerequisite1>"", ""<prerequisite2>""],
                       ""detailedSpecification"": ""<full specification text>""
-                    }
-
-                    Example:
-                    {
-                      ""structureType"": ""PowerPlant"",
-                      ""quantity"": 2,
-                      ""materials"": [""Fusion reactor cores"", ""Plasma containment vessels"", ""Power distribution transformers"", ""Cooling systems""],
-                      ""constructionDays"": 240,
-                      ""workerHours"": 18000,
-                      ""prerequisites"": [""Secure foundation with seismic dampening"", ""Coolant water supply"", ""Emergency shutdown systems""],
-                      ""detailedSpecification"": ""Dual fusion reactors each generating 500MW, with automatic load balancing and failover capability. Tritium-deuterium fuel requires minimal resupply. Redundant cooling loops prevent meltdown scenarios...""
                     }")
                         ]
                     },

@@ -95,7 +95,7 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
         }
 
         // Aggregate all results
-        var aggregationInput = new AggregateResultsInput(scanResults.ToList(), voteResults);
+        var aggregationInput = new AggregateResultsInput(input.ShipId, scanResults.ToList(), voteResults);
         var finalReport = await context.CallActivityAsync<DiagnosticReport>(
             nameof(AggregateResultsActivity),
             aggregationInput,

@@ -24,7 +24,8 @@ public class NavigationScanActivity : WorkflowActivity<Starship, ScanResult>
 
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = ScanResultSchema.Get()
         };
 
         var response = await _conversationClient.ConverseAsync(
@@ -41,28 +42,13 @@ public class NavigationScanActivity : WorkflowActivity<Starship, ScanResult>
                             - Stellar cartography database integrity
                             - FTL jump calculation accuracy
 
-                            Respond **only** with valid JSON.
-                            Do not include explanations, comments, or text outside the JSON object.
-                            Ensure the JSON is syntactically correct and can be parsed without errors.
-                            Use double quotes around all keys and string values.
-                            Use opening and closing curly braces.
-
-                            JSON structure that describes the fields:
+                            Respond with the following JSON structure:
                             {
                               ""status"": ""<OK|WARNING|CRITICAL>"",
                               ""healthPercentage"": <0-100>,
                               ""issues"": [""<issue1>"", ""<issue2>""],
                               ""recommendations"": [""<rec1>"", ""<rec2>""],
                               ""detailedAnalysis"": ""<full analysis text>""
-                            }
-
-                            Example:
-                            {
-                              ""status"": ""OK"",
-                              ""healthPercentage"": 92,
-                              ""issues"": [""Minor drift in long-range sensor calibration""],
-                              ""recommendations"": [""Recalibrate sensor array during next maintenance window""],
-                              ""detailedAnalysis"": ""Navigation systems are operating within acceptable parameters. Warp drive calibration is precise and stellar cartography database is current...""
                             }")
                         ]
                     },

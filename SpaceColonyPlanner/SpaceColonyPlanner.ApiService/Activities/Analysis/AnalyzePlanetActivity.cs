@@ -2,6 +2,7 @@ using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.Workflow;
+using Google.Protobuf.WellKnownTypes;
 using SpaceColonyPlanner.Models;
 using System.Text.Json;
 
@@ -22,7 +23,8 @@ public class AnalyzePlanetActivity : WorkflowActivity<Planet, PlanetAnalysis>
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -38,25 +40,12 @@ public class AnalyzePlanetActivity : WorkflowActivity<Planet, PlanetAnalysis>
                     - Available resources
                     - Engineering requirements
                     - Long-term sustainability
-                    
-                    Respond **only** with valid JSON.
-                    Do not include explanations, comments, or text outside the JSON object.
-                    Ensure the JSON is syntactically correct and can be parsed without errors.
-                    Use double quotes around all keys and string values.
-                    Use opening and closing curly braces.
 
                     JSON structure that describes the fields:
                     {
                       ""challenges"": [""<challenge1>"", ""<challenge2>""],
                       ""opportunities"": [""<opportunity1>"", ""<opportunity2>""],
                       ""recommendedApproach"": ""<approach description>""
-                    }
-
-                    Example:
-                    {
-                      ""challenges"": [""High radiation levels require heavy shielding"", ""Thin atmosphere needs pressurized habitats""],
-                      ""opportunities"": [""Rich metal deposits enable local manufacturing"", ""Low gravity reduces structural requirements""],
-                      ""recommendedApproach"": ""Focus on underground construction to leverage natural radiation protection while exploiting mineral resources for building materials.""
                     }")
                         ]
                     },
@@ -96,5 +85,30 @@ Resources:
                 json.GetProperty("opportunities").GetRawText())!,
             json.GetProperty("recommendedApproach").GetString()!
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var stringArrayType = new Struct();
+        stringArrayType.Fields.Add("type", Value.ForString("array"));
+        stringArrayType.Fields.Add("items", Value.ForStruct(stringType));
+
+        var properties = new Struct();
+        properties.Fields.Add("challenges", Value.ForStruct(stringArrayType));
+        properties.Fields.Add("opportunities", Value.ForStruct(stringArrayType));
+        properties.Fields.Add("recommendedApproach", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("challenges"),
+            Value.ForString("opportunities"),
+            Value.ForString("recommendedApproach")));
+
+        return responseFormat;
     }
 }

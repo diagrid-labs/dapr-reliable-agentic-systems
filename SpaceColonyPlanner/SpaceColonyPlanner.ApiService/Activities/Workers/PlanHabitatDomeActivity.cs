@@ -22,7 +22,8 @@ public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePl
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f
+            Temperature = 0.7f,
+            ResponseFormat = StructurePlanSchema.Get()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -39,13 +40,7 @@ public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePl
                     - Life support systems
                     - Living space per person
                     - Emergency backup systems
-                    
-                    Respond **only** with valid JSON.
-                    Do not include explanations, comments, or text outside the JSON object.
-                    Ensure the JSON is syntactically correct and can be parsed without errors.
-                    Use double quotes around all keys and string values.
-                    Use opening and closing curly braces.
-                    
+
                     JSON structure that describes the fields:
                     {
                       ""structureType"": ""<structure type>"",
@@ -55,17 +50,6 @@ public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePl
                       ""workerHours"": <number>,
                       ""prerequisites"": [""<prerequisite1>"", ""<prerequisite2>""],
                       ""detailedSpecification"": ""<full specification text>""
-                    }
-
-                    Example:
-                    {
-                      ""structureType"": ""HabitatDome"",
-                      ""quantity"": 3,
-                      ""materials"": [""Reinforced titanium-alloy framework"", ""Multi-layer radiation shielding"", ""Transparent aluminum viewports"", ""Life support modules""],
-                      ""constructionDays"": 180,
-                      ""workerHours"": 12000,
-                      ""prerequisites"": [""Level foundation"", ""Power distribution network"", ""Water supply connection""],
-                      ""detailedSpecification"": ""Each habitat dome provides 500 cubic meters of living space with triple-redundant life support, radiation shielding rated for 2 Sv/year environments, and emergency atmosphere retention systems. Modular design allows expansion...""
                     }")
                         ]
                     },

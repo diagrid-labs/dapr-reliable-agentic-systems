@@ -22,7 +22,8 @@ public class LifeSupportScanActivity : WorkflowActivity<Starship, ScanResult>
     {
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.5
+            Temperature = 0.5,
+            ResponseFormat = ScanResultSchema.Get()
         };
 
         var response = await _conversationClient.ConverseAsync(
@@ -39,28 +40,13 @@ public class LifeSupportScanActivity : WorkflowActivity<Starship, ScanResult>
                             - Temperature and humidity control
                             - Air quality and contamination levels
 
-                            Respond **only** with valid JSON.
-                            Do not include explanations, comments, or text outside the JSON object.
-                            Ensure the JSON is syntactically correct and can be parsed without errors.
-                            Use double quotes around all keys and string values.
-                            Use opening and closing curly braces.
-
-                            JSON structure that describes the fields:
+                            Respond with the following JSON structure:
                             {
                               ""status"": ""<OK|WARNING|CRITICAL>"",
                               ""healthPercentage"": <0-100>,
                               ""issues"": [""<issue1>"", ""<issue2>""],
                               ""recommendations"": [""<rec1>"", ""<rec2>""],
                               ""detailedAnalysis"": ""<full analysis text>""
-                            }
-
-                            Example:
-                            {
-                              ""status"": ""OK"",
-                              ""healthPercentage"": 94,
-                              ""issues"": [""Oxygen recycler efficiency slightly degraded in section B""],
-                              ""recommendations"": [""Replace carbon dioxide scrubber filters during next scheduled maintenance""],
-                              ""detailedAnalysis"": ""Life support systems are operating within normal parameters. All critical subsystems are functional with minor efficiency degradation in non-critical components...""
                             }")
                         ]
                     },

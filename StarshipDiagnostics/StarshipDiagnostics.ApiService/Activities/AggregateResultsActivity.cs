@@ -32,7 +32,7 @@ public class AggregateResultsActivity : WorkflowActivity<AggregateResultsInput, 
                            input.ScanResults.Count(s => s.Status == "WARNING") * 4;
 
         return await Task.FromResult(new DiagnosticReport(
-            "SHIP-ID",
+            input.ShipId,
             DateTime.UtcNow,
             input.ScanResults,
             input.VoteResults,

@@ -2,6 +2,7 @@ using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.Workflow;
+using Google.Protobuf.WellKnownTypes;
 using SpaceColonyPlanner.Models;
 using System.Text.Json;
 
@@ -36,7 +37,8 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
         // Create construction timeline by analyzing prerequisites
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -46,15 +48,9 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
                     new SystemMessage
                     {
                         Content = [
-                            new MessageContent(@"You are a construction project manager. Organize structures 
-                    into construction phases based on prerequisites and efficiency. 
-                    
-                    Respond **only** with valid JSON.
-                    Do not include explanations, comments, or text outside the JSON object.
-                    Ensure the JSON is syntactically correct and can be parsed without errors.
-                    Use double quotes around all keys and string values.
-                    Use opening and closing curly braces.
-                    
+                            new MessageContent(@"You are a construction project manager. Organize structures
+                    into construction phases based on prerequisites and efficiency.
+
                     JSON structure that describes the fields:
                     {
                       ""timeline"": [
@@ -67,26 +63,6 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
                       ],
                       ""successFactors"": ""<success factors description>"",
                       ""riskAssessment"": ""<risk assessment description>""
-                    }
-
-                    Example:
-                    {
-                      ""timeline"": [
-                        {
-                          ""phaseNumber"": 1,
-                          ""name"": ""Foundation Infrastructure"",
-                          ""structures"": [""PowerPlant"", ""Water Processing""],
-                          ""durationDays"": 90
-                        },
-                        {
-                          ""phaseNumber"": 2,
-                          ""name"": ""Life Support Systems"",
-                          ""structures"": [""HabitatDome"", ""Agriculture""],
-                          ""durationDays"": 150
-                        }
-                      ],
-                      ""successFactors"": ""Critical success depends on reliable power generation from day one, establishing closed-loop water recycling, and achieving food self-sufficiency within 6 months."",
-                      ""riskAssessment"": ""Primary risks include construction delays due to extreme temperatures, potential equipment failures in high-radiation environment, and dependency on imported materials for first 2 years.""
                     }")
                         ]
                     },
@@ -106,8 +82,7 @@ Create phased construction plan.")
         
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
-        Console.WriteLine(json);
-        
+
         var timeline = new List<ConstructionPhase>();
         foreach (var phase in json.GetProperty("timeline").EnumerateArray())
         {
@@ -129,5 +104,52 @@ Create phased construction plan.")
             json.GetProperty("successFactors").GetString()!,
             json.GetProperty("riskAssessment").GetString()!
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var integerType = new Struct();
+        integerType.Fields.Add("type", Value.ForString("integer"));
+
+        var stringArrayType = new Struct();
+        stringArrayType.Fields.Add("type", Value.ForString("array"));
+        stringArrayType.Fields.Add("items", Value.ForStruct(stringType));
+
+        var phaseProps = new Struct();
+        phaseProps.Fields.Add("phaseNumber", Value.ForStruct(integerType));
+        phaseProps.Fields.Add("name", Value.ForStruct(stringType));
+        phaseProps.Fields.Add("structures", Value.ForStruct(stringArrayType));
+        phaseProps.Fields.Add("durationDays", Value.ForStruct(integerType));
+
+        var phaseType = new Struct();
+        phaseType.Fields.Add("type", Value.ForString("object"));
+        phaseType.Fields.Add("properties", Value.ForStruct(phaseProps));
+        phaseType.Fields.Add("required", Value.ForList(
+            Value.ForString("phaseNumber"),
+            Value.ForString("name"),
+            Value.ForString("structures"),
+            Value.ForString("durationDays")));
+
+        var timelineArrayType = new Struct();
+        timelineArrayType.Fields.Add("type", Value.ForString("array"));
+        timelineArrayType.Fields.Add("items", Value.ForStruct(phaseType));
+
+        var properties = new Struct();
+        properties.Fields.Add("timeline", Value.ForStruct(timelineArrayType));
+        properties.Fields.Add("successFactors", Value.ForStruct(stringType));
+        properties.Fields.Add("riskAssessment", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("timeline"),
+            Value.ForString("successFactors"),
+            Value.ForString("riskAssessment")));
+
+        return responseFormat;
     }
 }

@@ -61,8 +61,8 @@ demos:
     steps:
       - action: highlight
         path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Activities/ClassifyAnomalyActivity.cs
-        position: '10'
-        highlightWholeLine: true
+        position: '11'
+        highlightWholeLine: false
     icons:
       start: code
       end: ''

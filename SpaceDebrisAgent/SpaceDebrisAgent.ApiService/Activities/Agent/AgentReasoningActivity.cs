@@ -2,6 +2,7 @@ using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
+using Google.Protobuf.WellKnownTypes;
 using SpaceDebrisAgent.Models;
 using System.Text.Json;
 
@@ -40,26 +41,12 @@ DECISION-MAKING PROCESS:
 - Request human approval for high-risk actions
 - Complete mission when objectives met
 
-Respond **only** with valid JSON.
-Do not include explanations, comments, or text outside the JSON object.
-Ensure the JSON is syntactically correct and can be parsed without errors.
-Use double quotes around all keys and string values.
-Use opening and closing curly braces.
-
 JSON structure that describes the fields:
 {
   ""reasoning"": ""<string: your analytical thought process for choosing this action>"",
   ""chosenAction"": ""<string: TOOL_NAME from available tools list>"",
-  ""actionParameters"": {<object: tool-specific parameters>},
+  ""actionParameters"": ""<JSON-encoded string of an object with tool-specific parameters>"",
   ""expectedOutcome"": ""<string: what you expect this action to accomplish>""
-}
-
-Example:
-{
-  ""reasoning"": ""Mission just started. Need to understand debris field before planning capture strategy. Scanning will reveal debris locations, masses, and threat levels to inform prioritization."",
-  ""chosenAction"": ""SCAN_DEBRIS_FIELD"",
-  ""actionParameters"": {},
-  ""expectedOutcome"": ""Will receive list of debris objects with positions, velocities, and threat assessments to plan optimal capture sequence.""
 }";
 
         var previousActions = string.Join("\n", 
@@ -94,7 +81,8 @@ What is your next action?";
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -122,9 +110,32 @@ What is your next action?";
             json.GetProperty("reasoning").GetString()!,
             json.GetProperty("chosenAction").GetString()!,
             JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("actionParameters").GetRawText())!,
+                json.GetProperty("actionParameters").GetString()!)!,
             json.GetProperty("expectedOutcome").GetString()!,
             DateTime.UtcNow
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var properties = new Struct();
+        properties.Fields.Add("reasoning", Value.ForStruct(stringType));
+        properties.Fields.Add("chosenAction", Value.ForStruct(stringType));
+        properties.Fields.Add("actionParameters", Value.ForStruct(stringType));
+        properties.Fields.Add("expectedOutcome", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("reasoning"),
+            Value.ForString("chosenAction"),
+            Value.ForString("actionParameters"),
+            Value.ForString("expectedOutcome")));
+
+        return responseFormat;
     }
 }

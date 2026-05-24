@@ -2,6 +2,7 @@ using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.Workflow;
+using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
 public class TranslateActivity : WorkflowActivity<TranslateInput, Translation>
@@ -27,22 +28,10 @@ translation for first contact scenarios. Your translations must:
 
 Provide both the translation and your reasoning for key choices.
 
-Respond **only** with valid JSON.
-Do not include explanations, comments, or text outside the JSON object.
-Ensure the JSON is syntactically correct and can be parsed without errors.
-Use double quotes around all keys and string values.
-Use opening and closing curly braces.
-
 JSON structure that describes the fields:
 {
   ""translation"": ""<translated text in English>"",
   ""reasoning"": ""<explanation of key translation choices>""
-}
-
-Example:
-{
-  ""translation"": ""Live long and prosper. Infinite diversity in infinite combinations. We treasure our bond."",
-  ""reasoning"": ""Translated formal Vulcan greeting with emphasis on longevity and prosperity. IDIC philosophy referenced using 'infinite diversity' phrase. 'Taluhk' rendered as 'treasure' to convey emotional depth while maintaining diplomatic tone.""
 }";
 
         var userPrompt = $@"Translate this {input.Text.AlienSpecies} text to English:
@@ -58,7 +47,8 @@ Provide your translation and explain your reasoning for important translation ch
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.75
+            Temperature = 0.75,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -87,5 +77,24 @@ Provide your translation and explain your reasoning for important translation ch
             json.GetProperty("reasoning").GetString()!,
             DateTime.UtcNow
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var properties = new Struct();
+        properties.Fields.Add("translation", Value.ForStruct(stringType));
+        properties.Fields.Add("reasoning", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("translation"),
+            Value.ForString("reasoning")));
+
+        return responseFormat;
     }
 }

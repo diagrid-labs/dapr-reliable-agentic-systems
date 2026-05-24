@@ -26,6 +26,7 @@ public record VoteResult(
 );
 
 public record AggregateResultsInput(
+    string ShipId,
     List<ScanResult> ScanResults,
     List<VoteResult> VoteResults
 );

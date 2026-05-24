@@ -24,7 +24,8 @@ public class WeaponsScanActivity : WorkflowActivity<Starship, ScanResult>
 
         var conversationOptions = new ConversationOptions("conversation")
         {
-            Temperature = 0.7
+            Temperature = 0.7,
+            ResponseFormat = ScanResultSchema.Get()
         };
 
         var response = await _conversationClient.ConverseAsync(
@@ -41,28 +42,13 @@ public class WeaponsScanActivity : WorkflowActivity<Starship, ScanResult>
                             - Targeting computer accuracy
                             - Defensive countermeasure systems
 
-                            Respond **only** with valid JSON.
-                            Do not include explanations, comments, or text outside the JSON object.
-                            Ensure the JSON is syntactically correct and can be parsed without errors.
-                            Use double quotes around all keys and string values.
-                            Use opening and closing curly braces.
-
-                            JSON structure that describes the fields:
+                            Respond with the following JSON structure:
                             {
                               ""status"": ""<OK|WARNING|CRITICAL>"",
                               ""healthPercentage"": <0-100>,
                               ""issues"": [""<issue1>"", ""<issue2>""],
                               ""recommendations"": [""<rec1>"", ""<rec2>""],
                               ""detailedAnalysis"": ""<full analysis text>""
-                            }
-
-                            Example:
-                            {
-                              ""status"": ""WARNING"",
-                              ""healthPercentage"": 85,
-                              ""issues"": [""Phaser array power coupling degraded by 12%"", ""Shield emitter 7 showing reduced output""],
-                              ""recommendations"": [""Replace power coupling in phaser array 3"", ""Repair or replace shield emitter 7""],
-                              ""detailedAnalysis"": ""Tactical systems are generally operational but showing age-related wear. Primary weapons systems functional but at reduced efficiency...""
                             }")
                         ]
                     },

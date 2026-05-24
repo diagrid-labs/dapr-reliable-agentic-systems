@@ -2,13 +2,8 @@ using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.Workflow;
+using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
-using Microsoft.VisualBasic;
-using System.Runtime.InteropServices;
-using System.Xml;
-using System.Runtime.CompilerServices;
-using System.Text.Json.Nodes;
-using System.ComponentModel.DataAnnotations;
 
 public class RefineTranslationActivity : WorkflowActivity<RefineInput, Translation>
 {
@@ -24,26 +19,14 @@ public class RefineTranslationActivity : WorkflowActivity<RefineInput, Translati
         RefineInput input)
     {
         
-        var systemPrompt = @"You are an expert xenolinguist refining a translation based on 
-detailed editorial feedback. Your goal is to address the specific weaknesses identified 
+        var systemPrompt = @"You are an expert xenolinguist refining a translation based on
+detailed editorial feedback. Your goal is to address the specific weaknesses identified
 while maintaining the strengths of the current translation.
-
-Respond **only** with valid JSON.
-Do not include explanations, comments, or text outside the JSON object.
-Ensure the JSON is syntactically correct and can be parsed without errors.
-Use double quotes around all keys and string values.
-Use opening and closing curly braces.
 
 JSON structure that describes the fields:
 {
   ""translation"": ""<improved translated text>"",
   ""reasoning"": ""<explanation of changes made to address feedback>""
-}
-
-Example:
-{
-  ""translation"": ""May you live long and prosper. We embrace infinite diversity in infinite combinations. Our alliance is precious to us."",
-  ""reasoning"": ""Improved opening with 'May you' for more diplomatic tone. Changed 'infinite diversity' to 'We embrace infinite diversity' to show active participation in IDIC philosophy. Replaced 'treasure our bond' with 'alliance is precious' for clearer diplomatic context while maintaining emotional nuance.""
 }";
 
         var userPrompt = $@"Refine this translation based on evaluator feedback:
@@ -69,12 +52,12 @@ Weaknesses to Address:
 Detailed Feedback:
 {input.Feedback.DetailedFeedback}
 
-Provide an improved translation that addresses the weaknesses while preserving the strengths.
-Return JSON with: translation (string), reasoning (string explaining changes made).";
+Provide an improved translation that addresses the weaknesses while preserving the strengths.";
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.75
+            Temperature = 0.75,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -94,25 +77,33 @@ Return JSON with: translation (string), reasoning (string explaining changes mad
             ],
             options);
         
-        Console.WriteLine($"LOG RefineTranslationActivity response: {response.Outputs.First().Choices.First().Message.Content}");
+        var json = JsonSerializer.Deserialize<JsonElement>(
+            response.Outputs.First().Choices.First().Message.Content);
 
-        JsonElement json;
-        try
-        {
-            json = JsonSerializer.Deserialize<JsonElement>(
-                response.Outputs.First().Choices.First().Message.Content);
-        }
-        catch (JsonException ex)
-        {
-            var jsonString = JsonUtils.ParseJsonString(response.Outputs.First().Choices.First().Message.Content);
-            json = JsonSerializer.Deserialize<JsonElement>(jsonString);
-        }
-        
         return new Translation(
             input.Iteration,
             json.GetProperty("translation").GetString()!,
             json.GetProperty("reasoning").GetString()!,
             DateTime.UtcNow
         );
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var properties = new Struct();
+        properties.Fields.Add("translation", Value.ForStruct(stringType));
+        properties.Fields.Add("reasoning", Value.ForStruct(stringType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("translation"),
+            Value.ForString("reasoning")));
+
+        return responseFormat;
     }
 }

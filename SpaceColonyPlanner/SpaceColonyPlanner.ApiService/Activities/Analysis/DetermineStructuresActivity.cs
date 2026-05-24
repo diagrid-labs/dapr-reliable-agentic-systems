@@ -2,6 +2,7 @@ using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.AI.Conversation.ConversationRoles;
 using Dapr.Workflow;
+using Google.Protobuf.WellKnownTypes;
 using SpaceColonyPlanner.Models;
 using System.Text.Json;
 
@@ -22,7 +23,8 @@ public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresI
     {
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.7f
+            Temperature = 0.7f,
+            ResponseFormat = GetResponseFormat()
         };
         
         var response = await _conversationClient.ConverseAsync(
@@ -46,13 +48,7 @@ public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresI
                     - MiningFacility (resource extraction)
                     - ResearchLab (scientific research)
                     - DefenseSystem (protection from threats)
-                    
-                    Respond **only** with valid JSON.
-                    Do not include explanations, comments, or text outside the JSON object.
-                    Ensure the JSON is syntactically correct and can be parsed without errors.
-                    Use double quotes around all keys and string values.
-                    Use opening and closing curly braces.
-                    
+
                     JSON structure that describes the fields:
                     {
                       ""structures"": [
@@ -61,24 +57,6 @@ public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresI
                           ""priority"": ""<Critical|High|Medium|Low>"",
                           ""quantity"": <number>,
                           ""reasoning"": ""<explanation>""
-                        }
-                      ]
-                    }
-
-                    Example:
-                    {
-                      ""structures"": [
-                        {
-                          ""structureType"": ""HabitatDome"",
-                          ""priority"": ""Critical"",
-                          ""quantity"": 3,
-                          ""reasoning"": ""Initial population of 100 requires multiple habitat modules for redundancy and growth capacity""
-                        },
-                        {
-                          ""structureType"": ""PowerPlant"",
-                          ""priority"": ""Critical"",
-                          ""quantity"": 2,
-                          ""reasoning"": ""Dual power generation for reliability in harsh environment""
                         }
                       ]
                     }")
@@ -115,12 +93,51 @@ What structures are needed?")
         {
             result.Add(new StructureRequest(
                 item.GetProperty("structureType").GetString()!,
-                Enum.Parse<Priority>(item.GetProperty("priority").GetString()!),
+                System.Enum.Parse<Priority>(item.GetProperty("priority").GetString()!),
                 item.GetProperty("quantity").GetInt32(),
                 item.GetProperty("reasoning").GetString()!
             ));
         }
         
         return result;
+    }
+
+    private static Struct GetResponseFormat()
+    {
+        var stringType = new Struct();
+        stringType.Fields.Add("type", Value.ForString("string"));
+
+        var integerType = new Struct();
+        integerType.Fields.Add("type", Value.ForString("integer"));
+
+        var structureProps = new Struct();
+        structureProps.Fields.Add("structureType", Value.ForStruct(stringType));
+        structureProps.Fields.Add("priority", Value.ForStruct(stringType));
+        structureProps.Fields.Add("quantity", Value.ForStruct(integerType));
+        structureProps.Fields.Add("reasoning", Value.ForStruct(stringType));
+
+        var structureType = new Struct();
+        structureType.Fields.Add("type", Value.ForString("object"));
+        structureType.Fields.Add("properties", Value.ForStruct(structureProps));
+        structureType.Fields.Add("required", Value.ForList(
+            Value.ForString("structureType"),
+            Value.ForString("priority"),
+            Value.ForString("quantity"),
+            Value.ForString("reasoning")));
+
+        var structuresArrayType = new Struct();
+        structuresArrayType.Fields.Add("type", Value.ForString("array"));
+        structuresArrayType.Fields.Add("items", Value.ForStruct(structureType));
+
+        var properties = new Struct();
+        properties.Fields.Add("structures", Value.ForStruct(structuresArrayType));
+
+        var responseFormat = new Struct();
+        responseFormat.Fields.Add("type", Value.ForString("object"));
+        responseFormat.Fields.Add("properties", Value.ForStruct(properties));
+        responseFormat.Fields.Add("required", Value.ForList(
+            Value.ForString("structures")));
+
+        return responseFormat;
     }
 }
