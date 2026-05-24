@@ -9,7 +9,7 @@ demos:
   - id: scene-mkcnyqe1-xk4s
     title: Stop model
     steps:
-      - action: openTerminal
+      - action: focusTerminal
         terminalId: ollama-run
       - action: sendKeybinding
         keybinding: ctrl+d
@@ -22,7 +22,7 @@ demos:
   - id: scene-mkcnyrus-dg35
     title: Stop Ollama
     steps:
-      - action: openTerminal
+      - action: focusTerminal
         terminalId: ollama-server
       - action: sendKeybinding
         keybinding: ctrl+c

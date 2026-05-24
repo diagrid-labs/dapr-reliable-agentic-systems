@@ -20,6 +20,7 @@ demos:
     icons:
       start: terminal
       end: ''
+    disabled: true
   - id: scene-mkcnxl2j-koo2
     title: Run model
     steps:
