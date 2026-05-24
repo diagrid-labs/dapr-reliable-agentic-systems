@@ -8,7 +8,7 @@ customTheme: .demo/slides/theme/theme.css
 - Dapr CLI
 - Docker Desktop
    - Dapr services
-   - Redis
+   - Valkey
    - Diagrid Dev Dashboard
-- .NET 9 Web Apps
+- .NET 10 with Aspire
 - Ollama LLM server with Llama3.2 model (3B parameters)

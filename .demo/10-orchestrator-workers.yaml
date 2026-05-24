@@ -36,11 +36,11 @@ demos:
         command: cd SpaceColonyPlanner
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
-        terminalId: dapr-run
+        terminalId: aspire-run
         autoExecute: true
       - action: executeTerminalCommand
-        command: dapr run -f .
-        terminalId: dapr-run
+        command: aspire run
+        terminalId: aspire-run
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
         autoExecute: true
@@ -51,7 +51,7 @@ demos:
     title: ColonyOrchestratorWorkflow
     steps:
       - action: highlight
-        path: SpaceColonyPlanner/Workflows/ColonyOrchestratorWorkflow.cs
+        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
         position: '8'
         highlightWholeLine: true
     icons:
@@ -61,7 +61,7 @@ demos:
     title: AnalyzePlanetActivity
     steps:
       - action: highlight
-        path: SpaceColonyPlanner/Activities/Analysis/AnalyzePlanetActivity.cs
+        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Activities/Analysis/AnalyzePlanetActivity.cs
         position: '10'
         highlightWholeLine: true
     icons:
@@ -71,7 +71,7 @@ demos:
     title: Start workflow
     steps:
       - action: highlight
-        path: SpaceColonyPlanner/local.http
+        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/SpaceColonyPlanner.ApiService.http
         position: '3'
         highlightWholeLine: true
     icons:
@@ -81,7 +81,7 @@ demos:
     title: Stop the workflow app
     steps:
       - action: focusTerminal
-        terminalId: dapr-run
+        terminalId: aspire-run
       - action: sendKeybinding
         keybinding: ctrl+c
       - action: waitForTimeout
@@ -89,7 +89,7 @@ demos:
       - action: executeTerminalCommand
         command: cd ..
         autoExecute: true
-        terminalId: dapr-run
+        terminalId: aspire-run
     icons:
       start: terminal
       end: ''

@@ -10,7 +10,7 @@
     "demoTime.customTheme": ".demo/slides/theme/theme.css",
     "demoTime.debug": false,
     "workbench.statusBar.visible": true,
-    "workbench.editor.showTabs": "single",
+    "workbench.editor.showTabs": "none",
     "workbench.activityBar.location": "default",
     "demoTime.previousEnabled": true,
     "demoTime.nextActionBehaviour": "currentPosition"

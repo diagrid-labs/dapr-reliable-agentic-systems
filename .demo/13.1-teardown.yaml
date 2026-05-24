@@ -32,19 +32,6 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: scene-mkcnyubp-94fi
-    title: Stop Diagrid Dashboard
-    steps:
-      - action: openTerminal
-        terminalId: diagrid-dashboard
-      - action: sendKeybinding
-        keybinding: ctrl+c
-      - action: executeTerminalCommand
-        command: clear
-        terminalId: diagrid-dashboard
-    icons:
-      start: terminal
-      end: ''
   - id: scene-mkl5zvcz-5n4u
     title: Close polls
     steps:

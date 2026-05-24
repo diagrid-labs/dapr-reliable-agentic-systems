@@ -95,36 +95,39 @@ graph TD
 
 ### Prerequisites
 
-- Docker Desktop or Podman
-- .NET 9 SDK
-- Dapr CLI
-- Ollama
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
+- [Aspire CLI](https://aspire.dev/get-started/install-cli/) — install with `dotnet tool install -g Aspire.Cli`
+- [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation)
+- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.17+)
+- [Ollama](https://ollama.com/) with the `llama3.2:3b` model pulled
 
 ### Start Ollama
 
 ```bash
 ollama serve
-ollama run llama3.2:3b
-```
-
-### Start the Diagrid Dev Dashboard
-
-```bash
-docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
+ollama pull llama3.2:3b
 ```
 
 ### Run the Application
 
+From the `StarshipDiagnostics/` folder:
+
 ```bash
-cd StarshipDiagnostics
-dapr run -f dapr.yaml
+aspire run
 ```
+
+This launches the Aspire AppHost, which orchestrates:
+- A Valkey container for workflow state persistence (port 16379, password-protected)
+- The ApiService with a Dapr sidecar (app ID `starship-diagnostics-app`)
+- The Diagrid Dev Dashboard container on http://localhost:18080
+
+The Aspire dashboard opens automatically in the browser, showing all resources and their status.
 
 ### Test with REST Client
 
-Open `local.http` in VS Code and execute the requests to start a diagnostic scan.
+Open `StarshipDiagnostics.ApiService/StarshipDiagnostics.ApiService.http` in VS Code and execute the requests to start a diagnostic scan. The ApiService HTTP port is shown in the Aspire dashboard.
 
 ### Inspect the Workflow runs
 
-Open the Diagrid Dev Dashboard at `http://localhost:8080` and inspect the workflow executions.
+Open the Diagrid Dev Dashboard at `http://localhost:18080` and inspect the workflow executions.
 

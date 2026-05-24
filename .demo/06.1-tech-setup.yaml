@@ -32,19 +32,8 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: scene-mkcnxn4m-yue1
-    title: Run Diagrid Dashboard
-    steps:
-      - action: executeTerminalCommand
-        command: docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest
-        terminalId: diagrid-dashboard
-        insertTypingMode: character-by-character
-        insertTypingSpeed: 50
-    icons:
-      start: terminal
-      end: ''
   - id: scene-mkqthaom-gju9
     title: Conversation component
     steps:
       - action: open
-        path: Resources/conversation.yaml
+        path: AnomalyAnalysis/AnomalyAnalysis.AppHost/Resources/conversation.yaml

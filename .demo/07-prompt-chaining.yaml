@@ -36,10 +36,10 @@ demos:
         command: cd AnomalyAnalysis
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
-        terminalId: dapr-run
+        terminalId: aspire-run
       - action: executeTerminalCommand
-        command: dapr run -f .
-        terminalId: dapr-run
+        command: aspire run
+        terminalId: aspire-run
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
         autoExecute: true
@@ -50,14 +50,14 @@ demos:
     title: Program.cs
     steps:
       - action: highlight
-        path: AnomalyAnalysis/Program.cs
-        position: '11'
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
+        position: '13'
         highlightWholeLine: true
   - id: scene-mkb26rj9-stw7
     title: AnomalyAnalysisWorkflow
     steps:
       - action: highlight
-        path: AnomalyAnalysis/Workflows/AnomalyAnalysisWorkflow.cs
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
         position: '7'
         highlightWholeLine: true
     icons:
@@ -67,7 +67,7 @@ demos:
     title: ProcessSensorDataActivity
     steps:
       - action: highlight
-        path: AnomalyAnalysis/Activities/ProcessSensorDataActivity.cs
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Activities/ProcessSensorDataActivity.cs
         position: '7'
         highlightWholeLine: true
     icons:
@@ -77,7 +77,7 @@ demos:
     title: Start workflow
     steps:
       - action: highlight
-        path: AnomalyAnalysis/local.http
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/AnomalyAnalysis.ApiService.http
         position: '3'
         highlightWholeLine: true
     icons:
@@ -87,7 +87,7 @@ demos:
     title: Stop the workflow app
     steps:
       - action: focusTerminal
-        terminalId: dapr-run
+        terminalId: aspire-run
       - action: sendKeybinding
         keybinding: ctrl+C
       - action: waitForTimeout
@@ -95,7 +95,7 @@ demos:
       - action: executeTerminalCommand
         command: cd ..
         autoExecute: true
-        terminalId: dapr-run
+        terminalId: aspire-run
     icons:
       start: terminal
       end: ''

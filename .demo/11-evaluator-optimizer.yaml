@@ -36,11 +36,11 @@ demos:
         command: cd AlienTranslator
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
-        terminalId: dapr-run
+        terminalId: aspire-run
         autoExecute: true
       - action: executeTerminalCommand
-        command: dapr run -f .
-        terminalId: dapr-run
+        command: aspire run
+        terminalId: aspire-run
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
         autoExecute: true
@@ -51,7 +51,7 @@ demos:
     title: AlienTranslationWorkflow
     steps:
       - action: highlight
-        path: AlienTranslator/Workflows/AlienTranslationWorkflow.cs
+        path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
         position: '3'
         highlightWholeLine: true
     icons:
@@ -61,7 +61,7 @@ demos:
     title: TranslateActivity
     steps:
       - action: highlight
-        path: AlienTranslator/Activities/TranslateActivity.cs
+        path: AlienTranslator/AlienTranslator.ApiService/Activities/TranslateActivity.cs
         position: '7'
         highlightWholeLine: true
     icons:
@@ -71,7 +71,7 @@ demos:
     title: Start workflow
     steps:
       - action: highlight
-        path: AlienTranslator/local.http
+        path: AlienTranslator/AlienTranslator.ApiService/AlienTranslator.ApiService.http
         position: '3'
         highlightWholeLine: true
     icons:
@@ -81,7 +81,7 @@ demos:
     title: Stop the workflow app
     steps:
       - action: focusTerminal
-        terminalId: dapr-run
+        terminalId: aspire-run
       - action: sendKeybinding
         keybinding: ctrl+c
       - action: waitForTimeout
@@ -89,7 +89,7 @@ demos:
       - action: executeTerminalCommand
         command: cd ..
         autoExecute: true
-        terminalId: dapr-run
+        terminalId: aspire-run
     icons:
       start: terminal
       end: ''

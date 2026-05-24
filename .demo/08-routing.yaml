@@ -36,10 +36,10 @@ demos:
         command: cd GalacticAnomalyClassifier
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
-        terminalId: dapr-run
+        terminalId: aspire-run
       - action: executeTerminalCommand
-        command: dapr run -f .
-        terminalId: dapr-run
+        command: aspire run
+        terminalId: aspire-run
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
         autoExecute: true
@@ -50,7 +50,7 @@ demos:
     title: AnomalyRoutingWorkflow
     steps:
       - action: highlight
-        path: GalacticAnomalyClassifier/Workflows/AnomalyRoutingWorkflow.cs
+        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
         position: '8'
         highlightWholeLine: true
     icons:
@@ -60,7 +60,7 @@ demos:
     title: ClassifyAnomalyActivity
     steps:
       - action: highlight
-        path: GalacticAnomalyClassifier/Activities/ClassifyAnomalyActivity.cs
+        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Activities/ClassifyAnomalyActivity.cs
         position: '10'
         highlightWholeLine: true
     icons:
@@ -70,7 +70,7 @@ demos:
     title: Start workflow
     steps:
       - action: highlight
-        path: GalacticAnomalyClassifier/local.http
+        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/GalacticAnomalyClassifier.ApiService.http
         position: '2'
         highlightWholeLine: true
     icons:
@@ -80,7 +80,7 @@ demos:
     title: Stop the workflow app
     steps:
       - action: focusTerminal
-        terminalId: dapr-run
+        terminalId: aspire-run
       - action: sendKeybinding
         keybinding: ctrl+b
       - action: waitForTimeout
@@ -88,7 +88,7 @@ demos:
       - action: executeTerminalCommand
         command: cd ..
         autoExecute: true
-        terminalId: dapr-run
+        terminalId: aspire-run
     icons:
       start: terminal
       end: ''
