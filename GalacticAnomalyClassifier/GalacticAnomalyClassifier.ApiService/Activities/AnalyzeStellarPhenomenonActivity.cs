@@ -56,6 +56,8 @@ public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, S
                               ""observationProtocols"": [""<observation protocol>""],
                               ""radiationLevel"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
                             }
+
+                            Keep `analysis` <=80 words. Array fields <=5 items. Return only the JSON object with no surrounding prose.
                             ")
                         ]
                     },

@@ -59,6 +59,7 @@ demos:
   - id: scene-mkpe5m83-bjuh
     title: Program.cs
     steps:
+      - action: close
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
         position: '13'

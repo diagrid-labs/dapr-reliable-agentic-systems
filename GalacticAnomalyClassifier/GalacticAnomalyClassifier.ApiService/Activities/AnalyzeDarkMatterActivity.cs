@@ -55,6 +55,8 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
                               ""harvestingOpportunities"": [""<harvesting opportunity>""],
                               ""collapseProbability"": ""<LOW, MEDIUM, HIGH, CRITICAL>""
                             }
+
+                            Keep `analysis` <=80 words. Array fields <=5 items. Return only the JSON object with no surrounding prose.
                             ")
                         ]
                     },

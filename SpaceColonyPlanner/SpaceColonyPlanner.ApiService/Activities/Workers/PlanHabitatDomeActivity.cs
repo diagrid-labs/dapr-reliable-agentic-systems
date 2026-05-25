@@ -50,7 +50,9 @@ public class PlanHabitatDomeActivity : WorkflowActivity<WorkerInput, StructurePl
                       ""workerHours"": <number>,
                       ""prerequisites"": [""<prerequisite1>"", ""<prerequisite2>""],
                       ""detailedSpecification"": ""<full specification text>""
-                    }")
+                    }
+
+                    Keep `detailedSpecification` <=80 words. `materials` and `prerequisites` <=5 items each. Return only the JSON object with no surrounding prose.")
                         ]
                     },
                     new UserMessage

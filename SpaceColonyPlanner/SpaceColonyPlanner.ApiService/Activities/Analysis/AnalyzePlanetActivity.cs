@@ -46,7 +46,9 @@ public class AnalyzePlanetActivity : WorkflowActivity<Planet, PlanetAnalysis>
                       ""challenges"": [""<challenge1>"", ""<challenge2>""],
                       ""opportunities"": [""<opportunity1>"", ""<opportunity2>""],
                       ""recommendedApproach"": ""<approach description>""
-                    }")
+                    }
+
+                    Keep `recommendedApproach` <=80 words. `challenges` and `opportunities` <=5 items each, each <=15 words. Return only the JSON object with no surrounding prose.")
                         ]
                     },
                     new UserMessage

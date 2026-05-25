@@ -56,6 +56,8 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
                               ""extractionProcedures"": [""<extraction procedure>""],
                               ""hostilityIndicator"": ""<SAFE, CAUTION, DANGEROUS, LETHAL>""
                             }
+
+                            Keep `analysis` <=80 words. Array fields <=5 items. Return only the JSON object with no surrounding prose.
                             ")
                         ]
                     },

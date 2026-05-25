@@ -27,7 +27,9 @@ JSON structure that describes the fields:
 {
   ""translation"": ""<improved translated text>"",
   ""reasoning"": ""<explanation of changes made to address feedback>""
-}";
+}
+
+Keep `reasoning` <=50 words. Return only the JSON object with no surrounding prose.";
 
         var userPrompt = $@"Refine this translation based on evaluator feedback:
 

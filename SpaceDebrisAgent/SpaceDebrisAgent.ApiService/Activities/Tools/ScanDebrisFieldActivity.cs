@@ -54,7 +54,9 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
                       ],
                       ""totalMass"": <number: sum of all debris mass>,
                       ""riskLevel"": ""<string: Low|Medium|High|Critical>""
-                    }")]
+                    }
+
+                    Return only the JSON object with no surrounding prose.")]
                     },
                     new UserMessage
                     {

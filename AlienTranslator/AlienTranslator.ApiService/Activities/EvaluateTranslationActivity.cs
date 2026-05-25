@@ -57,7 +57,9 @@ JSON structure that describes the fields:
   ""weaknesses"": [""<specific weakness 1>"", ""<specific weakness 2>""],
   ""detailedFeedback"": ""<comprehensive actionable feedback>"",
   ""meetsStandards"": <true or false boolean>
-}}";
+}}
+
+Keep `detailedFeedback` <=100 words. `strengths` and `weaknesses` <=5 items each, each item <=20 words. Return only the JSON object with no surrounding prose.";
 
         var options = new ConversationOptions("conversation")
         {

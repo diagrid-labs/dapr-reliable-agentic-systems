@@ -32,7 +32,9 @@ JSON structure that describes the fields:
 {
   ""translation"": ""<translated text in English>"",
   ""reasoning"": ""<explanation of key translation choices>""
-}";
+}
+
+Keep `reasoning` <=50 words. Return only the JSON object with no surrounding prose.";
 
         var userPrompt = $@"Translate this {input.Text.AlienSpecies} text to English:
 

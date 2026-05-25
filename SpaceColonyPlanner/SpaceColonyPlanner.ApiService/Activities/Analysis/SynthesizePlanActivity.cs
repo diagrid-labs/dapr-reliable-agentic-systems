@@ -63,7 +63,9 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
                       ],
                       ""successFactors"": ""<success factors description>"",
                       ""riskAssessment"": ""<risk assessment description>""
-                    }")
+                    }
+
+                    Keep `successFactors` and `riskAssessment` <=60 words each. Return only the JSON object with no surrounding prose.")
                         ]
                     },
                     new UserMessage

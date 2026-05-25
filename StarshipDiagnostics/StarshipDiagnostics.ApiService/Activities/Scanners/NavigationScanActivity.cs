@@ -49,7 +49,9 @@ public class NavigationScanActivity : WorkflowActivity<Starship, ScanResult>
                               ""issues"": [""<issue1>"", ""<issue2>""],
                               ""recommendations"": [""<rec1>"", ""<rec2>""],
                               ""detailedAnalysis"": ""<full analysis text>""
-                            }")
+                            }
+
+                            Keep `detailedAnalysis` <=80 words. `issues` and `recommendations` <=5 items each, each <=15 words. Return only the JSON object with no surrounding prose.")
                         ]
                     },
                     new UserMessage

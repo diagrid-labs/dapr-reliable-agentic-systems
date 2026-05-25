@@ -55,6 +55,8 @@ Measurements: {string.Join(", ", input.Measurements.Select(m => $"{m.Key}={m.Val
                               ""confidence"": <0.0 to 1.0>,
                               ""reasoning"": ""<brief explanation>""
                             }
+
+                            Keep `reasoning` <=50 words. Return only the JSON object with no surrounding prose.
                             ")
                         ]
                     },

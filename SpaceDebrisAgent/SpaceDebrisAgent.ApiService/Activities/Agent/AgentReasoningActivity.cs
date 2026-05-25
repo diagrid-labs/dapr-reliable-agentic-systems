@@ -47,7 +47,9 @@ JSON structure that describes the fields:
   ""chosenAction"": ""<string: TOOL_NAME from available tools list>"",
   ""actionParameters"": ""<JSON-encoded string of an object with tool-specific parameters>"",
   ""expectedOutcome"": ""<string: what you expect this action to accomplish>""
-}";
+}
+
+Keep `reasoning` <=60 words and `expectedOutcome` <=30 words. Return only the JSON object with no surrounding prose.";
 
         var previousActions = string.Join("\n", 
             input.CurrentState.DecisionHistory.TakeLast(5));

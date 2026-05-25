@@ -59,7 +59,9 @@ public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresI
                           ""reasoning"": ""<explanation>""
                         }
                       ]
-                    }")
+                    }
+
+                    Keep each `reasoning` <=30 words. Return at most 8 structures. Return only the JSON object with no surrounding prose.")
                         ]
                     },
                     new UserMessage
