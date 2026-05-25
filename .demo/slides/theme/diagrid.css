@@ -1,0 +1,91 @@
+/*
+ * Diagrid-inspired DemoTime theme
+ * Mirrors diagrid.io: near-black backgrounds, mint/teal accents,
+ * warm gold highlights, Geist typography. Tuned for VS Code dark mode.
+ *
+ * Variables are scoped to `.slide.default` to match how DemoTime's built-in
+ * themes are structured — `:root` overrides are shadowed by the default
+ * theme's own redefinitions and would never apply.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+
+:root {
+  font-family: 'Geist', 'Geist Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+code, pre, kbd, samp {
+  font-family: 'Geist Mono', 'Geist Mono Fallback', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+.slide.default {
+  /* Top-level (applies to every layout) */
+  --demotime-font-size: 32px;
+  --demotime-color: #e6e6e6;
+  --demotime-background: #0a0a0a;
+  --demotime-heading-color: #ffffff;
+  --demotime-heading-background: transparent;
+  --demotime-link-color: #41BD9B;
+  --demotime-link-active-color: #F0C75E;
+  --demotime-blockquote-border: #41BD9B;
+  --demotime-blockquote-background: #111315;
+
+  /* default layout — standard content slides */
+  --demotime-default-background: #0a0a0a;
+  --demotime-default-color: #e6e6e6;
+  --demotime-default-heading-color: #F0C75E;
+  --demotime-default-heading-background: transparent;
+
+  /* intro layout — opening title slide */
+  --demotime-intro-background: radial-gradient(circle at 30% 20%, #0a1f1a 0%, #0a0a0a 60%);
+  --demotime-intro-color: #e6e6e6;
+  --demotime-intro-heading-color: #41BD9B;
+  --demotime-intro-heading-background: transparent;
+
+  /* section layout — chapter dividers */
+  --demotime-section-background: linear-gradient(135deg, #0a1f1a 0%, #0a0a0a 100%);
+  --demotime-section-color: #A6A6A6;
+  --demotime-section-heading-color: #41BD9B;
+  --demotime-section-heading-background: transparent;
+
+  /* quote layout */
+  --demotime-quote-background: #111315;
+  --demotime-quote-color: #e6e6e6;
+  --demotime-quote-heading-color: #41BD9B;
+  --demotime-quote-heading-background: transparent;
+
+  /* image-left layout */
+  --demotime-image-left-background: #0a0a0a;
+  --demotime-image-left-color: #e6e6e6;
+  --demotime-image-left-heading-color: #41BD9B;
+  --demotime-image-left-heading-background: transparent;
+
+  /* image-right layout */
+  --demotime-image-right-background: #0a0a0a;
+  --demotime-image-right-color: #e6e6e6;
+  --demotime-image-right-heading-color: #41BD9B;
+  --demotime-image-right-heading-background: transparent;
+
+  /* two-columns layout */
+  --demotime-two-columns-background: #0a0a0a;
+  --demotime-two-columns-color: #e6e6e6;
+  --demotime-two-columns-heading-color: #F0C75E;
+  --demotime-two-columns-heading-background: transparent;
+
+  /* h2 isn't exposed via per-layout variables in the default theme.
+     Qualifying with `.slide.default` (via this nesting) raises specificity
+     to (0,3,1), beating the built-in `.slide.default h2` rule (0,2,1). */
+  .default h2 {
+    color: #41BD9B;
+  }
+
+  .intro h2,
+  .section h2 {
+    color: #F0C75E;
+  }
+
+  .intro h1,
+  .section h1 {
+    font-weight: 700;
+  }
+}

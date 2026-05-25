@@ -1,6 +1,5 @@
 ---
 layout: section
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Combining workflows and LLMs
@@ -9,7 +8,6 @@ customTheme: .demo/slides/theme/theme.css
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Benefits of combining workflows and LLMs
@@ -23,7 +21,6 @@ customTheme: .demo/slides/theme/theme.css
 
 ---
 layout: section
-customTheme: .demo/slides/theme/theme.css
 ---
 
 > ## "We've worked with dozens of teams building LLM agents across industries. Consistently, the most successful implementations use simple, composable patterns rather than complex frameworks."
@@ -32,7 +29,6 @@ _[Anthropic Engineering blog](https://www.anthropic.com/engineering/building-eff
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Common Agentic Patterns & Demo Projects
@@ -50,7 +46,6 @@ customTheme: .demo/slides/theme/theme.css
 
 ---
 layout: two-columns
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Demo theme

@@ -1,6 +1,5 @@
 ---
 layout: section
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Agentic Systems
@@ -9,7 +8,6 @@ customTheme: .demo/slides/theme/theme.css
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # What are Agentic Systems?
@@ -25,7 +23,6 @@ Agentic systems use LLMs to make decisions and take actions.
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Everyone is building Agent Frameworks
@@ -42,14 +39,12 @@ The AI agent landscape is exploding with new tools and frameworks.
 
 ---
 layout: section
-customTheme: .demo/slides/theme/theme.css
 ---
 
 ## Do you **need** an agent framework to build agentic systems?
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Agentic Systems ARE Distributed Systems

@@ -1,6 +1,5 @@
 ---
 layout: section
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Durable Execution
@@ -9,7 +8,6 @@ customTheme: .demo/slides/theme/theme.css
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # What is Durable Execution?
@@ -21,7 +19,6 @@ Durable Execution enables code to run to completion even if the process that run
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Why Durable Execution Matters for AI Agents

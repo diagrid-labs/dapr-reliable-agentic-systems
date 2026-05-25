@@ -1,6 +1,5 @@
 ---
 layout: section
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Key takeaways & Next steps
@@ -9,7 +8,6 @@ customTheme: .demo/slides/theme/theme.css
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Key Takeaways
@@ -22,21 +20,18 @@ customTheme: .demo/slides/theme/theme.css
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 ![Diagrid Dev Dashboard](.demo/images/diagrid-dev-dashboard.png)
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 ![Diagrid Catalyst](.demo/images/diagrid-catalyst.png)
 
 ---
 layout: two-columns
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Thank you!

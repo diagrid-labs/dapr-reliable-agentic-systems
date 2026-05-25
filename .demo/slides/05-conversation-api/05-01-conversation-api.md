@@ -1,6 +1,5 @@
 ---
 layout: section
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Dapr Conversation API
@@ -9,14 +8,12 @@ customTheme: .demo/slides/theme/theme.css
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 ![Conversation API](.demo/images/dapr-conversation-api.png)
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Conversation API code example
@@ -45,7 +42,6 @@ var response = await _conversationClient.ConverseAsync(
 
 ---
 layout: default
-customTheme: .demo/slides/theme/theme.css
 ---
 
 # Conversation component example
