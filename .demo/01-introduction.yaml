@@ -9,6 +9,7 @@ demos:
         path: .demo/slides/01-intro/01-01-intro.md
         slide: 1
       - action: setPresentationView
+      - action: startEngageTimeSession
   - id: scene-mks7hi83-ma5p
     title: Start timer
     steps:
@@ -24,4 +25,4 @@ demos:
         path: .demo/slides/01-intro/01-02-bio.md
         slide: 1
 engageTime:
-  sessionId: m6ec1e
+  sessionId: 6gx6rg

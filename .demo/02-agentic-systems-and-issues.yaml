@@ -9,3 +9,12 @@ demos:
         path: .demo/slides/02-agentic-systems/02-01-agentic-systems.md
         slide: 1
       - action: setPresentationView
+  - id: scene-mpl7u79p-0v15
+    title: Agent Framework poll
+    steps:
+      - action: showEngageTimePoll
+        pollId: laoued
+        startOnOpen: true
+        closeOnOpen: false
+engageTime:
+  sessionId: 6gx6rg

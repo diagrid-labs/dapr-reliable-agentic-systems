@@ -31,11 +31,13 @@ The AI agent landscape is exploding with new tools and frameworks.
 
 ## Frameworks
 
+- Crew AI
+- Dapr Agents
+- Google ADK
+- LangGraph
 - Microsoft Agentic Framework
 - OpenAI Agents
-- LangGraph
-- Crew AI
-- **Dapr Agents**
+- Strands
 
 ---
 layout: section

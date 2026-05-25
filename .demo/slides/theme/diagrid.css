@@ -14,8 +14,18 @@
   font-family: 'Geist', 'Geist Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-code, pre, kbd, samp {
+.slide, .slide * {
+  font-family: 'Geist', 'Geist Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+code, pre, kbd, samp,
+.slide code, .slide pre, .slide kbd, .slide samp,
+.slide pre *, .slide code * {
   font-family: 'Geist Mono', 'Geist Mono Fallback', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+pre, pre code {
+  line-height: 1.25;
 }
 
 .slide.default {
@@ -38,7 +48,7 @@ code, pre, kbd, samp {
 
   /* intro layout — opening title slide */
   --demotime-intro-background: radial-gradient(circle at 30% 20%, #0a1f1a 0%, #0a0a0a 60%);
-  --demotime-intro-color: #e6e6e6;
+  --demotime-intro-color: #F0C75E;
   --demotime-intro-heading-color: #41BD9B;
   --demotime-intro-heading-background: transparent;
 

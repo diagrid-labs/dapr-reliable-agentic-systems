@@ -23,14 +23,14 @@ sequenceDiagram
         rect rgba(65, 189, 155, 0.22)
             Workflow->>Engine: Schedule activity
             alt Activity not executed
-                rect rgba(139, 111, 191, 0.30)
+                rect rgba(240, 199, 94, 0.22)
                     Engine->>State: Persist activity input
                     Engine->>Activity: Execute activity
                     Activity-->>Engine: Return Result
                     Engine->>State: Persist activity result
                 end
             else Activity already executed
-                rect rgba(139, 111, 191, 0.30)
+                rect rgba(240, 199, 94, 0.22)
                     State->>Engine: Retrieve activity result
                 end
             end
