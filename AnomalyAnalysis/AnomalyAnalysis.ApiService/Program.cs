@@ -11,9 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 builder.Services.AddDaprClient();
-builder.Services.AddDaprConversationClient((serviceProvider, clientBuilder) =>
+builder.Services.AddDaprConversationClient((_, clientBuilder) =>
 {
-    clientBuilder.UseTimeout(TimeSpan.FromSeconds(120));
+    clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
 });
 builder.Services.AddDaprWorkflow(options =>
 {

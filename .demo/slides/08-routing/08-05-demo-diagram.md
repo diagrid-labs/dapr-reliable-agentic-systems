@@ -1,7 +1,4 @@
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
----
+
 
 # Demo: Galactic Anomaly Classifier - Routing Pattern
 

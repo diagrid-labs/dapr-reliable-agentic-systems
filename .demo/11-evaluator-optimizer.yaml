@@ -47,9 +47,20 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkb3lvzz-oyk7
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: AlienTranslator/AlienTranslator.ApiService/AlienTranslator.ApiService.http
+        position: '3'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
   - id: scene-mkb3lue6-4q9m
     title: AlienTranslationWorkflow
     steps:
+      - action: close
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
         position: '3'
@@ -62,20 +73,18 @@ demos:
     steps:
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Activities/TranslateActivity.cs
-        position: '7'
         highlightWholeLine: true
+        position: '8'
     icons:
       start: code
       end: ''
-  - id: scene-mkb3lvzz-oyk7
-    title: Start workflow
+  - id: demo-mpkz4sdu-uulu
+    title: Inspect workflow state
     steps:
-      - action: highlight
-        path: AlienTranslator/AlienTranslator.ApiService/AlienTranslator.ApiService.http
-        position: '3'
-        highlightWholeLine: true
+      - action: showInfoMessage
+        message: Open Diagrid Dev Dashboard
     icons:
-      start: arrow-right
+      start: dashboard
       end: ''
   - id: scene-mkb3lxd1-ivgu
     title: Stop the workflow app

@@ -47,9 +47,20 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkb3nkrx-8xbi
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/SpaceDebrisAgent.ApiService.http
+        position: '3'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
   - id: scene-mkb3njij-6q2d
     title: SpaceDebrisCleanupWorkflow
     steps:
+      - action: close
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
         position: '8'
@@ -67,15 +78,13 @@ demos:
     icons:
       start: code
       end: ''
-  - id: scene-mkb3nkrx-8xbi
-    title: Start workflow
+  - id: demo-mpkz72d6-u747
+    title: Inspect workflow state
     steps:
-      - action: highlight
-        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/SpaceDebrisAgent.ApiService.http
-        position: '3'
-        highlightWholeLine: true
+      - action: showInfoMessage
+        message: Open Diagrid Dev Dashboard
     icons:
-      start: arrow-right
+      start: dashboard
       end: ''
   - id: scene-mkb3nme9-36la
     title: Stop the workflow app

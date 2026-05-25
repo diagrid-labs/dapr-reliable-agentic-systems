@@ -13,7 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 builder.Services.AddDaprClient();
-builder.Services.AddDaprConversationClient();
+builder.Services.AddDaprConversationClient((_, clientBuilder) =>
+{
+    clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
+});
 builder.Services.AddDaprWorkflow(options =>
 {
     options.RegisterWorkflow<ParallelDiagnosticsWorkflow>();

@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "SpaceDebrisAgent.AppHost/SpaceDebrisAgent.AppHost.csproj"
+  }
+}

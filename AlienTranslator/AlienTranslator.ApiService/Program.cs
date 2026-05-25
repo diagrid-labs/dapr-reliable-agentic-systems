@@ -14,7 +14,10 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-builder.Services.AddDaprConversationClient();
+builder.Services.AddDaprConversationClient((_, clientBuilder) =>
+{
+    clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
+});
 builder.Services.AddDaprWorkflow(options =>
 {
     options.RegisterWorkflow<AlienTranslationWorkflow>();

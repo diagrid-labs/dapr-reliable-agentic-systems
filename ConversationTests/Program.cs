@@ -10,7 +10,10 @@ using Google.Protobuf;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDaprClient();
-builder.Services.AddDaprConversationClient();
+builder.Services.AddDaprConversationClient((_, clientBuilder) =>
+{
+    clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
+});
 
 
 var app = builder.Build();

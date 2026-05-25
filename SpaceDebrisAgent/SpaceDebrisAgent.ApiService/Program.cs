@@ -21,7 +21,10 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.AddDaprClient();
-builder.Services.AddDaprConversationClient();
+builder.Services.AddDaprConversationClient((_, clientBuilder) =>
+{
+    clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
+});
 builder.Services.AddDaprWorkflow(options =>
 {
     options.RegisterWorkflow<SpaceDebrisCleanupWorkflow>();

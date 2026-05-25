@@ -16,7 +16,9 @@ public class RequestHumanApprovalActivity : WorkflowActivity<Dictionary<string, 
         WorkflowActivityContext context, 
         Dictionary<string, object> parameters)
     {
-        var reason = parameters["reason"].ToString()!;
+        var reason = parameters.TryGetValue("reason", out var r) && r is not null
+            ? r.ToString()!
+            : "No reason provided by agent";
         
         // Store approval request in state for human operator to view
         await _daprClient.SaveStateAsync(

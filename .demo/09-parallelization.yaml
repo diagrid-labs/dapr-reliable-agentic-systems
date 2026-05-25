@@ -47,9 +47,20 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkb2ctl7-haoq
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: StarshipDiagnostics/StarshipDiagnostics.ApiService/StarshipDiagnostics.ApiService.http
+        position: '2'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
   - id: scene-mkb2csbu-w72k
     title: ParallelDiagnosticsWorkflow
     steps:
+      - action: close
       - action: highlight
         path: StarshipDiagnostics/StarshipDiagnostics.ApiService/Workflows/ParallelDiagnosticsWorkflow.cs
         position: '9'
@@ -67,15 +78,13 @@ demos:
     icons:
       start: code
       end: ''
-  - id: scene-mkb2ctl7-haoq
-    title: Start workflow
+  - id: demo-mpkz5xdp-ejxy
+    title: Inspect workflow state
     steps:
-      - action: highlight
-        path: StarshipDiagnostics/StarshipDiagnostics.ApiService/StarshipDiagnostics.ApiService.http
-        position: '2'
-        highlightWholeLine: true
+      - action: showInfoMessage
+        message: Open Diagrid Dev Dashboard
     icons:
-      start: arrow-right
+      start: dashboard
       end: ''
   - id: scene-mkb2cv2y-avsr
     title: Stop the workflow app

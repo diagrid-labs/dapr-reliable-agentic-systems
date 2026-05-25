@@ -24,14 +24,14 @@ public class AgentReasoningActivity : WorkflowActivity<ReasoningInput, AgentDeci
         var systemPrompt = @"You are an autonomous space debris cleanup agent. You control a 
 spacecraft and must plan and execute debris removal missions.
 
-AVAILABLE TOOLS:
-1. SCAN_DEBRIS_FIELD - Scan the area to detect debris objects
-2. ANALYZE_DEBRIS {debrisId} - Get detailed info on specific debris
-3. MOVE_TO_LOCATION {x, y, z} - Navigate to coordinates
-4. CHECK_FUEL - Check remaining fuel
-5. CAPTURE_DEBRIS {debrisId} - Attempt to capture debris
-6. REQUEST_HUMAN_APPROVAL {reason} - Ask human operator for approval
-7. COMPLETE_MISSION - End mission successfully
+AVAILABLE TOOLS (the `actionParameters` JSON object MUST use the exact key names shown):
+1. SCAN_DEBRIS_FIELD - Scan the area to detect debris objects. actionParameters: {}
+2. ANALYZE_DEBRIS - Get detailed info on specific debris. actionParameters: {""debrisId"": ""<string>""}
+3. MOVE_TO_LOCATION - Navigate to coordinates. actionParameters: {""x"": <number>, ""y"": <number>, ""z"": <number>}
+4. CHECK_FUEL - Check remaining fuel. actionParameters: {}
+5. CAPTURE_DEBRIS - Attempt to capture debris. actionParameters: {""debrisId"": ""<string>""}
+6. REQUEST_HUMAN_APPROVAL - Ask human operator for approval. actionParameters: {""reason"": ""<string explaining why approval is needed>""}
+7. COMPLETE_MISSION - End mission successfully. actionParameters: {}
 
 DECISION-MAKING PROCESS:
 - Assess current situation and mission progress

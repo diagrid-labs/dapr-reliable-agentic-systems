@@ -1,8 +1,3 @@
----
-layout: default
-customTheme: .demo/slides/theme/theme.css
----
-
 # Demo: Space Debris Cleanup - Autonomous Agent
 
 ```mermaid

@@ -46,9 +46,20 @@ demos:
     icons:
       start: terminal
       end: ''
+  - id: scene-mkb28qaj-1wp1
+    title: Start workflow
+    steps:
+      - action: highlight
+        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/GalacticAnomalyClassifier.ApiService.http
+        position: '2'
+        highlightWholeLine: true
+    icons:
+      start: arrow-right
+      end: ''
   - id: scene-mkb28oma-vekn
     title: AnomalyRoutingWorkflow
     steps:
+      - action: close
       - action: highlight
         path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
         position: '8'
@@ -66,15 +77,13 @@ demos:
     icons:
       start: code
       end: ''
-  - id: scene-mkb28qaj-1wp1
-    title: Start workflow
+  - id: demo-mpkx955p-5adi
+    title: Inspect workflow state
     steps:
-      - action: highlight
-        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/GalacticAnomalyClassifier.ApiService.http
-        position: '2'
-        highlightWholeLine: true
+      - action: showInfoMessage
+        message: Open Diagrid Dev Dashboard
     icons:
-      start: arrow-right
+      start: dashboard
       end: ''
   - id: scene-mkb28tio-ohx6
     title: Stop the workflow app
