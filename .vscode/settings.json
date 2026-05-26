@@ -10,7 +10,7 @@
     "demoTime.customTheme": ".demo/slides/theme/diagrid.css",
     "demoTime.debug": false,
     "workbench.statusBar.visible": true,
-    "workbench.editor.showTabs": "none",
+    "workbench.editor.showTabs": "single",
     "workbench.activityBar.location": "default",
     "demoTime.previousEnabled": true,
     "demoTime.nextActionBehaviour": "currentPosition"

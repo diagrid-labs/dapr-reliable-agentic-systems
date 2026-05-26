@@ -48,3 +48,8 @@ Use the QR code to:
 
 ::right::
 ![QR Code](.demo/images/session-6gx6rg-feedback-qr.png)
+
+---
+layout: image
+image: .demo/images/feedback-session-19.png
+---
