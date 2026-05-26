@@ -19,6 +19,12 @@ layout: default
 ### 5. Start simple, add complexity when needed
 
 ---
+layout: image
+image: ".demo/images/dapr-university.gif"
+---
+
+
+---
 layout: default
 ---
 
