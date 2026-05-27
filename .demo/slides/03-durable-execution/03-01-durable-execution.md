@@ -23,12 +23,12 @@ graph LR
     A1 --> A2[Step 2]
     A2 --> A3[Step 3]
     A3 --> End([End])
-    A1 -.->|persist| DB[(State Store)]
-    A2 -.->|persist| DB
-    A3 -.->|persist| DB
-    DB -.->|read on failure| A1
-    DB -.->|read on failure| A2
-    DB -.->|read on failure| A3
+    A1 -.->|write| DB[(State Store)]
+    A2 -.->|write| DB
+    A3 -.->|write| DB
+    DB -.->|read| A1
+    DB -.->|read| A2
+    DB -.->|read| A3
 
     style Start fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
     style End fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
