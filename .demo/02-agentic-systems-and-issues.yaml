@@ -2,7 +2,7 @@ title: 2 Agentic Systems and Issues
 description: ''
 version: 2
 demos:
-  - title: Agentic Systems?
+  - title: Agentic Systems
     id: scene-mk5gwh5y-mvrq1
     steps:
       - action: openSlide
@@ -16,5 +16,12 @@ demos:
         pollId: laoued
         startOnOpen: true
         closeOnOpen: false
+  - title: Do we need Agentic Systems?
+    id: demo-mpnppfwg-4o76
+    steps:
+      - action: openSlide
+        path: .demo/slides/02-agentic-systems/02-02-agentic-systems.md
+        slide: 1
+      - action: setPresentationView
 engageTime:
   sessionId: 6gx6rg

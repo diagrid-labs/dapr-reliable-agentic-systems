@@ -7,10 +7,8 @@ layout: default
 ## Pros ✅
 
 - Easy to understand and implement
-- High accuracy due to focussed subtasks
-- Validation gates between tasks
+- High accuracy due to focussed subtasks & validation gates
 
 ## Cons ❌
 
-- Higher latency (sequential)
-- Increased cost (multiple calls)
+- Takes longer to complete (sequential)

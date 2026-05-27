@@ -7,7 +7,7 @@ namespace SpaceDebrisAgent.Workflows;
 
 public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInput, MissionResult>
 {
-    private const int MAX_STEPS = 50; // Prevent infinite loops
+    private const int MAX_STEPS = 15; // Prevent infinite loops
     
     private static WorkflowTaskOptions GetDefaultRetryPolicy()
     {

@@ -22,4 +22,13 @@ graph TD
     style Restart fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
 ```
 
+---
 
+<details>
+<summary>Pros & cons</summary>
+
+- 🟢 Incremental quality improvement
+- 🔴 Unpredictable iterations
+- 🔴 Higher cost and execution time
+
+</details>

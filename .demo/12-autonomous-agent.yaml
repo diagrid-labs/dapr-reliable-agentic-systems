@@ -73,7 +73,7 @@ demos:
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Activities/Agent/AgentReasoningActivity.cs
-        position: '10'
+        position: '11'
         highlightWholeLine: true
     icons:
       start: code
@@ -105,5 +105,5 @@ demos:
     id: scene-mkvn9pni-m9uh
     steps:
       - action: setPresentationView
-      - action: openSlide
-        path: .demo/slides/12-autonomous-agent/12-06-autonomous-agent-final.md
+      - action: markdownPreview
+        path: .demo/slides/12-autonomous-agent/12-02-diagram.md

@@ -47,10 +47,5 @@ demos:
     steps:
       - action: markdownPreview
         path: .demo/slides/04-dapr-workflow/04-05-workflow-sequence-diagram.md
-  - id: scene-mkxqwu1f-zpuh
-    title: Workflows are the GOAT
-    steps:
-      - action: openSlide
-        path: .demo/slides/04-dapr-workflow/04-06-workflows-final.md
 engageTime:
   sessionId: 6gx6rg

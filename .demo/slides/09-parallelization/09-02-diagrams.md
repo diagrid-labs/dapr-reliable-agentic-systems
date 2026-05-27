@@ -19,3 +19,14 @@ graph TD
     style A3 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
     style End fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
 ```
+
+---
+
+<details>
+<summary>Pros & cons</summary>
+
+- 🟢 Higher throughput
+- 🟢 Higher confidence (voting)
+- 🔴 Tasks must be independent
+
+</details>

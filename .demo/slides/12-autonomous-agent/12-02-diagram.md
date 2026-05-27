@@ -21,3 +21,15 @@ graph TD
 ### Agent Loop
 
 Perceive → Reason → Act → Observe → Repeat
+
+---
+
+<details>
+<summary>Pros & cons</summary>
+
+- 🟢 Maximum flexibility
+- 🔴 Higher cost and execution time
+- 🔴 Potential for compounding errors
+- 🔴 Less predictable (requires extensive testing)
+
+</details>

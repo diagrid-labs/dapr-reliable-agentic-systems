@@ -106,5 +106,5 @@ demos:
     id: scene-mkvn94gj-1lqm
     steps:
       - action: setPresentationView
-      - action: openSlide
-        path: .demo/slides/11-evaluator-optimizer/11-06-evaluator-optimizer-final.md
+      - action: markdownPreview
+        path: .demo/slides/11-evaluator-optimizer/11-02-diagram.md

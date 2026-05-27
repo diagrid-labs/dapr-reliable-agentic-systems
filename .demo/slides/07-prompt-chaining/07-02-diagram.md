@@ -20,4 +20,13 @@ graph LR
     style Gate2 fill:#F0C75E,stroke:#b8943f,color:#0a0a0a
 ```
 
+---
 
+<details>
+<summary>Pros & cons</summary>
+
+- 🟢 Easy to understand and implement
+- 🟢 High accuracy due to focussed subtasks & validation gates
+- 🔴 Takes longer to complete (sequential)
+
+</details>

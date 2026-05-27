@@ -21,3 +21,14 @@ graph TD
     style End2 fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
     style End3 fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
 ```
+
+---
+
+<details>
+<summary>Pros & cons</summary>
+
+- 🟢 Specialized handlers per category
+- 🟢 Cost optimization (route to appropriate model)
+- 🔴 Classification accuracy depends on routing decision
+
+</details>

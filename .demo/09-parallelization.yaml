@@ -106,5 +106,5 @@ demos:
     id: scene-mkvn7jxc-2a8l
     steps:
       - action: setPresentationView
-      - action: openSlide
-        path: .demo/slides/09-parallelization/09-06-parallelization-final.md
+      - action: markdownPreview
+        path: .demo/slides/09-parallelization/09-02-diagrams.md

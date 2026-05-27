@@ -112,5 +112,5 @@ demos:
     id: scene-mkvn3xcf-9jlo
     steps:
       - action: setPresentationView
-      - action: openSlide
-        path: .demo/slides/07-prompt-chaining/07-06-prompt-chaining-final.md
+      - action: markdownPreview
+        path: .demo/slides/07-prompt-chaining/07-02-diagram.md

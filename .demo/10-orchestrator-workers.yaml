@@ -106,5 +106,5 @@ demos:
     id: scene-mkvn8fcc-rble
     steps:
       - action: setPresentationView
-      - action: openSlide
-        path: .demo/slides/10-orchestrator-workers/10-06-orchestrator-workers-final.md
+      - action: markdownPreview
+        path: .demo/slides/10-orchestrator-workers/10-02-diagram.md

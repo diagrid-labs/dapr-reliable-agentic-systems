@@ -22,4 +22,15 @@ graph TD
     style End fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
 ```
 
+---
 
+<details>
+<summary>Pros & cons</summary>
+
+- 🟢 Flexible and adaptable
+- 🟢 Scales to complex problems
+- 🟢 Clear separation of concerns
+- 🔴 Higher complexity
+- 🔴 High orchestrator dependency
+
+</details>
