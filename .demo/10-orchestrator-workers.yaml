@@ -24,11 +24,6 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/10-orchestrator-workers/10-04-demo.md
-  - title: Demo Diagram
-    id: scene-mk5h331d-k1l2
-    steps:
-      - action: markdownPreview
-        path: .demo/slides/10-orchestrator-workers/10-05-demo-diagram.md
   - id: scene-mkb32jje-lewc
     title: Run workflow app
     steps:
@@ -47,6 +42,11 @@ demos:
     icons:
       start: terminal
       end: ''
+  - title: Demo Diagram
+    id: scene-mk5h331d-k1l2
+    steps:
+      - action: markdownPreview
+        path: .demo/slides/10-orchestrator-workers/10-05-demo-diagram.md
   - id: scene-mkb32l72-xbfd
     title: Start workflow
     steps:
@@ -108,3 +108,4 @@ demos:
       - action: setPresentationView
       - action: markdownPreview
         path: .demo/slides/10-orchestrator-workers/10-02-diagram.md
+    disabled: true

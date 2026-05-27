@@ -38,3 +38,13 @@ demos:
     steps:
       - action: open
         path: AnomalyAnalysis/AnomalyAnalysis.AppHost/Resources/conversation.yaml
+  - id: demo-mpnui7mw-i74j
+    title: State component
+    steps:
+      - action: open
+        path: AnomalyAnalysis/AnomalyAnalysis.AppHost/Resources/statestore.yaml
+  - id: scene-mpnug4e0-yqvx
+    title: Aspire AppHost
+    steps:
+      - action: open
+        path: AnomalyAnalysis/AnomalyAnalysis.AppHost/AppHost.cs

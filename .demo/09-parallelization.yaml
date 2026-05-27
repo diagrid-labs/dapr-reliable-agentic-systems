@@ -24,11 +24,6 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/09-parallelization/09-04-demo.md
-  - title: Demo Diagram
-    id: scene-mk5h2p1c-i9j0
-    steps:
-      - action: markdownPreview
-        path: .demo/slides/09-parallelization/09-05-demo-diagram.md
   - id: scene-mkb2csbu-w72j
     title: Run workflow app
     steps:
@@ -47,6 +42,11 @@ demos:
     icons:
       start: terminal
       end: ''
+  - title: Demo Diagram
+    id: scene-mk5h2p1c-i9j0
+    steps:
+      - action: markdownPreview
+        path: .demo/slides/09-parallelization/09-05-demo-diagram.md
   - id: scene-mkb2ctl7-haoq
     title: Start workflow
     steps:
@@ -108,3 +108,4 @@ demos:
       - action: setPresentationView
       - action: markdownPreview
         path: .demo/slides/09-parallelization/09-02-diagrams.md
+    disabled: true

@@ -24,11 +24,6 @@ demos:
     steps:
       - action: openSlide
         path: .demo/slides/07-prompt-chaining/07-04-demo.md
-  - title: Demo Diagram
-    id: scene-mk5h1z1a-c3d4
-    steps:
-      - action: markdownPreview
-        path: .demo/slides/07-prompt-chaining/07-05-demo-diagram.md
   - id: scene-mkb26rj8-stv6
     title: Run workflow app
     steps:
@@ -46,6 +41,11 @@ demos:
     icons:
       start: terminal
       end: ''
+  - title: Demo Diagram
+    id: scene-mk5h1z1a-c3d4
+    steps:
+      - action: markdownPreview
+        path: .demo/slides/07-prompt-chaining/07-05-demo-diagram.md
   - id: scene-mkb26t53-hukh
     title: Start workflow
     steps:
@@ -60,10 +60,8 @@ demos:
     title: Program.cs
     steps:
       - action: close
-      - action: highlight
+      - action: open
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
-        position: '13'
-        highlightWholeLine: true
   - id: scene-mkb26rj9-stw7
     title: AnomalyAnalysisWorkflow
     steps:
@@ -114,3 +112,4 @@ demos:
       - action: setPresentationView
       - action: markdownPreview
         path: .demo/slides/07-prompt-chaining/07-02-diagram.md
+    disabled: true

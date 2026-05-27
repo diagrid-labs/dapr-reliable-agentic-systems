@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Dapr.Client;
 using Dapr.Workflow;
 using AnomalyAnalysis.Models;
 using AnomalyAnalysis.Workflows;
@@ -10,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddDaprClient();
 builder.Services.AddDaprConversationClient((_, clientBuilder) =>
 {
     clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
@@ -31,17 +29,10 @@ var app = builder.Build();
 // Start analyzing a spatial anomaly
 app.MapPost("/anomaly/analyze", async (
     [FromBody] SpatialAnomaly anomaly,
-    [FromServices] DaprWorkflowClient workflowClient,
-    [FromServices] DaprClient daprClient) =>
+    [FromServices] DaprWorkflowClient workflowClient) =>
 {
     var instanceId = $"ANOM-{anomaly.AnomalyId}";
-    
-    // Store original anomaly data
-    await daprClient.SaveStateAsync(
-        "statestore",
-        instanceId,
-        anomaly);
-    
+
     // Start workflow
     await workflowClient.ScheduleNewWorkflowAsync(
         nameof(AnomalyAnalysisWorkflow),
@@ -71,20 +62,6 @@ app.MapGet("/anomaly/status/{instanceId}", async (
     });
 });
 
-// Get a specific analyzed anomaly by ID
-app.MapGet("/anomalies/{anomalyId}", async (
-    string anomalyId,
-    DaprClient daprClient) =>
-{
-    var anomaly = await daprClient.GetStateAsync<SpatialAnomaly>(
-        "statestore",
-        anomalyId);
-    
-    if (anomaly == null)
-        return Results.NotFound();
-    
-    return Results.Ok(anomaly);
-});
 
 app.MapDefaultEndpoints();
 
