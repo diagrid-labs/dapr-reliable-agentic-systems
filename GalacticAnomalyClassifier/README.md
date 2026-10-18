@@ -104,14 +104,14 @@ aspire run
 This launches the Aspire AppHost, which orchestrates:
 - A Valkey container for workflow state persistence (port 16379, password-protected)
 - The ApiService with a Dapr sidecar (app ID `anomaly-routing-app`)
-- The `web` resource (LCARS web UI) on http://localhost:5501
+- The `web` resource (LCARS web UI) on http://localhost:5503
 - The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
-The Aspire dashboard opens automatically in the browser, showing all resources and their status.
+The Aspire dashboard opens automatically in the browser at https://localhost:15000 (the same port for every demo), showing all resources and their status.
 
 ### Use the web UI
 
-Open http://localhost:5501, pick a preset (Temporal rift, Dark matter, Alien artifact, Stellar phenomenon or Dimensional tear) or edit the sensor data and measurements (at least one measurement row is required), and choose **Classify anomaly**. The page polls the status endpoint every 2 seconds and shows a routing board: the classifier completes first, then the lane for the anomaly type the LLM chose lights up while the other lanes show as not routed. The findings view shows the anomaly type, classification, specialized analysis, metrics, recommendations and threat level. A critical or severe threat level switches the page to Red Alert.
+Open http://localhost:5503, pick a preset (Temporal rift, Dark matter, Alien artifact, Stellar phenomenon or Dimensional tear) or edit the sensor data and measurements (at least one measurement row is required), and choose **Classify anomaly**. The page polls the status endpoint every 2 seconds and shows a routing board: the classifier completes first, then the lane for the anomaly type the LLM chose lights up while the other lanes show as not routed. The findings view shows the anomaly type, classification, specialized analysis, metrics, recommendations and threat level. A critical or severe threat level switches the page to Red Alert.
 
 The status endpoint (`GET /anomaly/status/{instanceId}`) returns `instanceId`, `status`, `result`, `progress` (the current stage and, once routed, the anomaly type and confidence, taken from the workflow custom status), `createdAt` and `lastUpdatedAt`.
 

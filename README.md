@@ -245,7 +245,16 @@ graph TD
 
 See the individual demo README files for specific instructions how to run the applications.
 
-Every demo ships a Star Trek TNG (LCARS) styled web UI at http://localhost:5501 when started with `aspire run`.
+Every demo ships a Star Trek TNG (LCARS) styled web UI when started with `aspire run`. The Aspire dashboard always opens at https://localhost:15000, and each demo has its own UI port so a browser tab can stay open per demo:
+
+| Demo | Web UI |
+|------|--------|
+| AlienTranslator | http://localhost:5501 |
+| AnomalyAnalysis | http://localhost:5502 |
+| GalacticAnomalyClassifier | http://localhost:5503 |
+| SpaceColonyPlanner | http://localhost:5504 |
+| SpaceDebrisAgent | http://localhost:5505 |
+| StarshipDiagnostics | http://localhost:5506 |
 
 ## Next Steps
 

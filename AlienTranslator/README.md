@@ -108,7 +108,7 @@ This launches the Aspire AppHost, which orchestrates:
 - The `web` resource (LCARS web UI) on http://localhost:5501
 - The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
-The Aspire dashboard opens automatically in the browser, showing all resources and their status.
+The Aspire dashboard opens automatically in the browser at https://localhost:15000 (the same port for every demo), showing all resources and their status.
 
 ### Use the web UI
 
