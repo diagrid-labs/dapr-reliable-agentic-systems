@@ -27,7 +27,7 @@
       <div id="link-lost" class="banner warn" role="alert" hidden>Subspace link lost &mdash; retrying</div>
 
       <section id="form-panel" class="panel">
-        <h2>Sensor input</h2>
+        <h2 tabindex="-1">Sensor input</h2>
         <form id="anomaly-form" novalidate>
           <div class="grid">
             <label>Coordinates<input id="coordinates" type="text" required></label>
@@ -49,7 +49,7 @@
       </section>
 
       <section id="findings-panel" class="panel">
-        <h2>Findings</h2>
+        <h2 tabindex="-1">Findings</h2>
         <div class="risk"><span>Risk level</span><strong id="risk-level">--</strong></div>
         <p id="findings-note" class="note" hidden></p>
         <dl>
@@ -62,7 +62,7 @@
       </section>
 
       <section id="progress-panel" class="panel">
-        <h2>Analysis <span id="run-status" class="status" aria-live="polite">--</span></h2>
+        <h2 tabindex="-1">Analysis <span id="run-status" class="status" aria-live="polite">--</span></h2>
         <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
         <p id="run-note" class="note" role="alert" hidden></p>
         <ol id="stage-list" aria-live="polite">

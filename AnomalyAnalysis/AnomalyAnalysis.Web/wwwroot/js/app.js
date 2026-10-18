@@ -44,8 +44,12 @@ let clockTimer;
 let startedAt;
 let submitting = false;
 
+const VIEW_HEADING = { idle: "form-panel", running: "progress-panel", failed: "progress-panel", completed: "findings-panel" };
+
 function setView(view) {
   document.body.dataset.view = view;
+  // the focused button was just hidden; keep keyboard and screen reader users oriented
+  $(VIEW_HEADING[view]).querySelector("h2").focus();
 }
 
 function applyPreset(name) {
@@ -160,8 +164,10 @@ function schedule(instanceId, token, delay, notFound) {
 
 async function poll(instanceId, token, notFound) {
   let response;
+  let state;
   try {
     response = await fetch(`/api/anomaly/status/${encodeURIComponent(instanceId)}`);
+    if (response.ok) state = await response.json();
   } catch {
     if (token !== runToken) return;
     setLink(false);
@@ -183,8 +189,6 @@ async function poll(instanceId, token, notFound) {
   }
 
   setLink(true);
-  const state = await response.json();
-  if (token !== runToken) return;
   renderProgress(state.status, state.progress);
   $("run-status").textContent = state.status;
 
@@ -237,7 +241,8 @@ const clean = (text) => String(text ?? "").replace(/\*\*/g, "").replace(/^#+\s*/
 function riskLabel(text) {
   const labelled = /risk level\b.{0,24}?\b(critical|high|moderate|medium|low)\b/is.exec(text);
   const known = /\b(critical|high|moderate|medium|low)\b/i.exec(text);
-  return (labelled?.[1] ?? known?.[1] ?? "assessed").toUpperCase();
+  const single = /^\w{1,12}$/.exec(text.trim());
+  return (labelled?.[1] ?? known?.[1] ?? single?.[0] ?? "assessed").toUpperCase();
 }
 
 function renderResult(result) {

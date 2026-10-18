@@ -49,7 +49,9 @@ app.MapGet("/anomaly/status/{instanceId}", async (
     {
         instanceId,
         status = state.RuntimeStatus.ToString(),
-        result = state.ReadOutputAs<AnalysisResult>(),
+        result = state.RuntimeStatus == WorkflowRuntimeStatus.Completed
+            ? state.ReadOutputAs<AnalysisResult>()
+            : null,
         progress = state.ReadCustomStatusAs<List<AnalysisStage>>(),
         createdAt = state.CreatedAt,
         lastUpdatedAt = state.LastUpdatedAt

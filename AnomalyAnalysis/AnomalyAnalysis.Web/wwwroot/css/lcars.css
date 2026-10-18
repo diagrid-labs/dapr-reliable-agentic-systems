@@ -24,7 +24,7 @@ body.red-alert {
   --text: #ff9c94;
   --orange: #cc3333;
   --lilac: #993333;
-  --blue: #aa4444;
+  --blue: #cc6666;
   --peach: #dd6655;
   --sky: #cc5555;
 }
@@ -101,6 +101,7 @@ body {
 .status { font-size: 16px; background: var(--blue); color: #000; padding: 2px 14px; border-radius: 14px; }
 .meta { margin: 0 0 12px; font-size: 15px; color: var(--blue); }
 .meta span { color: var(--text); }
+#instance-id { text-transform: none; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px 16px; }
 label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--sky); }
@@ -116,6 +117,7 @@ input, textarea {
   padding: 6px 14px;
   text-transform: none;
 }
+.panel h2:focus { outline: none; }
 input:focus, textarea:focus { outline: none; border-color: var(--accent); }
 textarea { resize: vertical; }
 
@@ -141,6 +143,7 @@ textarea { resize: vertical; }
 .p-sky { background: var(--sky); }
 .go { margin-left: auto; }
 #restart-actions { display: none; }
+body[data-view="running"] #restart-actions,
 body[data-view="failed"] #restart-actions { display: flex; }
 
 .error { color: var(--salmon); margin: 10px 0 0; font-size: 15px; }
