@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Client;
 using Dapr.Workflow;
+using Dapr.Workflow.Versioning;
 using SpaceColonyPlanner.Models;
 using SpaceColonyPlanner.Workflows;
 using SpaceColonyPlanner.Activities.Analysis;
@@ -22,25 +23,8 @@ builder.Services.AddDaprConversationClient((_, clientBuilder) =>
 {
     clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
 });
-builder.Services.AddDaprWorkflow(options =>
-{
-    options.RegisterWorkflow<ColonyOrchestratorWorkflow>();
-    
-    // Analysis activities
-    options.RegisterActivity<AnalyzePlanetActivity>();
-    options.RegisterActivity<DetermineStructuresActivity>();
-    options.RegisterActivity<SynthesizePlanActivity>();
-    options.RegisterActivity<OptimizeTimelineActivity>();
-    
-    // Worker activities
-    options.RegisterActivity<PlanHabitatDomeActivity>();
-    options.RegisterActivity<PlanPowerPlantActivity>();
-    options.RegisterActivity<PlanAgricultureActivity>();
-    options.RegisterActivity<PlanMiningFacilityActivity>();
-    options.RegisterActivity<PlanResearchLabActivity>();
-    options.RegisterActivity<PlanDefenseSystemActivity>();
-    options.RegisterActivity<UnknownStructureActivity>();
-});
+builder.Services.AddDaprWorkflow();
+builder.Services.AddDaprWorkflowVersioning();
 
 var app = builder.Build();
 
