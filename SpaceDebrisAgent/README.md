@@ -86,7 +86,7 @@ graph TD
 - **SpaceDebrisCleanupWorkflow**: Main agent loop with ContinueAsNew pattern
 - **AgentReasoningActivity**: LLM-based decision making
 - **Tool Activities**: Scan, Capture, Move, Analyze, CheckFuel, RequestApproval
-- **External Events**: Human approval with 1-minute timeout
+- **External Events**: Human approval with 5-minute timeout
 
 ## Running the Demo
 
@@ -124,9 +124,16 @@ aspire run
 This launches the Aspire AppHost, which orchestrates:
 - A Valkey container for workflow state persistence (port 16379, password-protected)
 - The ApiService with a Dapr sidecar (app ID `space-debris-agent`)
+- The `web` resource (LCARS web UI) on http://localhost:5501
 - The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
 The Aspire dashboard opens automatically in the browser, showing all resources and their status.
+
+### Use the web UI
+
+Open http://localhost:5501, pick a preset (LEO cleanup, MEO aggressive or GEO conservative) or edit the form, and choose **Launch mission**. The form takes a mission id, the orbital zone, the maximum number of debris pieces, the fuel budget (kg), the maximum mission hours and a switch that lets the agent ask for human approval. The mission id is generated for every run (`<ZONE>-<uuid>`, because the instance id is `CLEAN-<missionId>`); you can edit it, but it may only contain letters, digits, `-` and `_`. The page polls the status endpoint every 2 seconds. The running view shows a step meter (`STEP n / 15`) and a decision log that grows while the agent works: one row per step with the chosen action as a pill and the agent's reasoning in an expandable, plus a sweeping `THINKING…` row for the step that is in progress. The log keeps its rows across the `ContinueAsNew` restarts of the loop.
+
+The `requireHumanApproval` switch only makes the agent *able* to ask; the agent decides whether it does. When it asks, an approval panel appears above the log (keyboard focus moves to its heading once and screen readers announce it once) with the request as key/value rows, a countdown to the 5-minute timeout, a reason field and **Approve** / **Deny** buttons that call `POST /mission/{instanceId}/approval`. Both buttons are disabled after one click (a failed request shows the error and enables them again), and the panel closes as soon as the workflow stops waiting, which includes the timeout, where the workflow defaults to denied. The result view shows `MISSION COMPLETE` or `MISSION ABORTED` (aborted missions, for example after a denial, turn the page into Red Alert), counters for debris captured, fuel used and total steps, the summary, the lessons learned, and the agent decisions and tool calls as expandable rows.
 
 ### Test with REST Client
 

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Universal Translator</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/lcars.css">
+  <link rel="stylesheet" href="css/demo.css">
+</head>
+<body data-view="idle">
+  <div class="frame">
+    <div class="corner-top"><span>04-2268</span></div>
+    <header class="bar-top">
+      <h1>Universal Translator</h1>
+      <span class="stardate">Stardate <b id="stardate">--</b></span>
+    </header>
+
+    <nav class="sidebar" aria-hidden="true">
+      <div class="block b-lilac"><span>Linguistics</span></div>
+      <div class="block b-blue"><span>Evaluation</span></div>
+      <div class="block b-peach"><span>Refinement</span></div>
+      <div class="block b-salmon filler"><span>92-4417</span></div>
+    </nav>
+
+    <main class="main">
+      <div id="link-lost" class="banner warn" role="alert" hidden>Subspace link lost &mdash; retrying</div>
+
+      <section id="form-panel" class="panel">
+        <h2 tabindex="-1">Alien transmission</h2>
+        <form id="demo-form" novalidate>
+          <div class="grid">
+            <label>Species
+              <select id="alienSpecies">
+                <option>Vulcan</option><option>Klingon</option><option>Romulan</option><option>Other</option>
+              </select>
+            </label>
+            <label id="other-species-label" hidden>Species name<input id="otherSpecies" type="text"></label>
+            <label>Context
+              <select id="context">
+                <option>Diplomatic</option><option>Scientific</option><option>Literary</option><option>Casual</option>
+              </select>
+            </label>
+          </div>
+          <label class="wide">Original text<textarea id="originalText" rows="3" required></textarea></label>
+          <fieldset class="vocab-set">
+            <legend>Known vocabulary</legend>
+            <div id="vocabulary"></div>
+            <button type="button" id="add-vocab" class="pill p-blue">Add phrase</button>
+          </fieldset>
+          <label class="wide">Cultural notes (optional)<textarea id="culturalNotes" rows="3"></textarea></label>
+          <p id="form-error" class="error" role="alert" hidden></p>
+          <div class="actions">
+            <button type="button" class="pill p-lilac" data-preset="vulcan">Vulcan diplomatic</button>
+            <button type="button" class="pill p-blue" data-preset="klingon">Klingon literary</button>
+            <button type="button" class="pill p-sky" data-preset="romulan">Romulan casual</button>
+            <button type="submit" id="begin" class="pill p-orange go">Translate</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="findings-panel" class="panel">
+        <h2 tabindex="-1">Translation result</h2>
+        <p id="findings-note" class="note" hidden></p>
+        <div class="compare">
+          <div>
+            <h3>Original text</h3>
+            <p id="original-text" class="prose"></p>
+          </div>
+          <div>
+            <h3>Final translation</h3>
+            <p id="final-translation" class="prose"></p>
+            <details id="reasoning" class="reasoning">
+              <summary>Translator reasoning</summary>
+              <p id="reasoning-text" class="prose"></p>
+            </details>
+          </div>
+        </div>
+        <h3>Final evaluation</h3>
+        <div id="scores" class="scores"></div>
+        <div class="compare">
+          <div>
+            <h3>Strengths</h3>
+            <ul id="strengths" class="points"></ul>
+          </div>
+          <div>
+            <h3>Weaknesses</h3>
+            <ul id="weaknesses" class="points"></ul>
+          </div>
+        </div>
+        <h3>Detailed feedback</h3>
+        <p id="feedback" class="prose"></p>
+        <h3>Improvement summary</h3>
+        <p id="summary" class="prose"></p>
+        <h3>Quality per iteration</h3>
+        <div id="trend" class="trend"></div>
+        <div class="actions"><button type="button" id="new-analysis" class="pill p-orange">New translation</button></div>
+      </section>
+
+      <section id="progress-panel" class="panel">
+        <h2 tabindex="-1">Translating <span id="run-status" class="status" aria-live="polite">--</span></h2>
+        <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
+        <p id="run-note" class="note" role="alert" hidden></p>
+        <ol id="iteration-board" class="board" aria-live="polite">
+          <li id="processing-row" class="iter active" hidden>
+            <span id="processing-name" class="stage-name">Processing iteration 1</span>
+            <span class="stage-bar"></span>
+            <span class="stage-state">Translate, evaluate</span>
+          </li>
+        </ol>
+        <p id="iteration-footer" class="footer-count">Iteration 1 / 5</p>
+        <div id="restart-actions" class="actions"><button type="button" id="restart" class="pill p-orange">New translation</button></div>
+      </section>
+    </main>
+
+    <div class="corner-bottom"><span>05-1701</span></div>
+    <footer class="bar-bottom">
+      <span id="link-indicator" class="link ok">Subspace link</span>
+      <a href="http://localhost:9090" target="_blank" rel="noopener">View in Dapr dashboard</a>
+    </footer>
+  </div>
+  <script type="module" src="js/engine.js"></script>
+</body>
+</html>

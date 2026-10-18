@@ -33,8 +33,16 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         );
 
         agentState = agentState with { StepCount = input.MissionParameters.StepNumber };
-        context.SetCustomStatus($"Step: {input.MissionParameters.StepNumber}/{MAX_STEPS}");
-        
+
+        // MissionParameters.StepNumber and AgentDecision.StepNumber are 0-based. Progress is shown 1-based
+        // (the step currently executing, 1..MAX_STEPS), so both step and decisions[].step add 1.
+        var step = input.MissionParameters.StepNumber + 1;
+        var progressDecisions = input.Decisions
+            .Select(d => new DecisionProgress(d.StepNumber + 1, d.ChosenAction, d.Reasoning))
+            .ToList();
+        // Republished every iteration so the status keeps the history after ContinueAsNew
+        context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, true, progressDecisions, null));
+
         // Agent reasoning: decide next action
         var decision = await context.CallActivityAsync<AgentDecision>(
             nameof(AgentReasoningActivity),
@@ -42,6 +50,10 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             GetDefaultRetryPolicy());
         
         var decisions = input.Decisions.Append(decision).ToList();
+        progressDecisions = progressDecisions
+            .Append(new DecisionProgress(decision.StepNumber + 1, decision.ChosenAction, decision.Reasoning))
+            .ToList();
+        context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, false, progressDecisions, null));
         
         // Check if agent decided mission is complete
         if (decision.ChosenAction == "COMPLETE_MISSION")
@@ -74,6 +86,9 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 decision.ActionParameters,
                 GetDefaultRetryPolicy());
             
+            context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, false, progressDecisions,
+                new ApprovalWait(context.CurrentUtcDateTime, decision.ActionParameters)));
+
             HumanApproval approval;
             try
             {
@@ -89,13 +104,15 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 );
             }
 
+            context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, false, progressDecisions, null));
+
             toolCall = new ToolCall(
                 "HUMAN_APPROVAL",
                 decision.ActionParameters,
                 new ApprovalResult(
                     approval.Approved,
                     approval.Reason,
-                    DateTime.UtcNow
+                    context.CurrentUtcDateTime
                 ),
                 true,
                 null

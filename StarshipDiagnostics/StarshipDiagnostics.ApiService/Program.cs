@@ -53,14 +53,17 @@ app.MapGet("/ship/report/{instanceId}", async (
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
 
-    if (state == null)
+    if (!state.Exists)
         return Results.NotFound();
 
     return Results.Ok(new
     {
         instanceId,
         status = state.RuntimeStatus.ToString(),
-        result = state.ReadOutputAs<DiagnosticReport>(),
+        result = state.RuntimeStatus == WorkflowRuntimeStatus.Completed
+            ? state.ReadOutputAs<DiagnosticReport>()
+            : null,
+        progress = state.ReadCustomStatusAs<DiagnosticsProgress>(),
         createdAt = state.CreatedAt,
         lastUpdatedAt = state.LastUpdatedAt
     });

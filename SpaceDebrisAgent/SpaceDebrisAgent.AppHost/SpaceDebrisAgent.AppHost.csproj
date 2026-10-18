@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SpaceDebrisAgent.ApiService\SpaceDebrisAgent.ApiService.csproj" />
+    <ProjectReference Include="..\SpaceDebrisAgent.Web\SpaceDebrisAgent.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

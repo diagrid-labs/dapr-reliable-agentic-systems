@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagnostic Console</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/lcars.css">
+  <link rel="stylesheet" href="css/demo.css">
+</head>
+<body data-view="idle">
+  <div class="frame">
+    <div class="corner-top"><span>01-1701</span></div>
+    <header class="bar-top">
+      <h1>Diagnostic Console</h1>
+      <span class="stardate">Stardate <b id="stardate">--</b></span>
+    </header>
+
+    <nav class="sidebar" aria-hidden="true">
+      <div class="block b-lilac"><span>Ship data</span></div>
+      <div class="block b-blue"><span>Scans</span></div>
+      <div class="block b-peach"><span>Report</span></div>
+      <div class="block b-salmon filler"><span>74-1701</span></div>
+    </nav>
+
+    <main class="main">
+      <div id="alert-banner" class="banner alert" role="alert" hidden>Red alert &mdash; ship is not cleared for departure</div>
+      <div id="link-lost" class="banner warn" role="alert" hidden>Subspace link lost &mdash; retrying</div>
+
+      <section id="form-panel" class="panel">
+        <h2 tabindex="-1">Ship data</h2>
+        <form id="demo-form" novalidate>
+          <div class="grid">
+            <label>Ship id<input id="shipId" type="text" required></label>
+            <label>Name<input id="name" type="text" required></label>
+            <label>Class<input id="class" type="text" required></label>
+            <label>Years in service<input id="yearsInService" type="number" min="0" step="1" required></label>
+            <label>Last maintenance<input id="lastMaintenance" type="text" required></label>
+          </div>
+          <fieldset class="telemetry">
+            <legend>Telemetry</legend>
+            <div class="grid">
+              <label>Hull stress level
+                <span class="slider"><input id="hullStressLevel" type="range" min="0" max="1" step="0.01"><output for="hullStressLevel"></output></span>
+              </label>
+              <label>Shield integrity
+                <span class="slider"><input id="shieldIntegrity" type="range" min="0" max="1" step="0.01"><output for="shieldIntegrity"></output></span>
+              </label>
+              <label>Oxygen level
+                <span class="slider"><input id="oxygenLevel" type="range" min="0" max="1" step="0.01"><output for="oxygenLevel"></output></span>
+              </label>
+              <label>Navigation accuracy
+                <span class="slider"><input id="navigationAccuracy" type="range" min="0" max="1" step="0.01"><output for="navigationAccuracy"></output></span>
+              </label>
+              <label>Weapons power
+                <span class="slider"><input id="weaponsPower" type="range" min="0" max="1" step="0.01"><output for="weaponsPower"></output></span>
+              </label>
+              <label>Reactor temperature<input id="reactorTemperature" type="number" step="any" required></label>
+            </div>
+          </fieldset>
+          <p id="form-error" class="error" role="alert" hidden></p>
+          <div class="actions">
+            <button type="button" class="pill p-lilac" data-preset="enterprise-d">Enterprise-D</button>
+            <button type="button" class="pill p-blue" data-preset="enterprise-original">Enterprise (original)</button>
+            <button type="button" class="pill p-sky" data-preset="enterprise-e">Enterprise-E</button>
+            <button type="submit" id="begin" class="pill p-orange go">Run diagnostics</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="findings-panel" class="panel">
+        <h2 tabindex="-1">Diagnostic report</h2>
+        <div id="departure" class="departure" role="status">--</div>
+        <div class="risk"><span>Overall status</span><strong id="overall-status">--</strong></div>
+        <p id="findings-note" class="note" hidden></p>
+        <h3>Subsystems</h3>
+        <div id="subsystems"></div>
+        <div id="votes-section" hidden>
+          <h3>Votes on critical findings</h3>
+          <div id="votes"></div>
+        </div>
+        <h3>Required repairs</h3>
+        <ul id="repairs"></ul>
+        <p class="repair-hours">Estimated repair time <strong id="repair-hours">--</strong></p>
+        <div class="actions"><button type="button" id="new-analysis" class="pill p-orange">New diagnostics</button></div>
+      </section>
+
+      <section id="progress-panel" class="panel">
+        <h2 tabindex="-1">Scans <span id="run-status" class="status" aria-live="polite">--</span></h2>
+        <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
+        <p id="run-note" class="note" role="alert" hidden></p>
+        <ol id="scan-board" aria-live="polite">
+          <li class="tile" data-activity="HullIntegrityScanActivity">
+            <span class="tile-name">Hull integrity</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+          </li>
+          <li class="tile" data-activity="ReactorCoreScanActivity">
+            <span class="tile-name">Reactor core</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+          </li>
+          <li class="tile" data-activity="NavigationScanActivity">
+            <span class="tile-name">Navigation</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+          </li>
+          <li class="tile" data-activity="LifeSupportScanActivity">
+            <span class="tile-name">Life support</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+          </li>
+          <li class="tile" data-activity="WeaponsScanActivity">
+            <span class="tile-name">Weapons</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+          </li>
+        </ol>
+        <div id="vote-panel" hidden>
+          <h3>Voting on critical findings <small>Safety &middot; Severity &middot; Recommendation</small></h3>
+          <ul id="vote-rows" aria-live="polite"></ul>
+        </div>
+        <div id="restart-actions" class="actions"><button type="button" id="restart" class="pill p-orange">New diagnostics</button></div>
+      </section>
+    </main>
+
+    <div class="corner-bottom"><span>03-1701</span></div>
+    <footer class="bar-bottom">
+      <span id="link-indicator" class="link ok">Subspace link</span>
+      <a href="http://localhost:9090" target="_blank" rel="noopener">View in Dapr dashboard</a>
+    </footer>
+  </div>
+  <script type="module" src="js/engine.js"></script>
+</body>
+</html>

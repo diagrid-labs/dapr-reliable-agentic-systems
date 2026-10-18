@@ -113,13 +113,20 @@ aspire run
 This launches the Aspire AppHost, which orchestrates:
 - A Valkey container for workflow state persistence (port 16379, password-protected)
 - The ApiService with a Dapr sidecar (app ID `space-colony-planner-app`)
+- The `web` resource (LCARS web UI) on http://localhost:5501
 - The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
 The Aspire dashboard opens automatically in the browser, showing all resources and their status.
 
+### Use the web UI
+
+Open http://localhost:5501, pick a preset (Arrakis Minor, Glacius Prime or Eden Prime) or edit the survey, and choose **Plan colony**. The form is grouped as planet, conditions, resources (checkboxes plus the soil quality) and requirements. The page polls the plan endpoint every 2 seconds. The running view shows the planet analysis and structure selection as bars, then one lane per structure the orchestrator selected (type, priority and quantity), so the number of lanes differs per planet. Each lane sweeps as `PLANNING` until its specialist worker finishes and then shows `COMPLETE`, in whatever order the workers finish. Synthesis and timeline optimisation follow as two more bars. The result view shows the total construction days and the number of structures, a bar per construction phase scaled to the longest phase, expandable structure rows (materials, days, worker hours, prerequisites and specification), the materials table, and the success factors and risk assessment text.
+
 ### Test with REST Client
 
 Open `SpaceColonyPlanner.ApiService/SpaceColonyPlanner.ApiService.http` in VS Code and execute the requests to plan different colonies. The ApiService HTTP port is shown in the Aspire dashboard.
+
+The status endpoint `GET /colony/plan/{instanceId}` returns `result` (the master plan, only when the workflow is `Completed`; this field was called `plan` before) and `progress` (the current stage and the list of structures with a `done` flag). An unknown instance ID returns 404.
 
 ### Inspect the Workflow runs
 

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orbital Salvage Operations</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/lcars.css">
+  <link rel="stylesheet" href="css/demo.css">
+</head>
+<body data-view="idle">
+  <div class="frame">
+    <div class="corner-top"><span>05-3392</span></div>
+    <header class="bar-top">
+      <h1>Orbital Salvage Operations</h1>
+      <span class="stardate">Stardate <b id="stardate">--</b></span>
+    </header>
+
+    <nav class="sidebar" aria-hidden="true">
+      <div class="block b-lilac"><span>Debris field</span></div>
+      <div class="block b-blue"><span>Navigation</span></div>
+      <div class="block b-peach"><span>Capture</span></div>
+      <div class="block b-salmon filler"><span>61-2870</span></div>
+    </nav>
+
+    <main class="main">
+      <div id="link-lost" class="banner warn" role="alert" hidden>Subspace link lost &mdash; retrying</div>
+      <div id="alert-banner" class="banner alert" role="alert" hidden>Red alert &mdash; mission aborted</div>
+
+      <section id="form-panel" class="panel">
+        <h2 tabindex="-1">Mission parameters</h2>
+        <form id="demo-form" novalidate>
+          <label class="wide">Mission id
+            <input id="missionId" type="text" maxlength="64" autocomplete="off" spellcheck="false" required>
+          </label>
+          <div class="grid">
+            <label>Orbital zone
+              <select id="orbitalZone">
+                <option value="LEO">LEO (low Earth orbit)</option>
+                <option value="MEO">MEO (medium Earth orbit)</option>
+                <option value="GEO">GEO (geostationary orbit)</option>
+              </select>
+            </label>
+            <label>Max debris pieces<input id="maxDebrisPieces" type="number" min="1" step="1" required></label>
+            <label>Fuel budget (kg)<input id="fuelBudget" type="number" min="0" step="any" required></label>
+            <label>Max mission hours<input id="maxMissionHours" type="number" min="1" step="1" required></label>
+          </div>
+          <label class="check wide">
+            <input id="requireHumanApproval" type="checkbox">
+            Allow the agent to ask for human approval
+          </label>
+          <p id="form-error" class="error" role="alert" hidden></p>
+          <div class="actions">
+            <button type="button" class="pill p-lilac" data-preset="leo">LEO cleanup</button>
+            <button type="button" class="pill p-blue" data-preset="meo">MEO aggressive</button>
+            <button type="button" class="pill p-sky" data-preset="geo">GEO conservative</button>
+            <button type="submit" id="begin" class="pill p-orange go">Launch mission</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="findings-panel" class="panel">
+        <h2 tabindex="-1">Mission report</h2>
+        <p id="findings-note" class="note" hidden></p>
+        <div class="risk"><span>Outcome</span><strong id="mission-outcome">--</strong></div>
+        <div class="counters">
+          <div class="counter"><span>Debris captured</span><b id="debris-captured">--</b></div>
+          <div class="counter"><span>Fuel used</span><b id="fuel-used">--</b></div>
+          <div class="counter"><span>Total steps</span><b id="total-steps">--</b></div>
+        </div>
+        <h3>Summary</h3>
+        <p id="summary" class="prose"></p>
+        <h3>Lessons learned</h3>
+        <ul id="lessons" class="points"></ul>
+        <h3>Agent decisions</h3>
+        <ol id="result-decisions" class="log"></ol>
+        <h3>Tool calls</h3>
+        <ol id="result-tools" class="log"></ol>
+        <div class="actions"><button type="button" id="new-analysis" class="pill p-orange">New mission</button></div>
+      </section>
+
+      <section id="progress-panel" class="panel">
+        <h2 tabindex="-1">Mission underway <span id="run-status" class="status" aria-live="polite">--</span></h2>
+        <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
+        <p id="run-note" class="note" role="alert" hidden></p>
+
+        <div class="step-meter">
+          <span id="step-meter">Step -- / 15</span>
+          <span class="meter-track" id="step-track"></span>
+        </div>
+
+        <p id="approval-status" class="sr-only" role="status"></p>
+        <div id="approval-panel" class="approval" role="group" aria-labelledby="approval-title" hidden>
+          <h3 id="approval-title" tabindex="-1">Human approval required</h3>
+          <p class="countdown"><span id="approval-countdown">--:--</span> <span id="approval-timeout" hidden>Timeout imminent</span></p>
+          <dl id="approval-request" class="kv"></dl>
+          <label class="wide">Reason for your answer (optional)
+            <input id="approval-reason" type="text" maxlength="200" autocomplete="off">
+          </label>
+          <p id="approval-error" class="error" role="alert" hidden></p>
+          <div class="actions">
+            <button type="button" id="approve" class="pill p-sky">Approve</button>
+            <button type="button" id="deny" class="pill p-salmon">Deny</button>
+          </div>
+        </div>
+
+        <ol id="decision-log" class="log" aria-live="polite"></ol>
+        <ol class="log">
+          <li id="thinking-row" class="entry active" hidden>
+            <span id="thinking-name" class="stage-name">Step 1</span>
+            <span class="stage-bar"></span>
+            <span class="stage-state">Thinking&hellip;</span>
+          </li>
+        </ol>
+        <div id="restart-actions" class="actions"><button type="button" id="restart" class="pill p-orange">New mission</button></div>
+      </section>
+    </main>
+
+    <div class="corner-bottom"><span>07-4410</span></div>
+    <footer class="bar-bottom">
+      <span id="link-indicator" class="link ok">Subspace link</span>
+      <a href="http://localhost:9090" target="_blank" rel="noopener">View in Dapr dashboard</a>
+    </footer>
+  </div>
+  <script type="module" src="js/engine.js"></script>
+</body>
+</html>

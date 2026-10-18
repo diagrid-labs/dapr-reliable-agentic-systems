@@ -26,6 +26,12 @@ var workflowApp = builder
 
 workflowApp.WaitFor(cache);
 
+builder
+    .AddProject<Projects.GalacticAnomalyClassifier_Web>("web")
+    .WithReference(workflowApp)
+    .WaitFor(workflowApp)
+    .WithExternalHttpEndpoints();
+
 builder.AddExecutable("dapr-dev-dashboard", "diagrid-dev-dashboard", ".",
         "--port", "9090", "--no-open")
     .WithHttpEndpoint(port: 9090, isProxied: false);

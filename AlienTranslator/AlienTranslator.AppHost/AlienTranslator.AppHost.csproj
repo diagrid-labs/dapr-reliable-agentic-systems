@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AlienTranslator.ApiService\AlienTranslator.ApiService.csproj" />
+    <ProjectReference Include="..\AlienTranslator.Web\AlienTranslator.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

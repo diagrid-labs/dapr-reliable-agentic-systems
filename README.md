@@ -245,6 +245,8 @@ graph TD
 
 See the individual demo README files for specific instructions how to run the applications.
 
+Every demo ships a Star Trek TNG (LCARS) styled web UI at http://localhost:5501 when started with `aspire run`.
+
 ## Next Steps
 
 - Join the [Dapr Discord](https://bit.ly/dapr-discord) to connect with the community.

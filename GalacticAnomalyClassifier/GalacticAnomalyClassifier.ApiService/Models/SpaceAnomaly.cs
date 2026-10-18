@@ -33,3 +33,5 @@ public record AnalysisResult(
     List<string> Recommendations,
     string ThreatLevel
 );
+
+public record RoutingProgress(string Stage, string? Type, double? Confidence);

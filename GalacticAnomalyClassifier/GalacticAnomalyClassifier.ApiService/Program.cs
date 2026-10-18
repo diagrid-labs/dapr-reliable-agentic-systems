@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Dapr.Client;
 using Dapr.Workflow;
@@ -10,6 +11,12 @@ using GalacticAnomalyClassifier.Activities;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNameCaseInsensitive = true;
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddDaprClient();
 builder.Services.AddDaprConversationClient((_, clientBuilder) =>
@@ -45,14 +52,17 @@ app.MapGet("/anomaly/status/{instanceId}", async (
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     
-    if (state == null)
+    if (!state.Exists)
         return Results.NotFound();
     
     return Results.Ok(new
     {
         instanceId,
         status = state.RuntimeStatus.ToString(),
-        result = state.ReadOutputAs<AnalysisResult>(),
+        result = state.RuntimeStatus == WorkflowRuntimeStatus.Completed
+            ? state.ReadOutputAs<AnalysisResult>()
+            : null,
+        progress = state.ReadCustomStatusAs<RoutingProgress>(),
         createdAt = state.CreatedAt,
         lastUpdatedAt = state.LastUpdatedAt
     });

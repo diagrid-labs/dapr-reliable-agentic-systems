@@ -127,9 +127,16 @@ aspire run
 This launches the Aspire AppHost, which orchestrates:
 - A Valkey container for workflow state persistence (port 16379, password-protected)
 - The ApiService with a Dapr sidecar (app ID `starship-diagnostics-app`)
+- The `web` resource (LCARS web UI) on http://localhost:5501
 - The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
 The Aspire dashboard opens automatically in the browser, showing all resources and their status.
+
+### Use the web UI
+
+Open http://localhost:5501, pick a preset (Enterprise-D, Enterprise (original) or Enterprise-E) or edit the ship data and telemetry, and choose **Run diagnostics**. The page polls the report endpoint every 2 seconds and shows five subsystem tiles (hull integrity, reactor core, navigation, life support and weapons). Each tile shows a sweeping bar and the label `Scanning` until its scan finishes, in whatever order the scans complete, and then shows the health percentage and a status colour. When a scan comes back critical, a vote panel shows one row per critical finding, pending until the three voters (Safety, Severity and Recommendation) reach a consensus. The report view shows `CLEAR FOR DEPARTURE` or `DEPARTURE HELD`, the overall status, expandable subsystem rows with issues, recommendations and the detailed analysis, the vote results, the required repairs and the estimated repair hours. A ship that is not cleared for departure switches the page to Red Alert.
+
+The report endpoint (`GET /ship/report/{instanceId}`) returns `instanceId`, `status`, `result`, `progress` (the stage plus the finished scans and votes, taken from the workflow custom status), `createdAt` and `lastUpdatedAt`.
 
 ### Test with REST Client
 

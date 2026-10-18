@@ -122,3 +122,15 @@ public record GenerateReportInput(
     List<AgentDecision> Decisions,
     List<ToolCall> ToolCalls
 );
+
+public record MissionProgress(
+    int Step,
+    int MaxSteps,
+    bool Thinking,
+    List<DecisionProgress> Decisions,
+    ApprovalWait? AwaitingApproval
+);
+
+public record DecisionProgress(int Step, string Action, string Reasoning);
+
+public record ApprovalWait(DateTime Since, Dictionary<string, object> Request);

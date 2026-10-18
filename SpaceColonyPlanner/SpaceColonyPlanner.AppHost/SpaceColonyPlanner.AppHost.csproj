@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SpaceColonyPlanner.ApiService\SpaceColonyPlanner.ApiService.csproj" />
+    <ProjectReference Include="..\SpaceColonyPlanner.Web\SpaceColonyPlanner.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

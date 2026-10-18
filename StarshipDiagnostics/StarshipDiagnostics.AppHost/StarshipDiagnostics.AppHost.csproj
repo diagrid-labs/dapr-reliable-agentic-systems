@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StarshipDiagnostics.ApiService\StarshipDiagnostics.ApiService.csproj" />
+    <ProjectReference Include="..\StarshipDiagnostics.Web\StarshipDiagnostics.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

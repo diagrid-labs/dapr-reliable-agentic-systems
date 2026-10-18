@@ -19,13 +19,16 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
         WorkflowContext context, 
         SpaceAnomaly input)
     {
+        context.SetCustomStatus(new RoutingProgress("Classifying", null, null));
+
         var classification = await context.CallActivityAsync<AnomalyClassification>(
             nameof(ClassifyAnomalyActivity),
             input,
             GetDefaultRetryPolicy());
 
         var anomalyType = ParseAnomalyType(classification.Type);
-        
+        context.SetCustomStatus(new RoutingProgress("Analyzing", anomalyType.ToString(), classification.Confidence));
+
         string specializedAnalysis;
         Dictionary<string, object> metrics;
         List<string> recommendations;

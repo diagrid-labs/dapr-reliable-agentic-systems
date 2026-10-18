@@ -105,9 +105,14 @@ aspire run
 This launches the Aspire AppHost, which orchestrates:
 - A Valkey container for workflow state persistence (port 16379, password-protected)
 - The ApiService with a Dapr sidecar (app ID `alien-translator-app`)
+- The `web` resource (LCARS web UI) on http://localhost:5501
 - The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
 The Aspire dashboard opens automatically in the browser, showing all resources and their status.
+
+### Use the web UI
+
+Open http://localhost:5501, pick a preset (Vulcan diplomatic, Klingon literary or Romulan casual) or edit the form, and choose **Translate**. The form takes the species (choose Other to type your own), the context, the original text, a list of known vocabulary (phrase and meaning rows; empty rows are ignored, a half-filled row or a duplicate phrase is an error) and optional cultural notes. The page polls the translate endpoint every 2 seconds. The running view is an iteration board: every finished iteration is a row with its quality bar (0 to 10, with a marker at the 8.0 threshold), the verdict `MEETS STANDARD` or `BELOW STANDARD` and an expandable translation, so you can watch the translation improve across the `ContinueAsNew` restarts. While the workflow runs, a `PROCESSING ITERATION n` row sweeps below the finished rows and a footer shows `ITERATION n / 5`. The result view shows the original text next to the final translation (with the translator's reasoning in an expandable), four score bars (accuracy, cultural nuance, idiomatic, overall), the strengths and weaknesses, the detailed feedback, the improvement summary and a small line chart of the overall quality per iteration (an iteration without a score has no dot and the line skips it). If the loop ended because it reached the maximum number of iterations, a `MANUAL REVIEW RECOMMENDED` note is shown.
 
 ### Test with REST Client
 

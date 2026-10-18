@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GalacticAnomalyClassifier.ApiService\GalacticAnomalyClassifier.ApiService.csproj" />
+    <ProjectReference Include="..\GalacticAnomalyClassifier.Web\GalacticAnomalyClassifier.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

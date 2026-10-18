@@ -58,14 +58,17 @@ app.MapGet("/colony/plan/{instanceId}", async (
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     
-    if (state == null)
+    if (!state.Exists)
         return Results.NotFound();
     
     return Results.Ok(new
     {
         instanceId,
         status = state.RuntimeStatus.ToString(),
-        plan = state.ReadOutputAs<ColonyMasterPlan>(),
+        result = state.RuntimeStatus == WorkflowRuntimeStatus.Completed
+            ? state.ReadOutputAs<ColonyMasterPlan>()
+            : null,
+        progress = state.ReadCustomStatusAs<ColonyProgress>(),
         createdAt = state.CreatedAt,
         lastUpdatedAt = state.LastUpdatedAt
     });

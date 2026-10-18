@@ -1,0 +1,48 @@
+fieldset.measure-set { margin: 14px 0 0; padding: 0; border: 0; min-width: 0; }
+.measure-set legend { padding: 0; font-size: 14px; color: var(--sky); }
+.measure-set .pill { margin-top: 8px; }
+.measure-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) auto; gap: 10px; margin-top: 8px; }
+.measure-row .pill { margin: 0; padding: 0 16px; }
+.p-salmon { background: var(--salmon); }
+
+#routing-board { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.lane, .node {
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) 1fr 110px;
+  align-items: center;
+  gap: 14px;
+}
+.lane { padding-left: 24px; }
+.stage-name small { display: block; font-size: 12px; color: var(--blue); }
+.lane.skipped .stage-name { opacity: 0.45; }
+.lane.skipped .stage-state { color: var(--salmon); }
+.lane.active .stage-bar { background: var(--accent); }
+/* the classifier node is a div, so lcars.css li.done / li.active does not reach it */
+.node.done .stage-bar { background: var(--accent); }
+.node.done .stage-state { color: var(--accent); }
+.node.active .stage-state { color: var(--sky); }
+.node.active .stage-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, var(--sky) 0 24px, transparent 24px 32px);
+  animation: sweep 1.2s linear infinite;
+}
+
+.metrics { border-collapse: collapse; margin-top: 14px; min-width: 280px; }
+.metrics caption { text-align: left; color: var(--sky); font-size: 14px; }
+.metrics th, .metrics td { text-align: left; padding: 4px 24px 4px 0; border-bottom: 1px solid #2a2a2a; text-transform: none; }
+.metrics th { color: var(--blue); font-size: 13px; font-weight: 400; }
+h3 { margin: 16px 0 4px; font-size: 14px; font-weight: 400; color: var(--sky); }
+#recommendations { margin: 0; padding-left: 20px; text-transform: none; line-height: 1.45; }
+
+@media (prefers-reduced-motion: reduce) {
+  .node.active .stage-bar::after { animation: none; }
+}
+
+@media (max-width: 760px) {
+  .lane, .node { grid-template-columns: 1fr 90px; }
+  .node .stage-bar { grid-column: 1 / -1; order: 3; }
+  .measure-row { grid-template-columns: 1fr 1fr; }
+  .measure-row .pill { grid-column: 1 / -1; }
+}
