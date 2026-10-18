@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AnomalyAnalysis.ApiService\AnomalyAnalysis.ApiService.csproj" />
+    <ProjectReference Include="..\AnomalyAnalysis.Web\AnomalyAnalysis.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

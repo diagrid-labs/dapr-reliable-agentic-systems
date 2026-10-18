@@ -42,7 +42,7 @@ app.MapGet("/anomaly/status/{instanceId}", async (
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     
-    if (state == null)
+    if (!state.Exists)
         return Results.NotFound();
     
     return Results.Ok(new
@@ -50,6 +50,7 @@ app.MapGet("/anomaly/status/{instanceId}", async (
         instanceId,
         status = state.RuntimeStatus.ToString(),
         result = state.ReadOutputAs<AnalysisResult>(),
+        progress = state.ReadCustomStatusAs<List<AnalysisStage>>(),
         createdAt = state.CreatedAt,
         lastUpdatedAt = state.LastUpdatedAt
     });

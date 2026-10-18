@@ -12,7 +12,7 @@ You are a proficient C# .NET & Web developer with extensive experience in buildi
   ```
 
 # Back-end development rules
-- Each project is a .NET Aspire solution composed of three csprojs: `<Name>.AppHost` (`Aspire.AppHost.Sdk` 13.6.1, net10.0), `<Name>.ApiService` (`Microsoft.NET.Sdk.Web`, net10.0), `<Name>.ServiceDefaults` (`Microsoft.NET.Sdk`, net10.0).
+- Each project is a .NET Aspire solution composed of three csprojs: `<Name>.AppHost` (`Aspire.AppHost.Sdk` 13.6.1, net10.0), `<Name>.ApiService` (`Microsoft.NET.Sdk.Web`, net10.0), `<Name>.ServiceDefaults` (`Microsoft.NET.Sdk`, net10.0). A project can add an optional `<Name>.Web` project (`Microsoft.NET.Sdk.Web`, net10.0) that serves a vanilla JS front-end and proxies `/api/*` to the ApiService with YARP (currently AnomalyAnalysis only).
 - The ApiService targets net10.0 and uses Dapr packages at version 1.18.10 (`Dapr.AspNetCore`, `Dapr.Client`, `Dapr.Workflow`, `Dapr.AI`). The workflow analyzers are built into `Dapr.Workflow`, so `Dapr.Workflow.Analyzers` is not referenced.
 - The AppHost orchestrates Valkey (port 16379, password-protected), the ApiService with a Dapr sidecar (state store component name `statestore`), and the locally installed Diagrid Dapr Dev Dashboard as a `dapr-dev-dashboard` executable resource on port 9090. Dapr components live in `<Name>.AppHost/Resources/`.
 - `AddDaprWorkflow()` auto-registers workflows and activities; `AddDaprWorkflowVersioning()` is also called. Do not add `RegisterWorkflow`/`RegisterActivity` calls.

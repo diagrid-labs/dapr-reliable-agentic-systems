@@ -101,9 +101,16 @@ aspire run
 This launches the Aspire AppHost, which orchestrates:
 - A Valkey container for workflow state persistence (port 16379, password-protected)
 - The ApiService with a Dapr sidecar (app ID `anomaly-detection-app`)
+- The `AnomalyAnalysis.Web` front-end (`web` resource) on http://localhost:5501, a Star Trek TNG (LCARS) styled page that forwards `/api/*` to the ApiService
 - The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
 The Aspire dashboard opens automatically in the browser, showing all resources and their status.
+
+### Use the web UI
+
+Open http://localhost:5501, pick a preset (Wormhole, Temporal rift or Quantum flux) or edit the sensor values, and choose **Begin analysis**. The page polls the status endpoint every 2 seconds, shows each of the five stages as it completes (expand a stage to read its output) and then shows the findings. A critical risk level switches the page to Red Alert.
+
+The status endpoint (`GET /anomaly/status/{instanceId}`) returns `instanceId`, `status`, `result`, `progress` (the stages recorded so far, taken from the workflow custom status), `createdAt` and `lastUpdatedAt`.
 
 ### Test with REST Client
 
