@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Client;
 using Dapr.Workflow;
+using Dapr.Workflow.Versioning;
 using SpaceDebrisAgent.Models;
 using SpaceDebrisAgent.Workflows;
 using SpaceDebrisAgent.Activities.Agent;
@@ -25,18 +26,8 @@ builder.Services.AddDaprConversationClient((_, clientBuilder) =>
 {
     clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
 });
-builder.Services.AddDaprWorkflow(options =>
-{
-    options.RegisterWorkflow<SpaceDebrisCleanupWorkflow>();
-    options.RegisterActivity<AgentReasoningActivity>();
-    options.RegisterActivity<ScanDebrisFieldActivity>();
-    options.RegisterActivity<AnalyzeDebrisActivity>();
-    options.RegisterActivity<CaptureDebrisActivity>();
-    options.RegisterActivity<MoveToLocationActivity>();
-    options.RegisterActivity<CheckFuelActivity>();
-    options.RegisterActivity<RequestHumanApprovalActivity>();
-    options.RegisterActivity<GenerateReportActivity>();
-});
+builder.Services.AddDaprWorkflow();
+builder.Services.AddDaprWorkflowVersioning();
 
 var app = builder.Build();
 

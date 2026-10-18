@@ -12,11 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapr.AspNetCore" Version="1.17.9" />
-    <PackageReference Include="Dapr.Client" Version="1.17.9" />
-    <PackageReference Include="Dapr.Workflow" Version="1.17.9" />
-    <PackageReference Include="Dapr.Workflow.Analyzers" Version="1.17.9" />
-    <PackageReference Include="Dapr.AI" Version="1.17.9" />
+    <PackageReference Include="Dapr.AspNetCore" Version="1.18.10" />
+    <PackageReference Include="Dapr.Client" Version="1.18.10" />
+    <PackageReference Include="Dapr.Workflow" Version="1.18.10" />
+    <PackageReference Include="Dapr.AI" Version="1.18.10" />
   </ItemGroup>
 
 </Project>

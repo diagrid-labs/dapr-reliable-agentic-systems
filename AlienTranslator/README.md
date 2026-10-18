@@ -76,7 +76,7 @@ graph TD
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
 - [Aspire CLI](https://aspire.dev/get-started/install-cli/) — install with `dotnet tool install -g Aspire.Cli`
 - [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation)
-- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.17+)
+- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.18+)
 - [Ollama](https://ollama.com/) with the `llama3.2:3b` model pulled
 
 ### Start Ollama
@@ -84,6 +84,14 @@ graph TD
 ```bash
 ollama serve
 ollama pull llama3.2:3b
+```
+
+### Use OpenAI instead of Ollama
+
+The `Resources` folder of the AppHost also contains `conversation-openai.yaml` (model `gpt-4.1-mini`) and `env-secret.yaml` (an environment variable secret store). Both Conversation components are named `conversation`, so keep only one of them in `Resources`. To use OpenAI, remove the Ollama component file and set the API key before starting the app:
+
+```bash
+export OPENAI_API_KEY=<your-key>
 ```
 
 ### Run the Application
@@ -97,7 +105,7 @@ aspire run
 This launches the Aspire AppHost, which orchestrates:
 - A Valkey container for workflow state persistence (port 16379, password-protected)
 - The ApiService with a Dapr sidecar (app ID `alien-translator-app`)
-- The Diagrid Dev Dashboard container on http://localhost:18080
+- The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
 The Aspire dashboard opens automatically in the browser, showing all resources and their status.
 
@@ -107,4 +115,24 @@ Open `AlienTranslator.ApiService/AlienTranslator.ApiService.http` in VS Code and
 
 ### Inspect the Workflow runs
 
-Open the Diagrid Dev Dashboard at `http://localhost:18080` and inspect the workflow executions.
+Open the Diagrid Dapr Dev Dashboard at `http://localhost:9090` and inspect the workflow executions.
+
+## Inspect runs with the Diagrid Dapr Dev Dashboard
+
+The [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) is an optional local tool that finds the apps you start with `dapr run` or Aspire and shows their workflow instances (status and execution history), sidecars, components, subscriptions and logs.
+
+Install it once:
+
+- macOS / Linux:
+
+  ```shell
+  curl -sSL https://raw.githubusercontent.com/diagridio/dev-dashboard/main/scripts/install.sh | sh
+  ```
+
+- Windows (PowerShell):
+
+  ```powershell
+  iwr -useb https://raw.githubusercontent.com/diagridio/dev-dashboard/main/scripts/install.ps1 | iex
+  ```
+
+`aspire run` starts it as the `dapr-dev-dashboard` resource; open it from the Aspire dashboard or at http://localhost:9090. If it is not installed, only that resource fails to start; the app keeps running.

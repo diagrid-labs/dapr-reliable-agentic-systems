@@ -1,10 +1,11 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.3.5">
+<Project Sdk="Aspire.AppHost.Sdk/13.6.1">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
     <UserSecretsId>2892f723-dce6-48bc-aecd-7cdfd50e0a07</UserSecretsId>
   </PropertyGroup>
 
@@ -13,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.Valkey" Version="13.3.5" />
+    <PackageReference Include="Aspire.Hosting.Valkey" Version="13.6.1" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Dapr" Version="13.0.0" />
   </ItemGroup>
 

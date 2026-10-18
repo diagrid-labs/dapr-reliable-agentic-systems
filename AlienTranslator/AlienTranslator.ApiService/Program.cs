@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
+using Dapr.Workflow.Versioning;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -18,13 +19,8 @@ builder.Services.AddDaprConversationClient((_, clientBuilder) =>
 {
     clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
 });
-builder.Services.AddDaprWorkflow(options =>
-{
-    options.RegisterWorkflow<AlienTranslationWorkflow>();
-    options.RegisterActivity<TranslateActivity>();
-    options.RegisterActivity<RefineTranslationActivity>();
-    options.RegisterActivity<EvaluateTranslationActivity>();
-});
+builder.Services.AddDaprWorkflow();
+builder.Services.AddDaprWorkflowVersioning();
 
 var app = builder.Build();
 
