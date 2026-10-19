@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        demo:
+          - AlienTranslator
+          - AnomalyAnalysis
+          - GalacticAnomalyClassifier
+          - SpaceColonyPlanner
+          - SpaceDebrisAgent
+          - StarshipDiagnostics
+    name: Build ${{ matrix.demo }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore ${{ matrix.demo }}/${{ matrix.demo }}.sln
+
+      - name: Build
+        run: dotnet build ${{ matrix.demo }}/${{ matrix.demo }}.sln --configuration Release --no-restore
