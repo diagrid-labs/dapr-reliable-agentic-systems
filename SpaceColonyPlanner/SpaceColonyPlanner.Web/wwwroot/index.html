@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colony Planning</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/lcars.css">
+  <link rel="stylesheet" href="css/demo.css">
+</head>
+<body data-view="idle">
+  <div class="frame">
+    <div class="corner-top"><span>02-2268</span></div>
+    <header class="bar-top">
+      <h1>Colony Planning</h1>
+      <span class="stardate">Stardate <b id="stardate">--</b></span>
+    </header>
+
+    <nav class="sidebar" aria-hidden="true">
+      <div class="block b-lilac"><span>Planet data</span></div>
+      <div class="block b-blue"><span>Planning</span></div>
+      <div class="block b-peach"><span>Master plan</span></div>
+      <div class="block b-salmon filler"><span>68-2268</span></div>
+    </nav>
+
+    <main class="main">
+      <div id="link-lost" class="banner warn" role="alert" hidden>Subspace link lost &mdash; retrying</div>
+
+      <section id="form-panel" class="panel">
+        <h2 tabindex="-1">Planet survey</h2>
+        <form id="demo-form" novalidate>
+          <fieldset class="group">
+            <legend>Planet</legend>
+            <div class="grid">
+              <label>Planet id<input id="planetId" type="text" required></label>
+              <label>Name<input id="planetName" type="text" required></label>
+            </div>
+          </fieldset>
+          <fieldset class="group">
+            <legend>Conditions</legend>
+            <div class="grid">
+              <label>Gravity (g)<input id="gravity" type="number" step="any" required></label>
+              <label>Atmosphere
+                <select id="atmosphereType">
+                  <option>None</option><option>Toxic</option><option>Breathable</option><option>Thin</option>
+                </select>
+              </label>
+              <label>Temperature (&deg;C)<input id="temperature" type="number" step="any" required></label>
+              <label>Radiation (Sv/year)<input id="radiationLevel" type="number" step="any" required></label>
+              <label>Day length (days)<input id="dayLength" type="number" step="any" required></label>
+            </div>
+            <label class="check"><input id="hasWater" type="checkbox">Surface water</label>
+          </fieldset>
+          <fieldset class="group">
+            <legend>Resources</legend>
+            <div class="checks">
+              <label class="check"><input id="metals" type="checkbox">Metals</label>
+              <label class="check"><input id="rareEarths" type="checkbox">Rare earths</label>
+              <label class="check"><input id="resWater" type="checkbox">Water</label>
+              <label class="check"><input id="organics" type="checkbox">Organics</label>
+              <label class="check"><input id="uranium" type="checkbox">Uranium</label>
+            </div>
+            <div class="grid">
+              <label>Soil quality
+                <select id="soilQuality">
+                  <option>None</option><option>Poor</option><option>Fair</option><option>Good</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+          <fieldset class="group">
+            <legend>Requirements</legend>
+            <div class="grid">
+              <label>Initial population<input id="initialPopulation" type="number" min="0" step="1" required></label>
+              <label>Target population<input id="targetPopulation" type="number" min="0" step="1" required></label>
+              <label>Purpose
+                <select id="purpose">
+                  <option>Mining</option><option>Research</option><option>Agriculture</option><option>Military</option><option>Mixed</option>
+                </select>
+              </label>
+              <label>Years to complete<input id="yearsToComplete" type="number" min="1" step="1" required></label>
+            </div>
+          </fieldset>
+          <p id="form-error" class="error" role="alert" hidden></p>
+          <div class="actions">
+            <button type="button" class="pill p-lilac" data-preset="arrakis">Arrakis Minor</button>
+            <button type="button" class="pill p-blue" data-preset="glacius">Glacius Prime</button>
+            <button type="button" class="pill p-sky" data-preset="agri-world">Eden Prime</button>
+            <button type="submit" id="begin" class="pill p-orange go">Plan colony</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="findings-panel" class="panel">
+        <h2 tabindex="-1">Colony master plan</h2>
+        <p id="findings-note" class="note" hidden></p>
+        <div class="headline">
+          <div><span>Total construction</span><strong id="total-days">--</strong></div>
+          <div><span>Structures</span><strong id="structure-count">--</strong></div>
+        </div>
+        <h3>Construction timeline</h3>
+        <ol id="timeline"></ol>
+        <h3>Structures</h3>
+        <div id="structures"></div>
+        <h3>Materials required</h3>
+        <table id="materials" class="metrics">
+          <thead><tr><th>Material</th><th>Quantity</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <h3>Success factors</h3>
+        <p id="success-factors" class="prose"></p>
+        <h3>Risk assessment</h3>
+        <p id="risk-assessment" class="prose"></p>
+        <div class="actions"><button type="button" id="new-analysis" class="pill p-orange">New colony plan</button></div>
+      </section>
+
+      <section id="progress-panel" class="panel">
+        <h2 tabindex="-1">Planning <span id="run-status" class="status" aria-live="polite">--</span></h2>
+        <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
+        <p id="run-note" class="note" role="alert" hidden></p>
+        <div id="durable" class="durable" aria-hidden="true"></div>
+        <p id="durable-caption" class="durable-caption" role="status"></p>
+        <ol id="pre-stages" class="stages" aria-live="polite">
+          <li class="node" data-stage="AnalyzingPlanet">
+            <span class="stage-name">01 Planet analysis</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+          </li>
+          <li class="node" data-stage="DeterminingStructures">
+            <span class="stage-name">02 Structure selection</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+          </li>
+        </ol>
+        <h3>03 Specialist planning <small id="worker-count"></small></h3>
+        <p id="worker-placeholder" class="placeholder">Awaiting structure selection</p>
+        <div id="colony-scene" class="scene" aria-hidden="true" hidden><span class="planet"></span></div>
+        <ol id="worker-board" class="stages" aria-live="polite"></ol>
+        <ol id="post-stages" class="stages" aria-live="polite">
+          <li class="node" data-stage="Synthesizing">
+            <span class="stage-name">04 Synthesis</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+          </li>
+          <li class="node" data-stage="Optimizing">
+            <span class="stage-name">05 Timeline optimisation</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+          </li>
+        </ol>
+        <div id="restart-actions" class="actions"><button type="button" id="restart" class="pill p-orange">New colony plan</button></div>
+      </section>
+    </main>
+
+    <div class="corner-bottom"><span>03-1701</span></div>
+    <footer class="bar-bottom">
+      <span id="link-indicator" class="link ok">Subspace link</span>
+      <a href="http://localhost:9090" target="_blank" rel="noopener">View in Dapr dashboard</a>
+    </footer>
+  </div>
+  <script type="module" src="js/engine.js"></script>
+</body>
+</html>

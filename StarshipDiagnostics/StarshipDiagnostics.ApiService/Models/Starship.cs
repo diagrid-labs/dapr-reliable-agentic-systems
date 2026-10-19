@@ -41,3 +41,9 @@ public record DiagnosticReport(
     List<string> RequiredRepairs,
     int EstimatedRepairHours
 );
+
+public record ScanProgress(string Activity, string Subsystem, string? Status, double HealthPercentage);
+
+public record VoteProgress(string Category, string Consensus, double AgreementLevel);
+
+public record DiagnosticsProgress(string Stage, List<ScanProgress> Scans, List<VoteProgress> Votes);

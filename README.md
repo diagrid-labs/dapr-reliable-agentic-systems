@@ -241,12 +241,25 @@ graph TD
 4. Install [Ollama](https://ollama.com/)
 5. Initialize Dapr: `dapr init`
 6. Run Ollama server: `ollama serve` and run a model: `ollama run llama3.2:3b`
-7. Run Diagrid Dashboard: `docker run -p 8080:8080 ghcr.io/diagridio/diagrid-dashboard:latest`
+7. Install the [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) (see the install commands in the demo READMEs). `aspire run` starts it automatically at http://localhost:9090
 
 See the individual demo README files for specific instructions how to run the applications.
+
+Every demo ships a Star Trek TNG (LCARS) styled web UI when started with `aspire run`. The Aspire dashboard always opens at https://localhost:15000, and each demo has its own UI port so a browser tab can stay open per demo:
+
+| Demo | Web UI |
+|------|--------|
+| AlienTranslator | http://localhost:5501 |
+| AnomalyAnalysis | http://localhost:5502 |
+| GalacticAnomalyClassifier | http://localhost:5503 |
+| SpaceColonyPlanner | http://localhost:5504 |
+| SpaceDebrisAgent | http://localhost:5505 |
+| StarshipDiagnostics | http://localhost:5506 |
+
+The UIs show animated durability (a timeline of saved checkpoints that stays put while you stop the ApiService mid-run, so you can watch the run continue) and a per-demo animation driven by the real workflow state.
 
 ## Next Steps
 
 - Join the [Dapr Discord](https://bit.ly/dapr-discord) to connect with the community.
-- Explore the [Diagrid Dev Dashboard](https://www.diagrid.io/blog/improving-the-local-dapr-workflow-experience-diagrid-dashboard) for workflow observability.
+- Explore the [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) for workflow observability.
 - Run your workflows and AI Agents reliably with [Diagrid Catalyst](https://www.diagrid.io/catalyst).

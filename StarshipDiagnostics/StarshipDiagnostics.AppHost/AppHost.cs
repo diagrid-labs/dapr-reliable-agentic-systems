@@ -27,12 +27,13 @@ var workflowApp = builder
 workflowApp.WaitFor(cache);
 
 builder
-    .AddContainer("diagrid-dashboard", "ghcr.io/diagridio/diagrid-dashboard:latest")
-    .WithContainerName("diagrid-dashboard")
-    .WithBindMount(Path.Join(executingPath, "Resources"), "/app/components")
-    .WithEnvironment("COMPONENT_FILE", "/app/components/statestore-dashboard.yaml")
-    .WithEnvironment("APP_ID", "diagrid-dashboard")
-    .WithHttpEndpoint(port: 18080, targetPort: 8080)
-    .WithReference(cache);
+    .AddProject<Projects.StarshipDiagnostics_Web>("web")
+    .WithReference(workflowApp)
+    .WaitFor(workflowApp)
+    .WithExternalHttpEndpoints();
+
+builder.AddExecutable("dapr-dev-dashboard", "diagrid-dev-dashboard", ".",
+        "--port", "9090", "--no-open")
+    .WithHttpEndpoint(port: 9090, isProxied: false);
 
 builder.Build().Run();

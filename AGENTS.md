@@ -12,9 +12,10 @@ You are a proficient C# .NET & Web developer with extensive experience in buildi
   ```
 
 # Back-end development rules
-- Each project is a .NET Aspire solution composed of three csprojs: `<Name>.AppHost` (`Aspire.AppHost.Sdk` 13.3.5, net10.0), `<Name>.ApiService` (`Microsoft.NET.Sdk.Web`, net10.0), `<Name>.ServiceDefaults` (`Microsoft.NET.Sdk`, net10.0).
-- The ApiService targets net10.0 and uses Dapr packages at version 1.17.9 (`Dapr.AspNetCore`, `Dapr.Client`, `Dapr.Workflow`, `Dapr.Workflow.Analyzers`, `Dapr.AI`).
-- The AppHost orchestrates Valkey (port 16379, password-protected), the ApiService with a Dapr sidecar (state store component name `statestore`), and a `diagrid-dashboard` container on port 18080. Dapr components live in `<Name>.AppHost/Resources/`.
+- Each project is a .NET Aspire solution composed of three csprojs: `<Name>.AppHost` (`Aspire.AppHost.Sdk` 13.6.1, net10.0), `<Name>.ApiService` (`Microsoft.NET.Sdk.Web`, net10.0), `<Name>.ServiceDefaults` (`Microsoft.NET.Sdk`, net10.0). A project can add an optional `<Name>.Web` project (`Microsoft.NET.Sdk.Web`, net10.0) that serves a vanilla JS front-end and proxies `/api/*` to the ApiService with YARP (all six demos have one). Each demo's front-end is self-contained: copies of the front-end files live in each project, duplication across the Aspire projects is intended, and nothing is shared between them.
+- The ApiService targets net10.0 and uses Dapr packages at version 1.18.10 (`Dapr.AspNetCore`, `Dapr.Client`, `Dapr.Workflow`, `Dapr.AI`). The workflow analyzers are built into `Dapr.Workflow`, so `Dapr.Workflow.Analyzers` is not referenced.
+- The AppHost orchestrates Valkey (port 16379, password-protected), the ApiService with a Dapr sidecar (state store component name `statestore`), and the locally installed Diagrid Dapr Dev Dashboard as a `dapr-dev-dashboard` executable resource on port 9090. Dapr components live in `<Name>.AppHost/Resources/`.
+- `AddDaprWorkflow()` auto-registers workflows and activities; `AddDaprWorkflowVersioning()` is also called. Do not add `RegisterWorkflow`/`RegisterActivity` calls.
 - Run a solution with `aspire run` from the solution root. Do not use `dapr run` or `dapr.yaml` — Aspire owns the sidecar lifecycle.
 - `Program.cs` calls `builder.AddServiceDefaults()` before service registration and `app.MapDefaultEndpoints()` before `app.Run()`.
 - Code is written in C# using ASP.NET Core minimal API style.
@@ -30,3 +31,4 @@ You are a proficient C# .NET & Web developer with extensive experience in buildi
 - Keep front-end code simple and lightweight.
 - Use vanilla JavaScript unless a specific library is requested.
 - Do not use any front-end frameworks like React, Angular, or Vue.js unless explicitly requested.
+- Animations in the web UIs are driven by real workflow data (no timer-driven fake progress), respect `prefers-reduced-motion`, and keep decorative elements out of live regions (`aria-hidden`). The shared files (`engine.js`, `util.js`, `lcars.css` and the YARP `appsettings.json`) are copied identically into every demo; this duplication across the Aspire projects is intended, so if one changes, change all six and compare them with `md5`.

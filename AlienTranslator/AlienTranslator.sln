@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlienTranslator.ApiService"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlienTranslator.ServiceDefaults", "AlienTranslator.ServiceDefaults\AlienTranslator.ServiceDefaults.csproj", "{C98425CE-D2D5-4116-8B22-74858A071921}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlienTranslator.Web", "AlienTranslator.Web\AlienTranslator.Web.csproj", "{2907DD82-B2B1-46C8-9E5D-A8584E46A287}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{C98425CE-D2D5-4116-8B22-74858A071921}.Release|x64.Build.0 = Release|Any CPU
 		{C98425CE-D2D5-4116-8B22-74858A071921}.Release|x86.ActiveCfg = Release|Any CPU
 		{C98425CE-D2D5-4116-8B22-74858A071921}.Release|x86.Build.0 = Release|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Debug|x64.Build.0 = Debug|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Debug|x86.Build.0 = Debug|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Release|x64.ActiveCfg = Release|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Release|x64.Build.0 = Release|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Release|x86.ActiveCfg = Release|Any CPU
+		{2907DD82-B2B1-46C8-9E5D-A8584E46A287}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

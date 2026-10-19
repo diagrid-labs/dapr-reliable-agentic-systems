@@ -84,7 +84,7 @@ graph TD
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
 - [Aspire CLI](https://aspire.dev/get-started/install-cli/) — install with `dotnet tool install -g Aspire.Cli`
 - [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation)
-- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.17+)
+- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.18+)
 - [Ollama](https://ollama.com/) with the `llama3.2:3b` model pulled
 
 ### Start Ollama
@@ -92,6 +92,14 @@ graph TD
 ```bash
 ollama serve
 ollama pull llama3.2:3b
+```
+
+### Use OpenAI instead of Ollama
+
+The `Resources` folder of the AppHost also contains `conversation-openai.yaml` (model `gpt-4.1-mini`) and `env-secret.yaml` (an environment variable secret store). Both Conversation components are named `conversation`, so keep only one of them in `Resources`. To use OpenAI, remove the Ollama component file and set the API key before starting the app:
+
+```bash
+export OPENAI_API_KEY=<your-key>
 ```
 
 ### Run the Application
@@ -105,14 +113,47 @@ aspire run
 This launches the Aspire AppHost, which orchestrates:
 - A Valkey container for workflow state persistence (port 16379, password-protected)
 - The ApiService with a Dapr sidecar (app ID `space-colony-planner-app`)
-- The Diagrid Dev Dashboard container on http://localhost:18080
+- The `web` resource (LCARS web UI) on http://localhost:5504
+- The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
-The Aspire dashboard opens automatically in the browser, showing all resources and their status.
+The Aspire dashboard opens automatically in the browser at https://localhost:15000 (the same port for every demo), showing all resources and their status.
+
+### Use the web UI
+
+Open http://localhost:5504, pick a preset (Arrakis Minor, Glacius Prime or Eden Prime) or edit the survey, and choose **Plan colony**. The form is grouped as planet, conditions, resources (checkboxes plus the soil quality) and requirements. The page polls the plan endpoint every 2 seconds. The running view shows the planet analysis and structure selection as bars, then one lane per structure the orchestrator selected (type, priority and quantity), so the number of lanes differs per planet. Each lane sweeps as `PLANNING` until its specialist worker finishes and then shows `COMPLETE`, in whatever order the workers finish. Synthesis and timeline optimisation follow as two more bars. The result view shows the total construction days and the number of structures, a bar per construction phase scaled to the longest phase, expandable structure rows (materials, days, worker hours, prerequisites and specification), the materials table, and the success factors and risk assessment text.
+
+**Durable timeline.** A strip of beads under the progress heading shows the saved steps of the run: one bead per saved step (planet analysis, structure selection, one per structure planned, synthesis, timeline optimisation); the ghost beads for the expected total appear once the number of structures is known. A bead flashes `saved` when it appears while you watch. The strip is driven by the status the workflow reports, not by a timer.
+
+**Orbiting workers and building blocks.** A small planet is circled by one orbit ring per structure (at most 8 rings are drawn), and each ring turns while its structure is being planned and stops, with a solid dot, when its worker is done. Every lane also has a row of six building blocks that shimmer while the worker is planning and fill in when it finishes.
+
+**Show the crash.** Start a run, then stop only the ApiService resource `wf-app` while the run is going: use the Stop action for `wf-app` in the Aspire dashboard at https://localhost:15000, or run `aspire resource wf-app stop`. Within a few seconds (typically 5 to 7) the page shows `Subspace link lost: state is safe`, the current bead turns red, the beads freeze and a counter shows how long the link has been down. Start `wf-app` again (the dashboard, or `aspire resource wf-app start`). The page reports that the link is restored and how many checkpoints were saved, and the run continues with the saved steps kept. The step that was running at the moment of the crash is executed again. The animations respect the browser's reduced-motion setting and show the final state at once.
 
 ### Test with REST Client
 
 Open `SpaceColonyPlanner.ApiService/SpaceColonyPlanner.ApiService.http` in VS Code and execute the requests to plan different colonies. The ApiService HTTP port is shown in the Aspire dashboard.
 
+The status endpoint `GET /colony/plan/{instanceId}` returns `result` (the master plan, only when the workflow is `Completed`; this field was called `plan` before) and `progress` (the current stage and the list of structures with a `done` flag). An unknown instance ID returns 404.
+
 ### Inspect the Workflow runs
 
-Open the Diagrid Dev Dashboard at `http://localhost:18080` and inspect the workflow executions.
+Open the Diagrid Dapr Dev Dashboard at `http://localhost:9090` and inspect the workflow executions.
+
+## Inspect runs with the Diagrid Dapr Dev Dashboard
+
+The [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) is an optional local tool that finds the apps you start with `dapr run` or Aspire and shows their workflow instances (status and execution history), sidecars, components, subscriptions and logs.
+
+Install it once:
+
+- macOS / Linux:
+
+  ```shell
+  curl -sSL https://raw.githubusercontent.com/diagridio/dev-dashboard/main/scripts/install.sh | sh
+  ```
+
+- Windows (PowerShell):
+
+  ```powershell
+  iwr -useb https://raw.githubusercontent.com/diagridio/dev-dashboard/main/scripts/install.ps1 | iex
+  ```
+
+`aspire run` starts it as the `dapr-dev-dashboard` resource; open it from the Aspire dashboard or at http://localhost:9090. If it is not installed, only that resource fails to start; the app keeps running.

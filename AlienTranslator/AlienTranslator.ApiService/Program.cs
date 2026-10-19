@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Dapr.AI.Conversation.Extensions;
 using Dapr.Workflow;
+using Dapr.Workflow.Versioning;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -18,13 +19,8 @@ builder.Services.AddDaprConversationClient((_, clientBuilder) =>
 {
     clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
 });
-builder.Services.AddDaprWorkflow(options =>
-{
-    options.RegisterWorkflow<AlienTranslationWorkflow>();
-    options.RegisterActivity<TranslateActivity>();
-    options.RegisterActivity<RefineTranslationActivity>();
-    options.RegisterActivity<EvaluateTranslationActivity>();
-});
+builder.Services.AddDaprWorkflow();
+builder.Services.AddDaprWorkflowVersioning();
 
 var app = builder.Build();
 
@@ -54,20 +50,28 @@ app.MapGet("/translate/{instanceId}", async (
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     
-    if (state == null)
+    if (!state.Exists)
         return Results.NotFound();
-    
-    var result = state.ReadOutputAs<AlienTranslationWorkflowOutput>();
     
     return Results.Ok(new
     {
         instanceId,
         status = state.RuntimeStatus.ToString(),
-        result,
+        result = state.RuntimeStatus == WorkflowRuntimeStatus.Completed
+            ? state.ReadOutputAs<AlienTranslationWorkflowOutput>()
+            : null,
+        progress = ReadProgress(state),
         createdAt = state.CreatedAt,
-        completedAt = state.LastUpdatedAt
+        lastUpdatedAt = state.LastUpdatedAt
     });
 });
+
+// Instances persisted with an older, non-JSON-object custom status have no usable progress
+static TranslationProgress? ReadProgress(WorkflowState state)
+{
+    try { return state.ReadCustomStatusAs<TranslationProgress>(); }
+    catch (JsonException) { return null; }
+}
 
 app.MapDefaultEndpoints();
 

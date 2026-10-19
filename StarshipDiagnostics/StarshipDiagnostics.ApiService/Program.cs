@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Dapr.Client;
 using Dapr.Workflow;
+using Dapr.Workflow.Versioning;
 using Dapr.AI.Conversation.Extensions;
 using StarshipDiagnostics.Activities;
 using StarshipDiagnostics.Activities.Scanners;
@@ -17,25 +18,8 @@ builder.Services.AddDaprConversationClient((_, clientBuilder) =>
 {
     clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
 });
-builder.Services.AddDaprWorkflow(options =>
-{
-    options.RegisterWorkflow<ParallelDiagnosticsWorkflow>();
-
-    // Register scanner activities
-    options.RegisterActivity<HullIntegrityScanActivity>();
-    options.RegisterActivity<ReactorCoreScanActivity>();
-    options.RegisterActivity<NavigationScanActivity>();
-    options.RegisterActivity<LifeSupportScanActivity>();
-    options.RegisterActivity<WeaponsScanActivity>();
-
-    // Register voter activities
-    options.RegisterActivity<SafetyVoterActivity>();
-    options.RegisterActivity<SeverityVoterActivity>();
-    options.RegisterActivity<RecommendationVoterActivity>();
-
-    // Register aggregation
-    options.RegisterActivity<AggregateResultsActivity>();
-});
+builder.Services.AddDaprWorkflow();
+builder.Services.AddDaprWorkflowVersioning();
 
 var app = builder.Build();
 
@@ -69,14 +53,17 @@ app.MapGet("/ship/report/{instanceId}", async (
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
 
-    if (state == null)
+    if (!state.Exists)
         return Results.NotFound();
 
     return Results.Ok(new
     {
         instanceId,
         status = state.RuntimeStatus.ToString(),
-        result = state.ReadOutputAs<DiagnosticReport>(),
+        result = state.RuntimeStatus == WorkflowRuntimeStatus.Completed
+            ? state.ReadOutputAs<DiagnosticReport>()
+            : null,
+        progress = state.ReadCustomStatusAs<DiagnosticsProgress>(),
         createdAt = state.CreatedAt,
         lastUpdatedAt = state.LastUpdatedAt
     });

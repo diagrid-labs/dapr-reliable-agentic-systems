@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anomaly Classifier</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/lcars.css">
+  <link rel="stylesheet" href="css/demo.css">
+</head>
+<body data-view="idle">
+  <div class="frame">
+    <div class="corner-top"><span>01-4712</span></div>
+    <header class="bar-top">
+      <h1>Anomaly Classifier</h1>
+      <span class="stardate">Stardate <b id="stardate">--</b></span>
+    </header>
+
+    <nav class="sidebar" aria-hidden="true">
+      <div class="block b-lilac"><span>Sensor data</span></div>
+      <div class="block b-blue"><span>Routing</span></div>
+      <div class="block b-peach"><span>Analysis</span></div>
+      <div class="block b-salmon filler"><span>47-9120</span></div>
+    </nav>
+
+    <main class="main">
+      <div id="alert-banner" class="banner alert" role="alert" hidden>Red alert &mdash; bridge has been notified</div>
+      <div id="link-lost" class="banner warn" role="alert" hidden>Subspace link lost &mdash; retrying</div>
+
+      <section id="form-panel" class="panel">
+        <h2 tabindex="-1">Sensor input</h2>
+        <form id="demo-form" novalidate>
+          <div class="grid">
+            <label>Coordinates<input id="coordinates" type="text" required></label>
+            <label>Detected at<input id="detectedAt" type="text" required></label>
+          </div>
+          <label class="wide">Sensor data<textarea id="sensorData" rows="3" required></textarea></label>
+          <fieldset class="measure-set">
+            <legend>Measurements</legend>
+            <div id="measurements"></div>
+            <button type="button" id="add-measurement" class="pill p-blue">Add measurement</button>
+          </fieldset>
+          <p id="form-error" class="error" role="alert" hidden></p>
+          <div class="actions">
+            <button type="button" class="pill p-lilac" data-preset="temporal-rift">Temporal rift</button>
+            <button type="button" class="pill p-blue" data-preset="dark-matter">Dark matter</button>
+            <button type="button" class="pill p-sky" data-preset="alien-artifact">Alien artifact</button>
+            <button type="button" class="pill p-lilac" data-preset="stellar-phenomenon">Stellar phenomenon</button>
+            <button type="button" class="pill p-blue" data-preset="dimensional-tear">Dimensional tear</button>
+            <button type="submit" id="begin" class="pill p-orange go">Classify anomaly</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="findings-panel" class="panel">
+        <h2 tabindex="-1">Findings</h2>
+        <div class="risk"><span>Threat level</span><strong id="threat-level">--</strong></div>
+        <p id="findings-note" class="note" hidden></p>
+        <dl>
+          <dt>Anomaly type</dt><dd id="anomaly-type"></dd>
+          <dt>Classification</dt><dd id="classification"></dd>
+          <dt>Specialized analysis</dt><dd id="specialized-analysis"></dd>
+        </dl>
+        <table class="metrics">
+          <caption>Metrics</caption>
+          <thead><tr><th scope="col">Measure</th><th scope="col">Value</th></tr></thead>
+          <tbody id="metrics"></tbody>
+        </table>
+        <h3>Recommendations</h3>
+        <ul id="recommendations"></ul>
+        <div class="actions"><button type="button" id="new-analysis" class="pill p-orange">New analysis</button></div>
+      </section>
+
+      <section id="progress-panel" class="panel">
+        <h2 tabindex="-1">Routing <span id="run-status" class="status" aria-live="polite">--</span></h2>
+        <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
+        <p id="run-note" class="note" role="alert" hidden></p>
+        <div id="durable" class="durable" aria-hidden="true"></div>
+        <p id="durable-caption" class="durable-caption" role="status"></p>
+        <div class="classify">
+          <div id="classifier-node" class="node">
+            <span class="stage-name">Classifier<small>Classifying the sensor data</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+          </div>
+          <div id="arc" class="arc" aria-hidden="true">
+            <svg viewBox="0 0 100 56" focusable="false"><path class="arc-track" d="M8 50 A42 42 0 0 1 92 50" pathLength="100"/><path id="arc-fill" class="arc-fill" d="M8 50 A42 42 0 0 1 92 50" pathLength="100"/></svg>
+            <span id="arc-text" class="arc-text">--</span>
+          </div>
+        </div>
+        <p id="routing-note" class="note" aria-live="polite" hidden></p>
+        <div class="routing">
+          <div id="switch" class="switch" aria-hidden="true"><span id="lever" class="lever"></span></div>
+          <ol id="routing-board" aria-live="polite">
+            <li class="lane" data-type="TemporalRift">
+              <span class="stage-name">Temporal rift<small>Quantum chronodynamics</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+            <li class="lane" data-type="DarkMatterCluster">
+              <span class="stage-name">Dark matter cluster<small>Gravitational physics</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+            <li class="lane" data-type="AlienArtifact">
+              <span class="stage-name">Alien artifact<small>Xenoarchaeology</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+            <li class="lane" data-type="StellarPhenomenon">
+              <span class="stage-name">Stellar phenomenon<small>Astrophysics</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+            <li class="lane" data-type="DimensionalTear">
+              <span class="stage-name">Dimensional tear<small>Multiverse theory</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+          </ol>
+        </div>
+        <div id="restart-actions" class="actions"><button type="button" id="restart" class="pill p-orange">New analysis</button></div>
+      </section>
+    </main>
+
+    <div class="corner-bottom"><span>03-1701</span></div>
+    <footer class="bar-bottom">
+      <span id="link-indicator" class="link ok">Subspace link</span>
+      <a href="http://localhost:9090" target="_blank" rel="noopener">View in Dapr dashboard</a>
+    </footer>
+  </div>
+  <script type="module" src="js/engine.js"></script>
+</body>
+</html>

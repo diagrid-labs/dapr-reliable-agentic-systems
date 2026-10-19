@@ -53,3 +53,6 @@ public record AlienTranslationWorkflowOutput(
 public record TranslateInput(AlienText Text, Evaluation? PreviousFeedback, int Iteration);
 public record EvaluateInput(AlienText OriginalText, Translation CurrentTranslation);
 public record RefineInput(AlienText Text, Translation Current, Evaluation Feedback, int Iteration);
+
+public record IterationProgress(int Iteration, string TranslatedText, double OverallQuality, bool MeetsStandards);
+public record TranslationProgress(List<IterationProgress> Iterations, double Threshold, int MaxIterations);

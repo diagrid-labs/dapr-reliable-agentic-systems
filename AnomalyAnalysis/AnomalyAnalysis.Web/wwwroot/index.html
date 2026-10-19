@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anomaly Analysis</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/lcars.css">
+  <link rel="stylesheet" href="css/demo.css">
+</head>
+<body data-view="idle">
+  <div class="frame">
+    <div class="corner-top"><span>01-4712</span></div>
+    <header class="bar-top">
+      <h1>Anomaly Analysis</h1>
+      <span class="stardate">Stardate <b id="stardate">--</b></span>
+    </header>
+
+    <nav class="sidebar" aria-hidden="true">
+      <div class="block b-lilac"><span>Sensor data</span></div>
+      <div class="block b-blue"><span>Analysis</span></div>
+      <div class="block b-peach"><span>Findings</span></div>
+      <div class="block b-salmon filler"><span>47-9120</span></div>
+    </nav>
+
+    <main class="main">
+      <div id="alert-banner" class="banner alert" role="alert" hidden>Red alert &mdash; bridge has been notified</div>
+      <div id="link-lost" class="banner warn" role="alert" hidden>Subspace link lost &mdash; retrying</div>
+
+      <section id="form-panel" class="panel">
+        <h2 tabindex="-1">Sensor input</h2>
+        <form id="demo-form" novalidate>
+          <div class="grid">
+            <label>Coordinates<input id="coordinates" type="text" required></label>
+            <label>Detected at<input id="detectedAt" type="text" required></label>
+            <label>Subspace (THz)<input id="subspaceFrequency" type="number" step="any" required></label>
+            <label>Gravimetric (tesla)<input id="gravimetricDistortion" type="number" step="any" required></label>
+            <label>Temporal variance (%)<input id="temporalVariance" type="number" step="any" required></label>
+            <label>Radiation<input id="radiationLevel" type="number" step="any" required></label>
+          </div>
+          <label class="wide">Raw sensor log<textarea id="rawSensorData" rows="3" required></textarea></label>
+          <p id="form-error" class="error" role="alert" hidden></p>
+          <div class="actions">
+            <button type="button" class="pill p-lilac" data-preset="wormhole">Wormhole</button>
+            <button type="button" class="pill p-blue" data-preset="temporal-rift">Temporal rift</button>
+            <button type="button" class="pill p-sky" data-preset="quantum-flux">Quantum flux</button>
+            <button type="submit" id="begin" class="pill p-orange go">Begin analysis</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="findings-panel" class="panel">
+        <h2 tabindex="-1">Findings</h2>
+        <div class="risk"><span>Risk level</span><strong id="risk-level">--</strong></div>
+        <p id="findings-note" class="note" hidden></p>
+        <dl>
+          <dt>Classification</dt><dd id="anomaly-type"></dd>
+          <dt>Scientific analysis</dt><dd id="scientific-analysis"></dd>
+          <dt>Risk assessment</dt><dd id="risk-text"></dd>
+          <dt>Tactical recommendation</dt><dd id="tactical-recommendation"></dd>
+        </dl>
+        <div class="actions"><button type="button" id="new-analysis" class="pill p-orange">New analysis</button></div>
+      </section>
+
+      <section id="progress-panel" class="panel">
+        <h2 tabindex="-1">Analysis <span id="run-status" class="status" aria-live="polite">--</span></h2>
+        <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
+        <p id="run-note" class="note" role="alert" hidden></p>
+        <div id="durable" class="durable" aria-hidden="true"></div>
+        <p id="durable-caption" class="durable-caption" role="status"></p>
+        <div id="conduit" class="conduit" aria-hidden="true">
+          <div class="conduit-node" data-stage="ProcessSensorDataActivity"><span class="conduit-dot"></span><span class="conduit-label">Sensor</span><span class="conduit-out"></span></div>
+          <div class="conduit-node" data-stage="ClassifyAnomalyActivity"><span class="conduit-dot"></span><span class="conduit-label">Classify</span><span class="conduit-out"></span></div>
+          <div class="conduit-node" data-stage="ScientificAnalysisActivity"><span class="conduit-dot"></span><span class="conduit-label">Analyse</span><span class="conduit-out"></span></div>
+          <div class="conduit-node" data-stage="RiskAssessmentActivity"><span class="conduit-dot"></span><span class="conduit-label">Risk</span><span class="conduit-out"></span></div>
+          <div class="conduit-node" data-stage="GenerateRecommendationActivity"><span class="conduit-dot"></span><span class="conduit-label">Recommend</span><span class="conduit-out"></span></div>
+          <span class="conduit-packet"></span>
+        </div>
+        <ol id="stage-list" aria-live="polite">
+          <li data-stage="ProcessSensorDataActivity">
+            <span class="stage-name">01 Sensor data processing</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            <details class="stage-output" hidden><summary>Output</summary><pre></pre></details>
+          </li>
+          <li data-stage="ClassifyAnomalyActivity">
+            <span class="stage-name">02 Anomaly classification</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            <details class="stage-output" hidden><summary>Output</summary><pre></pre></details>
+          </li>
+          <li data-stage="ScientificAnalysisActivity">
+            <span class="stage-name">03 Scientific analysis</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            <details class="stage-output" hidden><summary>Output</summary><pre></pre></details>
+          </li>
+          <li data-stage="RiskAssessmentActivity">
+            <span class="stage-name">04 Risk assessment</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            <details class="stage-output" hidden><summary>Output</summary><pre></pre></details>
+          </li>
+          <li data-stage="GenerateRecommendationActivity">
+            <span class="stage-name">05 Tactical recommendation</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            <details class="stage-output" hidden><summary>Output</summary><pre></pre></details>
+          </li>
+        </ol>
+        <div id="restart-actions" class="actions"><button type="button" id="restart" class="pill p-orange">New analysis</button></div>
+      </section>
+    </main>
+
+    <div class="corner-bottom"><span>03-1701</span></div>
+    <footer class="bar-bottom">
+      <span id="link-indicator" class="link ok">Subspace link</span>
+      <a href="http://localhost:9090" target="_blank" rel="noopener">View in Dapr dashboard</a>
+    </footer>
+  </div>
+  <script type="module" src="js/engine.js"></script>
+</body>
+</html>

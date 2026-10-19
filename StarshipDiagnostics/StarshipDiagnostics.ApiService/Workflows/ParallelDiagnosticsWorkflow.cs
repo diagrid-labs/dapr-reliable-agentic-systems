@@ -20,32 +20,42 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
         WorkflowContext context,
         Starship input)
     {
-        // Specify independent scans to be run in parallel
-        var scanTasks = new List<Task<ScanResult>>
-        {
-            context.CallActivityAsync<ScanResult>(
-                nameof(HullIntegrityScanActivity),
-                input,
-                GetDefaultRetryPolicy()),
-            context.CallActivityAsync<ScanResult>(
-                nameof(ReactorCoreScanActivity),
-                input,
-                GetDefaultRetryPolicy()),
-            context.CallActivityAsync<ScanResult>(
-                nameof(NavigationScanActivity),
-                input,
-                GetDefaultRetryPolicy()),
-            context.CallActivityAsync<ScanResult>(
-                nameof(LifeSupportScanActivity),
-                input,
-                GetDefaultRetryPolicy()),
-            context.CallActivityAsync<ScanResult>(
-                nameof(WeaponsScanActivity),
-                input,
-                GetDefaultRetryPolicy())
-        };
+        var scans = new List<ScanProgress>();
+        var votesProgress = new List<VoteProgress>();
+        void Publish(string stage) =>
+            context.SetCustomStatus(new DiagnosticsProgress(stage, scans.ToList(), votesProgress.ToList()));
 
-        // Run the scans and wait for all scans to complete
+        Publish("Scanning");
+
+        // Specify independent scans to be run in parallel
+        var scanActivities = new[]
+        {
+            nameof(HullIntegrityScanActivity),
+            nameof(ReactorCoreScanActivity),
+            nameof(NavigationScanActivity),
+            nameof(LifeSupportScanActivity),
+            nameof(WeaponsScanActivity)
+        };
+        var scanTasks = scanActivities
+            .Select(activity => context.CallActivityAsync<ScanResult>(activity, input, GetDefaultRetryPolicy()))
+            .ToList();
+
+        // Publish each scan as it completes, the results keep the original order
+        var pending = scanTasks.ToList();
+        while (pending.Count > 0)
+        {
+            var done = await Task.WhenAny(pending);
+            pending.Remove(done);
+            var result = await done;
+            scans.Add(new ScanProgress(
+                scanActivities[scanTasks.IndexOf(done)],
+                result.SubsystemName,
+                result.Status,
+                result.HealthPercentage));
+            Publish("Scanning");
+        }
+
+        // All scans are complete here, this only collects the results in the original order
         var scanResults = await Task.WhenAll(scanTasks);
 
         // Identify critical findings that need voting
@@ -57,6 +67,8 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
 
         if (criticalFindings.Any())
         {
+            Publish("Voting");
+
             // VOTING: Multiple AI models vote on critical findings
             // Run votes in parallel for each critical finding
             foreach (var finding in criticalFindings)
@@ -91,8 +103,12 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
                     consensus,
                     agreement
                 ));
+                votesProgress.Add(new VoteProgress(finding.SubsystemName, consensus, agreement));
+                Publish("Voting");
             }
         }
+
+        Publish("Aggregating");
 
         // Aggregate all results
         var aggregationInput = new AggregateResultsInput(input.ShipId, scanResults.ToList(), voteResults);

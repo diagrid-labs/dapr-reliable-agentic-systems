@@ -1,0 +1,71 @@
+/* conduit: five stage nodes with a packet at the current stage (decorative, aria-hidden) */
+.conduit {
+  --at: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: 34px 0 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--blue);
+}
+.conduit-node { position: relative; text-align: center; min-width: 0; }
+.conduit-node:not(:first-of-type)::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: -50%;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: #2a2a2a;
+}
+.conduit-node.done::before { background: var(--blue); }
+.conduit-dot {
+  display: block;
+  position: relative;
+  width: 14px;
+  height: 14px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #000;
+  border: 2px solid #444;
+  transition: background-color 0.4s, border-color 0.4s;
+}
+.conduit-node.done .conduit-dot { background: var(--blue); border-color: var(--sky); }
+.conduit-node.current .conduit-dot { border-color: var(--sky); }
+.conduit-label { display: block; margin-top: 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--blue); }
+.conduit-node.done .conduit-label { color: var(--sky); }
+.conduit-out {
+  display: block;
+  min-height: 5.2em; /* 4 lines of 1.3 */
+  margin-top: 4px;
+  padding: 0 3px;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--sky);
+  overflow-wrap: anywhere;
+}
+.conduit-packet {
+  position: absolute;
+  top: 17px;
+  left: calc((var(--at) + 0.5) * 20%);
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
+  transform: rotate(45deg);
+  z-index: 1;
+  transition: left 0.7s ease-in-out;
+}
+.conduit[data-state="idle"] .conduit-packet { opacity: 0.5; }
+.conduit[data-state="running"] .conduit-packet { animation: conduit-pulse 1.2s ease-in-out infinite; }
+.conduit.snap .conduit-packet { transition: none; }
+.conduit[data-state="ended"] .conduit-packet { box-shadow: none; }
+
+@keyframes conduit-pulse { 50% { box-shadow: 0 0 2px var(--gold); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .conduit-packet, .conduit-dot { transition: none; animation: none !important; }
+}

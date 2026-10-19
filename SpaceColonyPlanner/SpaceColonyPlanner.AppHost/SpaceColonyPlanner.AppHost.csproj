@@ -1,19 +1,21 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.3.5">
+<Project Sdk="Aspire.AppHost.Sdk/13.6.1">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
     <UserSecretsId>a3ea5b66-0307-4282-b356-6c48a6d5d387</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SpaceColonyPlanner.ApiService\SpaceColonyPlanner.ApiService.csproj" />
+    <ProjectReference Include="..\SpaceColonyPlanner.Web\SpaceColonyPlanner.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.Valkey" Version="13.3.5" />
+    <PackageReference Include="Aspire.Hosting.Valkey" Version="13.6.1" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Dapr" Version="13.0.0" />
   </ItemGroup>
 

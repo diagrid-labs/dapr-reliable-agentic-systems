@@ -17,6 +17,17 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
         WorkflowContext context,
         AlienTranslationWorkflowInput input)
     {
+        // Republish history so the status is not empty right after ContinueAsNew
+        var iterations = input.Translations
+            .Zip(input.Evaluations)
+            .Select((x, i) => new IterationProgress(
+                i + 1, x.First.TranslatedText, x.Second.OverallQuality, x.Second.MeetsStandards))
+            .ToList();
+        if (iterations.Count > 0)
+        {
+            context.SetCustomStatus(new TranslationProgress(iterations.ToList(), QUALITY_THRESHOLD, MAX_ITERATIONS));
+        }
+
         Translation translation;
         if (input.Evaluations.Count == 0)
         {
@@ -46,7 +57,9 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
             GetDefaultRetryPolicy());
 
         var evaluations = input.Evaluations.Append(evaluation).ToList();
-        context.SetCustomStatus($"Evaluations: {evaluations.Count}");
+        iterations.Add(new IterationProgress(
+            iterations.Count + 1, translation.TranslatedText, evaluation.OverallQuality, evaluation.MeetsStandards));
+        context.SetCustomStatus(new TranslationProgress(iterations.ToList(), QUALITY_THRESHOLD, MAX_ITERATIONS));
 
         if (evaluation.MeetsStandards && evaluation.OverallQuality >= QUALITY_THRESHOLD)
         {
@@ -56,7 +69,7 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
                 evaluations,
                 translation,
                 evaluation,
-                input.Evaluations.Count,
+                evaluations.Count,
                 GenerateImprovementSummary(evaluations)
             );
         }

@@ -76,7 +76,7 @@ graph TD
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
 - [Aspire CLI](https://aspire.dev/get-started/install-cli/) — install with `dotnet tool install -g Aspire.Cli`
 - [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation)
-- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.17+)
+- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.18+)
 - [Ollama](https://ollama.com/) with the `llama3.2:3b` model pulled
 
 ### Start Ollama
@@ -84,6 +84,14 @@ graph TD
 ```bash
 ollama serve
 ollama pull llama3.2:3b
+```
+
+### Use OpenAI instead of Ollama
+
+The `Resources` folder of the AppHost also contains `conversation-openai.yaml` (model `gpt-4.1-mini`) and `env-secret.yaml` (an environment variable secret store). Both Conversation components are named `conversation`, so keep only one of them in `Resources`. To use OpenAI, remove the Ollama component file and set the API key before starting the app:
+
+```bash
+export OPENAI_API_KEY=<your-key>
 ```
 
 ### Run the Application
@@ -97,9 +105,20 @@ aspire run
 This launches the Aspire AppHost, which orchestrates:
 - A Valkey container for workflow state persistence (port 16379, password-protected)
 - The ApiService with a Dapr sidecar (app ID `alien-translator-app`)
-- The Diagrid Dev Dashboard container on http://localhost:18080
+- The `web` resource (LCARS web UI) on http://localhost:5501
+- The Diagrid Dapr Dev Dashboard (`dapr-dev-dashboard` resource) on http://localhost:9090
 
-The Aspire dashboard opens automatically in the browser, showing all resources and their status.
+The Aspire dashboard opens automatically in the browser at https://localhost:15000 (the same port for every demo), showing all resources and their status.
+
+### Use the web UI
+
+Open http://localhost:5501, pick a preset (Vulcan diplomatic, Klingon literary or Romulan casual) or edit the form, and choose **Translate**. The form takes the species (choose Other to type your own), the context, the original text, a list of known vocabulary (phrase and meaning rows; empty rows are ignored, a half-filled row or a duplicate phrase is an error) and optional cultural notes. The page polls the translate endpoint every 2 seconds. The running view is an iteration board: every finished iteration is a row with its quality bar (0 to 10, with a marker at the 8.0 threshold), the verdict `MEETS STANDARD` or `BELOW STANDARD` and an expandable translation, so you can watch the translation improve across the `ContinueAsNew` restarts. While the workflow runs, a `PROCESSING ITERATION n` row sweeps below the finished rows and a footer shows `ITERATION n / 5`. The result view shows the original text next to the final translation (with the translator's reasoning in an expandable), four score bars (accuracy, cultural nuance, idiomatic, overall), the strengths and weaknesses, the detailed feedback, the improvement summary and a small line chart of the overall quality per iteration (an iteration without a score has no dot and the line skips it). If the loop ended because it reached the maximum number of iterations, a `MANUAL REVIEW RECOMMENDED` note is shown.
+
+**Durable timeline.** A strip of beads under the progress heading shows the saved steps of the run: one bead per finished iteration, with ghost beads up to the iteration limit (5 unless the status reports another). A bead flashes `saved` when it appears while you watch. The strip is driven by the status the workflow reports, not by a timer.
+
+**Decoded translation preview and quality gauge.** When an iteration row appears while you watch, its translation text decodes character by character from scrambled glyphs (the final translation in the result view decodes the same way), the quality bar fills from 0 to the real score and the `MEETS STANDARD` / `BELOW STANDARD` verdict fades in after it. Rows that were already there when the page first rendered appear instantly.
+
+**Show the crash.** Start a run, then stop only the ApiService resource `wf-app` while the run is going: use the Stop action for `wf-app` in the Aspire dashboard at https://localhost:15000, or run `aspire resource wf-app stop`. Within a few seconds (typically 5 to 7) the page shows `Subspace link lost: state is safe`, the current bead turns red, the beads freeze and a counter shows how long the link has been down. Start `wf-app` again (the dashboard, or `aspire resource wf-app start`). The page reports that the link is restored and how many checkpoints were saved, and the run continues with the saved steps kept. The step that was running at the moment of the crash is executed again. The animations respect the browser's reduced-motion setting and show the final state at once.
 
 ### Test with REST Client
 
@@ -107,4 +126,24 @@ Open `AlienTranslator.ApiService/AlienTranslator.ApiService.http` in VS Code and
 
 ### Inspect the Workflow runs
 
-Open the Diagrid Dev Dashboard at `http://localhost:18080` and inspect the workflow executions.
+Open the Diagrid Dapr Dev Dashboard at `http://localhost:9090` and inspect the workflow executions.
+
+## Inspect runs with the Diagrid Dapr Dev Dashboard
+
+The [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) is an optional local tool that finds the apps you start with `dapr run` or Aspire and shows their workflow instances (status and execution history), sidecars, components, subscriptions and logs.
+
+Install it once:
+
+- macOS / Linux:
+
+  ```shell
+  curl -sSL https://raw.githubusercontent.com/diagridio/dev-dashboard/main/scripts/install.sh | sh
+  ```
+
+- Windows (PowerShell):
+
+  ```powershell
+  iwr -useb https://raw.githubusercontent.com/diagridio/dev-dashboard/main/scripts/install.ps1 | iex
+  ```
+
+`aspire run` starts it as the `dapr-dev-dashboard` resource; open it from the Aspire dashboard or at http://localhost:9090. If it is not installed, only that resource fails to start; the app keeps running.

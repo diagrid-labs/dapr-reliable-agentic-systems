@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Dapr.Workflow;
+using Dapr.Workflow.Versioning;
 using AnomalyAnalysis.Models;
 using AnomalyAnalysis.Workflows;
 using AnomalyAnalysis.Activities;
@@ -13,16 +14,8 @@ builder.Services.AddDaprConversationClient((_, clientBuilder) =>
 {
     clientBuilder.UseTimeout(TimeSpan.FromMinutes(4));
 });
-builder.Services.AddDaprWorkflow(options =>
-{
-    options.RegisterWorkflow<AnomalyAnalysisWorkflow>();
-    options.RegisterActivity<ProcessSensorDataActivity>();
-    options.RegisterActivity<ClassifyAnomalyActivity>();
-    options.RegisterActivity<ScientificAnalysisActivity>();
-    options.RegisterActivity<RiskAssessmentActivity>();
-    options.RegisterActivity<GenerateRecommendationActivity>();
-    options.RegisterActivity<AlertBridgeActivity>();
-});
+builder.Services.AddDaprWorkflow();
+builder.Services.AddDaprWorkflowVersioning();
 
 var app = builder.Build();
 
@@ -49,14 +42,17 @@ app.MapGet("/anomaly/status/{instanceId}", async (
 {
     var state = await workflowClient.GetWorkflowStateAsync(instanceId);
     
-    if (state == null)
+    if (!state.Exists)
         return Results.NotFound();
     
     return Results.Ok(new
     {
         instanceId,
         status = state.RuntimeStatus.ToString(),
-        result = state.ReadOutputAs<AnalysisResult>(),
+        result = state.RuntimeStatus == WorkflowRuntimeStatus.Completed
+            ? state.ReadOutputAs<AnalysisResult>()
+            : null,
+        progress = state.ReadCustomStatusAs<List<AnalysisStage>>(),
         createdAt = state.CreatedAt,
         lastUpdatedAt = state.LastUpdatedAt
     });
