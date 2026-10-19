@@ -31,6 +31,7 @@ demos:
         command: cd AnomalyAnalysis
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
+        autoExecute: true
         terminalId: aspire-run
       - action: executeTerminalCommand
         command: aspire run
@@ -49,17 +50,14 @@ demos:
   - id: scene-mkb26t53-hukh
     title: Start workflow
     steps:
-      - action: highlight
-        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/AnomalyAnalysis.ApiService.http
-        position: '3'
-        highlightWholeLine: true
+      - action: showInfoMessage
+        message: Open the Aspire Dashboard and click the URL of the web resource to open the Spatial Anomaly Analysis UI, then start the workflow
     icons:
       start: arrow-right
       end: ''
   - id: scene-mkpe5m83-bjuh
     title: Program.cs
     steps:
-      - action: close
       - action: open
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
   - id: scene-mkb26rj9-stw7
@@ -83,7 +81,7 @@ demos:
       start: code
       end: ''
   - id: demo-mpkw6pc4-8hzl
-    title: Inspect worklfow state
+    title: Inspect workflow state
     steps:
       - action: showInfoMessage
         message: Open the Diagrid Dev Dashboard
@@ -96,9 +94,9 @@ demos:
       - action: focusTerminal
         terminalId: aspire-run
       - action: sendKeybinding
-        keybinding: ctrl+C
+        keybinding: ctrl+c
       - action: waitForTimeout
-        timeout: 200
+        timeout: 500
       - action: executeTerminalCommand
         command: cd ..
         autoExecute: true

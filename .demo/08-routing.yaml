@@ -31,6 +31,7 @@ demos:
         command: cd GalacticAnomalyClassifier
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
+        autoExecute: true
         terminalId: aspire-run
       - action: executeTerminalCommand
         command: aspire run
@@ -49,17 +50,14 @@ demos:
   - id: scene-mkb28qaj-1wp1
     title: Start workflow
     steps:
-      - action: highlight
-        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/GalacticAnomalyClassifier.ApiService.http
-        position: '2'
-        highlightWholeLine: true
+      - action: showInfoMessage
+        message: Open the Aspire Dashboard and click the URL of the web resource to open the Galactic Anomaly Classifier UI, then start the workflow
     icons:
       start: arrow-right
       end: ''
   - id: scene-mkb28oma-vekn
     title: AnomalyRoutingWorkflow
     steps:
-      - action: close
       - action: highlight
         path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
         position: '8'
@@ -91,9 +89,9 @@ demos:
       - action: focusTerminal
         terminalId: aspire-run
       - action: sendKeybinding
-        keybinding: ctrl+b
+        keybinding: ctrl+c
       - action: waitForTimeout
-        timeout: 200
+        timeout: 500
       - action: executeTerminalCommand
         command: cd ..
         autoExecute: true

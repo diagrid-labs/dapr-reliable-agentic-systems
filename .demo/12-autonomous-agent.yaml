@@ -31,8 +31,8 @@ demos:
         command: cd SpaceDebrisAgent
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
-        terminalId: aspire-run
         autoExecute: true
+        terminalId: aspire-run
       - action: executeTerminalCommand
         command: aspire run
         terminalId: aspire-run
@@ -50,17 +50,14 @@ demos:
   - id: scene-mkb3nkrx-8xbi
     title: Start workflow
     steps:
-      - action: highlight
-        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/SpaceDebrisAgent.ApiService.http
-        position: '3'
-        highlightWholeLine: true
+      - action: showInfoMessage
+        message: Open the Aspire Dashboard and click the URL of the web resource to open the Space Debris Agent UI, then start the workflow
     icons:
       start: arrow-right
       end: ''
   - id: scene-mkb3njij-6q2d
     title: SpaceDebrisCleanupWorkflow
     steps:
-      - action: close
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
         position: '8'
@@ -94,13 +91,14 @@ demos:
       - action: sendKeybinding
         keybinding: ctrl+c
       - action: waitForTimeout
-        timeout: 2000
+        timeout: 500
       - action: executeTerminalCommand
         command: cd ..
+        autoExecute: true
         terminalId: aspire-run
     icons:
       start: terminal
-      end: close
+      end: ''
   - title: Autonomous Agent Pros/Cons
     id: scene-mkvn9pni-m9uh
     steps:

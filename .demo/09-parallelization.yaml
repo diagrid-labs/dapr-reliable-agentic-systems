@@ -31,8 +31,8 @@ demos:
         command: cd StarshipDiagnostics
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
-        terminalId: aspire-run
         autoExecute: true
+        terminalId: aspire-run
       - action: executeTerminalCommand
         command: aspire run
         terminalId: aspire-run
@@ -50,17 +50,14 @@ demos:
   - id: scene-mkb2ctl7-haoq
     title: Start workflow
     steps:
-      - action: highlight
-        path: StarshipDiagnostics/StarshipDiagnostics.ApiService/StarshipDiagnostics.ApiService.http
-        position: '2'
-        highlightWholeLine: true
+      - action: showInfoMessage
+        message: Open the Aspire Dashboard and click the URL of the web resource to open the Starship Diagnostics UI, then start the workflow
     icons:
       start: arrow-right
       end: ''
   - id: scene-mkb2csbu-w72k
     title: ParallelDiagnosticsWorkflow
     steps:
-      - action: close
       - action: highlight
         path: StarshipDiagnostics/StarshipDiagnostics.ApiService/Workflows/ParallelDiagnosticsWorkflow.cs
         position: '9'
@@ -94,7 +91,7 @@ demos:
       - action: sendKeybinding
         keybinding: ctrl+c
       - action: waitForTimeout
-        timeout: 200
+        timeout: 500
       - action: executeTerminalCommand
         command: cd ..
         autoExecute: true

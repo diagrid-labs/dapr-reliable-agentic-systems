@@ -31,8 +31,8 @@ demos:
         command: cd SpaceColonyPlanner
         insertTypingMode: character-by-character
         insertTypingSpeed: 75
-        terminalId: aspire-run
         autoExecute: true
+        terminalId: aspire-run
       - action: executeTerminalCommand
         command: aspire run
         terminalId: aspire-run
@@ -50,17 +50,14 @@ demos:
   - id: scene-mkb32l72-xbfd
     title: Start workflow
     steps:
-      - action: highlight
-        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/SpaceColonyPlanner.ApiService.http
-        position: '3'
-        highlightWholeLine: true
+      - action: showInfoMessage
+        message: Open the Aspire Dashboard and click the URL of the web resource to open the Space Colony Planner UI, then start the workflow
     icons:
       start: arrow-right
       end: ''
   - id: scene-mkb32jje-lewd
     title: ColonyOrchestratorWorkflow
     steps:
-      - action: close
       - action: highlight
         path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
         position: '8'
@@ -94,7 +91,7 @@ demos:
       - action: sendKeybinding
         keybinding: ctrl+c
       - action: waitForTimeout
-        timeout: 200
+        timeout: 500
       - action: executeTerminalCommand
         command: cd ..
         autoExecute: true
