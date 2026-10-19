@@ -12,12 +12,14 @@ graph TD
     Router -.->|MiningFacility| W4[PlanMiningFacilityActivity]
     Router -.->|ResearchLab| W5[PlanResearchLabActivity]
     Router -.->|DefenseSystem| W6[PlanDefenseSystemActivity]
+    Router -.->|Unknown| W7[UnknownStructureActivity]
     W1 --> Gather[Task.WhenAll - Gather Worker Results]
     W2 --> Gather
     W3 --> Gather
     W4 --> Gather
     W5 --> Gather
     W6 --> Gather
+    W7 --> Gather
     Gather --> A3[SynthesizePlanActivity]
     A3 --> A4[OptimizeTimelineActivity]
     A4 --> End([Return ColonyMasterPlan])
@@ -32,4 +34,5 @@ graph TD
     style W4 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
     style W5 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
     style W6 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
+    style W7 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
 ```

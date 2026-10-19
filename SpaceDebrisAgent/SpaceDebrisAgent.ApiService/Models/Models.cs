@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace SpaceDebrisAgent.Models;
 
 public record MissionParameters(
@@ -58,9 +60,20 @@ public record HumanApproval(
     string Reason
 );
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum MissionOutcome
+{
+    Completed,
+    MaxStepsReached,
+    AbortedDisapproved,
+    AbortedApprovalTimeout,
+    AbortedFuelExhausted
+}
+
 public record MissionResult(
     string MissionId,
     bool Success,
+    MissionOutcome Outcome,
     int DebrisCaptured,
     double FuelUsed,
     int TotalSteps,

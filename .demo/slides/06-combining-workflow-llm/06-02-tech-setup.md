@@ -8,6 +8,6 @@ layout: default
 - Docker Desktop
    - Dapr services
    - Valkey
-   - Diagrid Dev Dashboard
 - .NET 10 with Aspire
-- Ollama LLM server with Llama3.2 model (3B parameters)
+- Diagrid Dapr Dev Dashboard
+- OpenAI (via a Dapr component)

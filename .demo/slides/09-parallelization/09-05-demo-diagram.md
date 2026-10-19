@@ -15,7 +15,8 @@ graph TD
     S4 --> Gather
     S5 --> Gather
     Gather --> Gate{Critical Findings?}
-    Gate -->|Yes| Vote{Parallel Voting}
+    Gate -->|Yes| Next[Next Critical Finding]
+    Next --> Vote{Parallel Voting}
     Gate -->|No| Aggregate[AggregateResultsActivity]
     Vote -->|Parallel| V1[SafetyVoterActivity]
     Vote -->|Parallel| V2[SeverityVoterActivity]
@@ -23,13 +24,16 @@ graph TD
     V1 --> GatherVotes[Gather Votes]
     V2 --> GatherVotes
     V3 --> GatherVotes
-    GatherVotes --> Aggregate
+    GatherVotes --> More{More Critical Findings?}
+    More -->|Yes| Next
+    More -->|No| Aggregate
     Aggregate --> End([Return DiagnosticReport])
     
     style Start fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
     style End fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
     style Parallel fill:#F0C75E,stroke:#b8943f,color:#0a0a0a
     style Gate fill:#F0C75E,stroke:#b8943f,color:#0a0a0a
+    style More fill:#F0C75E,stroke:#b8943f,color:#0a0a0a
     style Vote fill:#F0C75E,stroke:#b8943f,color:#0a0a0a
     style S1 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
     style S2 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6

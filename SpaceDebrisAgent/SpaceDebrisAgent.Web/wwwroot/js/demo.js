@@ -304,9 +304,20 @@ function counter(id, value, unit = "") {
   $(id).textContent = number === null ? "--" : `${number}${unit}`;
 }
 
+// result.outcome decides the label; aborted outcomes name their reason and raise the red alert, max steps does not
+const OUTCOMES = {
+  Completed: { label: "Mission complete" },
+  MaxStepsReached: { label: "Max steps reached", note: "Maximum steps reached — the mission ended before the agent finished, see summary" },
+  AbortedDisapproved: { label: "Mission aborted: approval denied", alert: "Red alert — mission aborted: approval denied" },
+  AbortedApprovalTimeout: { label: "Mission aborted: approval timed out", alert: "Red alert — mission aborted: approval timed out" },
+  AbortedFuelExhausted: { label: "Mission aborted: fuel exhausted", alert: "Red alert — mission aborted: fuel exhausted" },
+};
+const ABORTED = { label: "Mission aborted", alert: "Red alert — mission aborted" };
+
 function renderResult(result) {
-  const success = result.success === true;
-  $("mission-outcome").textContent = success ? "Mission complete" : "Mission aborted";
+  const outcome = (Object.hasOwn(OUTCOMES, result.outcome) ? OUTCOMES[result.outcome] : null) ?? (result.success === true ? OUTCOMES.Completed : ABORTED);
+  $("mission-outcome").textContent = outcome.label;
+  if (outcome.alert) $("alert-banner").textContent = outcome.alert;
   counter("debris-captured", result.debrisCaptured);
   const fuel = num(result.fuelUsed);
   counter("fuel-used", fuel === null ? null : Number(fuel.toFixed(1)), " kg");
@@ -343,7 +354,7 @@ function renderResult(result) {
   });
   $("result-tools").replaceChildren(...tools);
 
-  return { alert: !success, note: success ? undefined : "Mission aborted — see summary" };
+  return { alert: Boolean(outcome.alert), note: outcome.alert ? "Mission aborted — see summary" : outcome.note };
 }
 
 $("approve").addEventListener("click", () => sendApproval(true));

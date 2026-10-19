@@ -69,13 +69,14 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             return new MissionResult(
                 input.MissionParameters.MissionId,
                 Success: true,
+                Outcome: MissionOutcome.Completed,
                 DebrisCaptured: agentState.CapturedDebris.Count,
                 FuelUsed: input.MissionParameters.FuelBudget - agentState.FuelRemaining,
                 TotalSteps: input.MissionParameters.StepNumber + 1,
                 Decisions: decisions,
                 ToolCalls: input.ToolCalls,
                 Summary: finalReport,
-                LessonsLearned: ExtractLessons(decisions, input.ToolCalls)
+                LessonsLearned: ExtractLessons(input.ToolCalls)
             );
         }
 
@@ -93,6 +94,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 new ApprovalWait(context.CurrentUtcDateTime, decision.ActionParameters), usage));
 
             HumanApproval approval;
+            var timedOut = false;
             try
             {
                 // Wait for external event with 5 minute timeout
@@ -101,6 +103,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             catch (TaskCanceledException)
             {
                 // Timeout - default to disapproved
+                timedOut = true;
                 approval = new HumanApproval(
                     Approved: false,
                     Reason: "Approval timeout - no response within 5 minutes"
@@ -126,13 +129,16 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 return new MissionResult(
                     input.MissionParameters.MissionId,
                     Success: false,
+                    Outcome: timedOut ? MissionOutcome.AbortedApprovalTimeout : MissionOutcome.AbortedDisapproved,
                     DebrisCaptured: agentState.CapturedDebris.Count,
-                    FuelUsed: input.MissionParameters.FuelBudget,
+                    FuelUsed: input.MissionParameters.FuelBudget - agentState.FuelRemaining,
                     TotalSteps: input.MissionParameters.StepNumber + 1,
                     Decisions: decisions,
                     ToolCalls: input.ToolCalls,
-                    Summary: "Mission aborted - human disapproval received",
-                    LessonsLearned: ExtractLessons(decisions, input.ToolCalls)
+                    Summary: timedOut
+                        ? "Mission aborted - approval timed out, no response within 5 minutes"
+                        : "Mission aborted - human disapproval received",
+                    LessonsLearned: ExtractLessons(input.ToolCalls)
                 );
             }
         }
@@ -182,13 +188,14 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             return new MissionResult(
                 input.MissionParameters.MissionId,
                 Success: false,
+                Outcome: MissionOutcome.AbortedFuelExhausted,
                 DebrisCaptured: agentState.CapturedDebris.Count,
                 FuelUsed: input.MissionParameters.FuelBudget,
                 TotalSteps: input.MissionParameters.StepNumber + 1,
                 Decisions: decisions,
                 ToolCalls: toolCalls,
                 Summary: "Mission aborted - fuel exhausted",
-                LessonsLearned: ExtractLessons(decisions, toolCalls)
+                LessonsLearned: ExtractLessons(toolCalls)
             );
         }
 
@@ -198,13 +205,14 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             return new MissionResult(
                 input.MissionParameters.MissionId,
                 Success: false,
+                Outcome: MissionOutcome.MaxStepsReached,
                 DebrisCaptured: agentState.CapturedDebris.Count,
                 FuelUsed: input.MissionParameters.FuelBudget - agentState.FuelRemaining,
                 TotalSteps: input.MissionParameters.StepNumber + 1,
                 Decisions: decisions,
                 ToolCalls: toolCalls,
                 Summary: "Mission incomplete - maximum steps reached",
-                LessonsLearned: ExtractLessons(decisions, toolCalls)
+                LessonsLearned: ExtractLessons(toolCalls)
             );
         }
 
@@ -312,9 +320,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         return newState;
     }
     
-    private List<string> ExtractLessons(
-        List<AgentDecision> decisions, 
-        List<ToolCall> toolCalls)
+    private List<string> ExtractLessons(List<ToolCall> toolCalls)
     {
         var lessons = new List<string>();
         
@@ -323,13 +329,6 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         if (failures.Any())
         {
             lessons.Add($"Encountered {failures.Count} tool failures - improve error handling");
-        }
-        
-        // Analyze efficiency
-        var avgSteps = decisions.Count;
-        if (avgSteps > 30)
-        {
-            lessons.Add("High step count - optimize planning efficiency");
         }
         
         return lessons;

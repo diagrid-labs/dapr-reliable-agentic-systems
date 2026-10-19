@@ -61,16 +61,22 @@ graph TD
     T4 --> Update
     T5 --> Update
     T6 --> Wait[WaitForExternalEvent: HumanApproval]
-    Wait --> Update
+    Wait --> Approved{Approved?}
+    Approved -->|Yes| Update
+    Approved -->|No| Denied([Aborted: Approval Denied])
+    Approved -->|5 min timeout| TimedOut([Aborted: Approval Timed Out])
     Update --> Check{Failure Conditions?}
-    Check -->|Fuel Exhausted| Fail([Mission Aborted])
-    Check -->|Max Steps| Fail
+    Check -->|Fuel Exhausted| Exhausted([Aborted: Fuel Exhausted])
+    Check -->|Max Steps| MaxSteps([Max Steps Reached])
     Check -->|Continue| ContinueAsNew[ContinueAsNew: Next Step]
     ContinueAsNew --> A1
     
     style Start fill:#e1f5ff
     style End fill:#d4edda
-    style Fail fill:#f8d7da
+    style Denied fill:#f8d7da
+    style TimedOut fill:#f8d7da
+    style Exhausted fill:#f8d7da
+    style MaxSteps fill:#fff3cd
     style Router fill:#fff3cd
     style Check fill:#fff3cd
     style T1 fill:#cfe2ff

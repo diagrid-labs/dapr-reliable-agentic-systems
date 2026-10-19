@@ -13,23 +13,33 @@ graph TD
     Router -->|CHECK_FUEL| T4[CheckFuelActivity]
     Router -->|CAPTURE_DEBRIS| T5[CaptureDebrisActivity]
     Router -->|REQUEST_HUMAN_APPROVAL| T6[RequestHumanApprovalActivity]
+    Router -->|Unknown action| T7[Failed ToolCall: UNKNOWN]
     T1 --> Update[UpdateAgentState]
     T2 --> Update
     T3 --> Update
     T4 --> Update
     T5 --> Update
+    T7 --> Update
     T6 --> Wait[WaitForExternalEvent: HumanApproval]
-    Wait --> Update
+    Wait --> Approved{Approved?}
+    Approved -->|Yes| Update
+    Approved -->|No| Denied([Aborted: Approval Denied])
+    Approved -->|5 min timeout| TimedOut([Aborted: Approval Timed Out])
     Update --> Check{Failure Conditions?}
-    Check -->|Fuel Exhausted| Fail([Mission Aborted])
-    Check -->|Max Steps| Fail
+    Check -->|Fuel Exhausted| Exhausted([Aborted: Fuel Exhausted])
+    Check -->|Max Steps| MaxSteps([Max Steps Reached])
     Check -->|Continue| ContinueAsNew[ContinueAsNew: Next Step]
     ContinueAsNew --> A1
     
     style Start fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
     style End fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
-    style Fail fill:#c84444,stroke:#8a2a2a,color:#ffffff
+    style Denied fill:#c84444,stroke:#8a2a2a,color:#ffffff
+    style TimedOut fill:#c84444,stroke:#8a2a2a,color:#ffffff
+    style Exhausted fill:#c84444,stroke:#8a2a2a,color:#ffffff
+    style MaxSteps fill:#F0C75E,stroke:#b8943f,color:#0a0a0a
     style Router fill:#F0C75E,stroke:#b8943f,color:#0a0a0a
+    style Approved fill:#F0C75E,stroke:#b8943f,color:#0a0a0a
+    style T7 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
     style Check fill:#F0C75E,stroke:#b8943f,color:#0a0a0a
     style T1 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
     style T2 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6

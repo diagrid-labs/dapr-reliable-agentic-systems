@@ -33,7 +33,7 @@ var response = await _conversationClient.ConverseAsync(
       }
     })
   ],
-  new ConversationOptions("myconversation")
+  new ConversationOptions("conversation")
   {
     Temperature = 0.7
   }
@@ -50,16 +50,17 @@ layout: default
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: myconversation
+  name: conversation
 spec:
   type: conversation.openai
+  version: v1
   metadata:
-  - name: key
-    value: <mykey>
-  - name: model
-    value: gpt-4-turbo
-  - name: endpoint
-    value: 'https://api.openai.com/v1'
-  - name: cacheTTL
-    value: 10m
+    - name: key
+      secretKeyRef:
+        name: OPENAI_API_KEY
+        key: OPENAI_API_KEY
+    - name: model
+      value: gpt-4.1-mini
+auth:
+  secretStore: envsecretstore
 ```

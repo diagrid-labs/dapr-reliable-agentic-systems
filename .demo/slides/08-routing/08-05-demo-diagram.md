@@ -10,11 +10,13 @@ graph TD
     Router -->|Alien Artifact| A4[AnalyzeAlienArtifactActivity]
     Router -->|Stellar Phenomenon| A5[AnalyzeStellarPhenomenonActivity]
     Router -->|Dimensional Tear| A6[AnalyzeDimensionalTearActivity]
+    Router -->|Unknown| A7[Default Analysis: no activity]
     A2 --> End([Return Analysis Result])
     A3 --> End
     A4 --> End
     A5 --> End
     A6 --> End
+    A7 --> End
     
     style Start fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
     style End fill:#41BD9B,stroke:#2d8a70,color:#0a0a0a
@@ -24,4 +26,5 @@ graph TD
     style A4 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
     style A5 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
     style A6 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
+    style A7 fill:#1f3a32,stroke:#41BD9B,color:#e6e6e6
 ```

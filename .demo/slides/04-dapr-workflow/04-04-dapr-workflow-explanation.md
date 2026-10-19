@@ -71,10 +71,10 @@ public class MyWorkflow : Workflow<Input, Output>
 # Workflow Activity example
 
 ```csharp
-public class MyActivity1 : Activity<Input, string>
+public class MyActivity1 : WorkflowActivity<Input, string>
 {
     public override async Task<string> RunAsync(
-        ActivityContext context, Input input)
+        WorkflowActivityContext context, Input input)
     {
         var response = await CallLLMAsync(input);
         return response;
