@@ -76,6 +76,47 @@ export function finishReveals() {
   for (const finish of [...pendingReveals.values()]) finish();
 }
 
+// 12345 -> "12,345"; anything that is not a finite number counts as 0
+export const formatTokens = (n) => (Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0).toLocaleString("en-US");
+
+const counters = new WeakMap();
+
+// Moves the integer shown in el from its current value up to target in `ms` (ease-out). Instant on the first
+// render of a run, with reduced motion, when ms <= 0, or when target is not above the current value.
+// Calling it again with the same target changes nothing, so identical polls do not touch the DOM.
+export function countTo(el, target, { ms = 600 } = {}) {
+  if (!el) return;
+  const goal = Number.isFinite(target) ? Math.max(0, Math.floor(target)) : 0;
+  let state = counters.get(el);
+  if (!state) counters.set(el, (state = { value: 0, target: null, frame: 0 }));
+  if (state.target === goal && !(ms <= 0 && state.frame)) return;
+  cancelAnimationFrame(state.frame);
+  state.frame = 0;
+  state.target = goal;
+  const from = state.value;
+  const write = (value) => {
+    state.value = value;
+    const shown = formatTokens(value);
+    if (el.textContent !== shown) el.textContent = shown;
+  };
+  if (!runState.animate || reducedMotion() || !(ms > 0) || goal <= from || !el.isConnected) return write(goal);
+
+  const startedAt = performance.now();
+  const step = (now) => {
+    const t = Math.min(1, (now - startedAt) / ms);
+    write(t >= 1 ? goal : from + Math.round((goal - from) * (1 - (1 - t) ** 3)));
+    state.frame = t < 1 ? requestAnimationFrame(step) : 0;
+  };
+  state.frame = requestAnimationFrame(step);
+}
+
+// forgets the displayed value (run reset); the caller writes the placeholder text
+export function clearCount(el) {
+  const state = counters.get(el);
+  if (state) cancelAnimationFrame(state.frame);
+  counters.delete(el);
+}
+
 // the LLM answers in markdown-flavoured text; show it as plain text
 export const clean = (text) => String(text ?? "").replace(/\*\*/g, "").replace(/^#+\s*/gm, "").trim();
 

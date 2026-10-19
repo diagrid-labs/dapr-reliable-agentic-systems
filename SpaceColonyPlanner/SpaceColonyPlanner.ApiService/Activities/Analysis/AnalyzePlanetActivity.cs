@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace SpaceColonyPlanner.Activities.Analysis;
 
-public class AnalyzePlanetActivity : WorkflowActivity<Planet, PlanetAnalysis>
+public class AnalyzePlanetActivity : WorkflowActivity<Planet, Metered<PlanetAnalysis>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -17,7 +17,7 @@ public class AnalyzePlanetActivity : WorkflowActivity<Planet, PlanetAnalysis>
         _conversationClient = conversationClient;
     }
     
-    public override async Task<PlanetAnalysis> RunAsync(
+    public override async Task<Metered<PlanetAnalysis>> RunAsync(
         WorkflowActivityContext context, 
         Planet input)
     {
@@ -80,13 +80,13 @@ Resources:
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new PlanetAnalysis(
+        return new Metered<PlanetAnalysis>(new PlanetAnalysis(
             JsonSerializer.Deserialize<List<string>>(
                 json.GetProperty("challenges").GetRawText())!,
             JsonSerializer.Deserialize<List<string>>(
                 json.GetProperty("opportunities").GetRawText())!,
             json.GetProperty("recommendedApproach").GetString()!
-        );
+        ), response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

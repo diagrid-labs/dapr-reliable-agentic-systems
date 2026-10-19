@@ -123,7 +123,7 @@ Add the project to the `.sln` and as a `ProjectReference` in the AppHost csproj.
 
 ### Common look and feel
 
-Same LCARS language as the reference (palette variables, Antonio, elbows, pills, stage bars, pulsing alert, reduced-motion). Per demo only these change: the page title and header text, the three sidebar labels and decorative numbers, which alert state exists (Red Alert is used where the demo has a danger outcome), and the panels in the main area. Every demo has the same footer (link indicator, "View in Dapr dashboard" to `http://localhost:9090`), the same view model (`idle` form, `running`, `completed`, `failed`) and the same restart button.
+Same LCARS language as the reference (palette variables, Antonio, elbows, pills, stage bars, pulsing alert, reduced-motion). Per demo only these change: the page title and header text, the three sidebar labels and decorative numbers, which alert state exists (Red Alert is used where the demo has a danger outcome), and the panels in the main area. Every demo has the same footer (link indicator, "View in Dapr dashboard" to `http://localhost:9090/workflows`), the same view model (`idle` form, `running`, `completed`, `failed`) and the same restart button.
 
 ## Step 0 — put AnomalyAnalysis on the engine/demo split
 

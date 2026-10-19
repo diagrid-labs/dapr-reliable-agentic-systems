@@ -24,3 +24,5 @@ public record AnalysisResult(
     string RiskLevel,
     string TacticalRecommendation
 );
+
+public record AnalysisProgress(List<AnalysisStage> Stages, TokenUsage Usage);

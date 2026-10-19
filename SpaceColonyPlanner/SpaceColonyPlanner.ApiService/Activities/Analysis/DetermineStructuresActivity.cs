@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace SpaceColonyPlanner.Activities.Analysis;
 
-public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresInput, List<StructureRequest>>
+public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresInput, Metered<List<StructureRequest>>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -17,7 +17,7 @@ public class DetermineStructuresActivity : WorkflowActivity<DetermineStructuresI
         _conversationClient = conversationClient;
     }
     
-    public override async Task<List<StructureRequest>> RunAsync(
+    public override async Task<Metered<List<StructureRequest>>> RunAsync(
         WorkflowActivityContext context, 
         DetermineStructuresInput input)
     {
@@ -101,7 +101,7 @@ What structures are needed?")
             ));
         }
         
-        return result;
+        return new Metered<List<StructureRequest>>(result, response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

@@ -3,14 +3,14 @@ using SpaceColonyPlanner.Models;
 
 namespace SpaceColonyPlanner.Activities.Workers;
 
-public class PlanDefenseSystemActivity : WorkflowActivity<WorkerInput, StructurePlan>
+public class PlanDefenseSystemActivity : WorkflowActivity<WorkerInput, Metered<StructurePlan>>
 {
-    public override Task<StructurePlan> RunAsync(
+    public override Task<Metered<StructurePlan>> RunAsync(
         WorkflowActivityContext context, 
         WorkerInput input)
     {
         // Simplified defense system plan
-        return Task.FromResult(new StructurePlan(
+        return Task.FromResult(new Metered<StructurePlan>(new StructurePlan(
             "DefenseSystem",
             input.Request.Quantity,
             ["Defensive perimeter sensors", "Shield generators", "Automated defense turrets", "Command center"],
@@ -18,6 +18,6 @@ public class PlanDefenseSystemActivity : WorkflowActivity<WorkerInput, Structure
             12000,
             ["Power supply", "Communication network", "Strategic positioning"],
             "Integrated defense system with early warning sensors, energy shields, and automated response capabilities."
-        ));
+        ), TokenUsage.Zero));
     }
 }

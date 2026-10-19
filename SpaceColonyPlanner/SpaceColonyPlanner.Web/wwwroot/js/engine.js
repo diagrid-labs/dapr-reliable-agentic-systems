@@ -10,12 +10,14 @@
 //   elapsed, run-note, restart, form-panel, progress-panel, findings-panel (each panel has an h2),
 //   plus buttons with data-preset.
 // Optional ids (skipped when missing): stardate, alert-banner, new-analysis, findings-note,
-//   durable (checkpoint strip, aria-hidden), durable-caption (role="status", outside #durable).
+//   durable (checkpoint strip, aria-hidden), durable-caption (role="status", outside #durable),
+//   tokens-total, tokens-detail (token readout in the progress panel, aria-hidden), findings-tokens (final total with prompt/completion detail, plain text).
+//   The readout comes from progress.usage { promptTokens, completionTokens, totalTokens }; missing or null means 0 ("--").
 // Optional demo hooks: stardate(), onPolled(state), resetUi(),
 //   messages: { refused(status), notFound, ended(status) } (each a string or a function),
 //   checkpoints(status, progress): { done: number, total: number | null } (the strip and its captions need it).
 import demo from "./demo.js";
-import { $, runState, finishReveals } from "./util.js";
+import { $, runState, finishReveals, formatTokens, countTo, clearCount } from "./util.js";
 
 const POLL_MS = 2000;
 const RETRY_MS = 5000;
@@ -88,6 +90,8 @@ let durable = { prev: null, done: 0, total: null, active: true, lostAt: null };
 const flashTimers = new Map();
 let captionTimer;
 let downTimer;
+// highest usage seen in this run: a stale or lower poll never moves the readout down
+let usage = { total: 0, prompt: 0, completion: 0 };
 
 function setView(view) {
   if (document.body.dataset.view !== view) document.body.dataset.view = view;
@@ -125,6 +129,7 @@ function resetRun() {
   finishReveals();
   runState.animate = false;
   resetDurable();
+  resetUsage();
   lastProgress = null;
   showAlert(false);
   setHidden($("link-lost"), true);
@@ -237,6 +242,7 @@ async function poll(instanceId, token, notFound) {
   guard(() => demo.renderProgress(state.status, lastProgress));
   guard(() => demo.onPolled?.(state));
   renderDurable(state.status, lastProgress);
+  guard(() => renderUsage(lastProgress, TERMINAL.includes(state.status)));
   setText($("run-status"), state.status);
 
   // only renders after the first successful one animate (that includes its finish); nothing animates once ended
@@ -460,6 +466,35 @@ function endDurable() {
   setStripState("ended");
   drawStrip();
   updateDown();
+}
+
+// --- token readout: counts up to the last polled total, never down ---
+
+function resetUsage() {
+  usage = { total: 0, prompt: 0, completion: 0 };
+  for (const id of ["tokens-total", "tokens-detail", "findings-tokens"]) {
+    const element = $(id);
+    if (element) clearCount(element);
+  }
+  if ($("tokens-detail")) setText($("tokens-detail"), "");
+  show("findings-tokens", "");
+  if ($("tokens-total")) setText($("tokens-total"), "--");
+}
+
+function renderUsage(progress, terminal) {
+  const read = progress?.usage;
+  const prompt = count(read?.promptTokens) ?? 0;
+  const completion = count(read?.completionTokens) ?? 0;
+  const total = count(read?.totalTokens) || prompt + completion;
+  if (total > usage.total) usage = { total, prompt, completion };
+  const detail = usage.total ? `prompt ${formatTokens(usage.prompt)} · completion ${formatTokens(usage.completion)}` : "";
+  if ($("tokens-total")) {
+    if (usage.total) countTo($("tokens-total"), usage.total, terminal ? { ms: 0 } : undefined);
+    else setText($("tokens-total"), "--");
+  }
+  if ($("tokens-detail")) setText($("tokens-detail"), detail);
+  // plain text, set once the run ended, so it is announced together with the findings
+  if (terminal) show("findings-tokens", usage.total ? `${formatTokens(usage.total)} (${detail})` : "--");
 }
 
 // also exposed for manual checks from the browser console

@@ -15,7 +15,7 @@ public record ArtifactAnalysis(
     string HostilityIndicators
 );
 
-public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, ArtifactAnalysis>
+public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Metered<ArtifactAnalysis>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -24,7 +24,7 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
         _conversationClient = conversationClient;
     }
     
-    public override async Task<ArtifactAnalysis> RunAsync(
+    public override async Task<Metered<ArtifactAnalysis>> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
@@ -75,14 +75,16 @@ public class AnalyzeAlienArtifactActivity : WorkflowActivity<SpaceAnomaly, Artif
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new ArtifactAnalysis(
-            json.GetProperty("analysis").GetString()!,
-            JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("xenoarchaeologyData").GetString()!)!,
-            JsonSerializer.Deserialize<List<string>>(
-                json.GetProperty("extractionProcedures").GetRawText())!,
-            json.GetProperty("hostilityIndicator").GetString()!
-        );
+        return new Metered<ArtifactAnalysis>(
+            new ArtifactAnalysis(
+                json.GetProperty("analysis").GetString()!,
+                JsonSerializer.Deserialize<Dictionary<string, object>>(
+                    json.GetProperty("xenoarchaeologyData").GetString()!)!,
+                JsonSerializer.Deserialize<List<string>>(
+                    json.GetProperty("extractionProcedures").GetRawText())!,
+                json.GetProperty("hostilityIndicator").GetString()!
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

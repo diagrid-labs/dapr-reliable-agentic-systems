@@ -34,4 +34,4 @@ public record AnalysisResult(
     string ThreatLevel
 );
 
-public record RoutingProgress(string Stage, string? Type, double? Confidence);
+public record RoutingProgress(string Stage, string? Type, double? Confidence, TokenUsage Usage);

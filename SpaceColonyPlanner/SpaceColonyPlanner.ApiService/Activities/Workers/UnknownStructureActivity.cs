@@ -3,7 +3,7 @@ using SpaceColonyPlanner.Models;
 
 namespace SpaceColonyPlanner.Activities.Workers;
 
-public class UnknownStructureActivity : WorkflowActivity<WorkerInput, StructurePlan>
+public class UnknownStructureActivity : WorkflowActivity<WorkerInput, Metered<StructurePlan>>
 {
     private readonly ILogger<UnknownStructureActivity> _logger;
 
@@ -12,7 +12,7 @@ public class UnknownStructureActivity : WorkflowActivity<WorkerInput, StructureP
         _logger = logger;
     }
 
-    public override Task<StructurePlan> RunAsync(
+    public override Task<Metered<StructurePlan>> RunAsync(
         WorkflowActivityContext context,
         WorkerInput input)
     {
@@ -35,6 +35,6 @@ public class UnknownStructureActivity : WorkflowActivity<WorkerInput, StructureP
                 $"Original reasoning: {input.Request.Reasoning}"
         );
 
-        return Task.FromResult(plan);
+        return Task.FromResult(new Metered<StructurePlan>(plan, TokenUsage.Zero));
     }
 }

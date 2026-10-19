@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace SpaceColonyPlanner.Activities.Analysis;
 
-public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, ColonyMasterPlan>
+public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Metered<ColonyMasterPlan>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -17,7 +17,7 @@ public class SynthesizePlanActivity : WorkflowActivity<SynthesizePlanInput, Colo
         _conversationClient = conversationClient;
     }
     
-    public override async Task<ColonyMasterPlan> RunAsync(
+    public override async Task<Metered<ColonyMasterPlan>> RunAsync(
         WorkflowActivityContext context, 
         SynthesizePlanInput input)
     {
@@ -97,7 +97,7 @@ Create phased construction plan.")
             ));
         }
         
-        return new ColonyMasterPlan(
+        return new Metered<ColonyMasterPlan>(new ColonyMasterPlan(
             input.PlanetId,
             input.StructurePlans,
             timeline.Sum(p => p.DurationDays),
@@ -105,7 +105,7 @@ Create phased construction plan.")
             timeline,
             json.GetProperty("successFactors").GetString()!,
             json.GetProperty("riskAssessment").GetString()!
-        );
+        ), response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

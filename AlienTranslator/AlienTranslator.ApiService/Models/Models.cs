@@ -9,7 +9,8 @@ public enum ContextType
 public record AlienTranslationWorkflowInput(
     AlienText AlienText,
     List<Translation> Translations,
-    List<Evaluation> Evaluations
+    List<Evaluation> Evaluations,
+    TokenUsage? Usage = null
 );
 
 public record AlienText(
@@ -55,4 +56,4 @@ public record EvaluateInput(AlienText OriginalText, Translation CurrentTranslati
 public record RefineInput(AlienText Text, Translation Current, Evaluation Feedback, int Iteration);
 
 public record IterationProgress(int Iteration, string TranslatedText, double OverallQuality, bool MeetsStandards);
-public record TranslationProgress(List<IterationProgress> Iterations, double Threshold, int MaxIterations);
+public record TranslationProgress(List<IterationProgress> Iterations, double Threshold, int MaxIterations, TokenUsage Usage);

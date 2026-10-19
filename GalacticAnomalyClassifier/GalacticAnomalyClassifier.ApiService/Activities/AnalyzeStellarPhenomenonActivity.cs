@@ -15,7 +15,7 @@ public record StellarAnalysis(
     string RadiationLevel
 );
 
-public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, StellarAnalysis>
+public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, Metered<StellarAnalysis>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -24,7 +24,7 @@ public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, S
         _conversationClient = conversationClient;
     }
     
-    public override async Task<StellarAnalysis> RunAsync(
+    public override async Task<Metered<StellarAnalysis>> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
@@ -75,14 +75,16 @@ public class AnalyzeStellarPhenomenonActivity : WorkflowActivity<SpaceAnomaly, S
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new StellarAnalysis(
-            json.GetProperty("analysis").GetString()!,
-            JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("astrophysicsData").GetString()!)!,
-            JsonSerializer.Deserialize<List<string>>(
-                json.GetProperty("observationProtocols").GetRawText())!,
-            json.GetProperty("radiationLevel").GetString()!
-        );
+        return new Metered<StellarAnalysis>(
+            new StellarAnalysis(
+                json.GetProperty("analysis").GetString()!,
+                JsonSerializer.Deserialize<Dictionary<string, object>>(
+                    json.GetProperty("astrophysicsData").GetString()!)!,
+                JsonSerializer.Deserialize<List<string>>(
+                    json.GetProperty("observationProtocols").GetRawText())!,
+                json.GetProperty("radiationLevel").GetString()!
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

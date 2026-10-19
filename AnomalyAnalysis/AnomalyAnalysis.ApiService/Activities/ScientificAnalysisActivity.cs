@@ -1,10 +1,11 @@
 using Dapr.Workflow;
+using AnomalyAnalysis.Models;
 using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.ConversationRoles;
 
 namespace AnomalyAnalysis.Activities;
 
-public class ScientificAnalysisActivity : WorkflowActivity<ScientificAnalysisInput, string>
+public class ScientificAnalysisActivity : WorkflowActivity<ScientificAnalysisInput, Metered<string>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -13,7 +14,7 @@ public class ScientificAnalysisActivity : WorkflowActivity<ScientificAnalysisInp
         _conversationClient = conversationClient;
     }
     
-    public override async Task<string> RunAsync(
+    public override async Task<Metered<string>> RunAsync(
         WorkflowActivityContext context, 
         ScientificAnalysisInput input)
     {
@@ -46,7 +47,9 @@ public class ScientificAnalysisActivity : WorkflowActivity<ScientificAnalysisInp
             ],
             conversationOptions);
         
-        return response.Outputs.First().Choices.First().Message.Content;
+        return new Metered<string>(
+            response.Outputs.First().Choices.First().Message.Content,
+            response.ToUsage());
     }
 }
 

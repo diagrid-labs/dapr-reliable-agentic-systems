@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace SpaceDebrisAgent.Activities.Tools;
 
-public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, object>, DebrisField>
+public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, object>, Metered<DebrisField>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -17,7 +17,7 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
         _conversationClient = conversationClient;
     }
     
-    public override async Task<DebrisField> RunAsync(
+    public override async Task<Metered<DebrisField>> RunAsync(
         WorkflowActivityContext context, 
         Dictionary<string, object> parameters)
     {
@@ -67,8 +67,10 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
             ],
             options);
         
-        return JsonSerializer.Deserialize<DebrisField>(
-            response.Outputs.First().Choices.First().Message.Content)!;
+        return new Metered<DebrisField>(
+            JsonSerializer.Deserialize<DebrisField>(
+                response.Outputs.First().Choices.First().Message.Content)!,
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

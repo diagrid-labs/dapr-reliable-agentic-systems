@@ -75,7 +75,8 @@ function stardate() {
 }
 
 // the last entry per stage name wins, for the stage list and the conduit alike
-const byStage = (progress) => new Map((Array.isArray(progress) ? progress : []).map((stage) => [stage?.stageName, stage]));
+const stagesOf = (progress) => (Array.isArray(progress?.stages) ? progress.stages : Array.isArray(progress) ? progress : []);
+const byStage = (progress) => new Map(stagesOf(progress).map((stage) => [stage?.stageName, stage]));
 
 function renderProgress(status, progress) {
   const done = byStage(progress);
@@ -150,7 +151,7 @@ function resetConduit() {
 }
 
 // one checkpoint per finished stage
-const checkpoints = (status, progress) => ({ done: Array.isArray(progress) ? progress.length : 0, total: 5 });
+const checkpoints = (status, progress) => ({ done: stagesOf(progress).length, total: 5 });
 
 // riskLevel is a full assessment: pick the level out of it for the pill
 function riskLabel(text) {

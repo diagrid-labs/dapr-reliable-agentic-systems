@@ -22,8 +22,9 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
     {
         var scans = new List<ScanProgress>();
         var votesProgress = new List<VoteProgress>();
+        var usage = TokenUsage.Zero;
         void Publish(string stage) =>
-            context.SetCustomStatus(new DiagnosticsProgress(stage, scans.ToList(), votesProgress.ToList()));
+            context.SetCustomStatus(new DiagnosticsProgress(stage, scans.ToList(), votesProgress.ToList(), usage));
 
         Publish("Scanning");
 
@@ -37,7 +38,7 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
             nameof(WeaponsScanActivity)
         };
         var scanTasks = scanActivities
-            .Select(activity => context.CallActivityAsync<ScanResult>(activity, input, GetDefaultRetryPolicy()))
+            .Select(activity => context.CallActivityAsync<Metered<ScanResult>>(activity, input, GetDefaultRetryPolicy()))
             .ToList();
 
         // Publish each scan as it completes, the results keep the original order
@@ -46,7 +47,9 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
         {
             var done = await Task.WhenAny(pending);
             pending.Remove(done);
-            var result = await done;
+            var metered = await done;
+            var result = metered.Value;
+            usage += metered.Usage;
             scans.Add(new ScanProgress(
                 scanActivities[scanTasks.IndexOf(done)],
                 result.SubsystemName,
@@ -56,7 +59,7 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
         }
 
         // All scans are complete here, this only collects the results in the original order
-        var scanResults = await Task.WhenAll(scanTasks);
+        var scanResults = (await Task.WhenAll(scanTasks)).Select(m => m.Value).ToList();
 
         // Identify critical findings that need voting
         var criticalFindings = scanResults
@@ -74,23 +77,25 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
             foreach (var finding in criticalFindings)
             {
                 // Parallel voting - 3 different AI perspectives
-                var voteTasks = new List<Task<KeyValuePair<string, string>>>
+                var voteTasks = new List<Task<Metered<KeyValuePair<string, string>>>>
                 {
-                    context.CallActivityAsync<KeyValuePair<string, string>>(
+                    context.CallActivityAsync<Metered<KeyValuePair<string, string>>>(
                         nameof(SafetyVoterActivity),
                         finding,
                         GetDefaultRetryPolicy()),
-                    context.CallActivityAsync<KeyValuePair<string, string>>(
+                    context.CallActivityAsync<Metered<KeyValuePair<string, string>>>(
                         nameof(SeverityVoterActivity),
                         finding,
                         GetDefaultRetryPolicy()),
-                    context.CallActivityAsync<KeyValuePair<string, string>>(
+                    context.CallActivityAsync<Metered<KeyValuePair<string, string>>>(
                         nameof(RecommendationVoterActivity),
                         finding,
                         GetDefaultRetryPolicy())
                 };
 
-                var votes = await Task.WhenAll(voteTasks);
+                var metered = await Task.WhenAll(voteTasks);
+                usage = metered.Aggregate(usage, (sum, m) => sum + m.Usage);
+                var votes = metered.Select(m => m.Value);
 
                 // Aggregate votes
                 var voteDict = votes.ToDictionary(v => v.Key, v => v.Value);

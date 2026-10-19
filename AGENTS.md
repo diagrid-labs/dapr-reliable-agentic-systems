@@ -21,6 +21,7 @@ You are a proficient C# .NET & Web developer with extensive experience in buildi
 - Code is written in C# using ASP.NET Core minimal API style.
 - Keep code small and modular. Do not introduce unnecessary new classes or files.
 - Dapr Workflow is used for orchestrating business logic and orchestration across services.
+- Activities that call the LLM (`ConverseAsync`) return `Metered<T>(Value, Usage)` with `Usage` built by `response.ToUsage()` (`Models/TokenUsage.cs`). The workflow sums the usage and publishes it as `usage` (`promptTokens`, `completionTokens`, `totalTokens`) in its custom status; the status endpoint returns it as `progress.usage`. Activities that do not call the LLM but share a dispatch type with ones that do (the non-LLM SpaceColonyPlanner workers) return `Metered<T>` with `TokenUsage.Zero`.
 - The Program.cs file for the workflow application contains a `start` POST endpoint that uses the DaprWorkflowClient to start a new workflow instance. It also contains a `get` GET endpoint to retrieve the status of a workflow instance by its ID.
 - For each HTTP endpoint in the Program.cs, a corresponding endpoint is added in a `<Name>.ApiService.http` file that the VSCode REST client can use.
 - Do not comment every class or method. Only add comments where calculations are made or where the logic is complex.
@@ -31,4 +32,5 @@ You are a proficient C# .NET & Web developer with extensive experience in buildi
 - Keep front-end code simple and lightweight.
 - Use vanilla JavaScript unless a specific library is requested.
 - Do not use any front-end frameworks like React, Angular, or Vue.js unless explicitly requested.
+- The token readout is optional: the shared `engine.js` reads `progress.usage` generically and renders it into the ids `tokens-total`, `tokens-detail` and `findings-tokens` when they exist in a demo's `index.html`. The list of shared files below is unchanged.
 - Animations in the web UIs are driven by real workflow data (no timer-driven fake progress), respect `prefers-reduced-motion`, and keep decorative elements out of live regions (`aria-hidden`). The shared files (`engine.js`, `util.js`, `lcars.css` and the YARP `appsettings.json`) are copied identically into every demo; this duplication across the Aspire projects is intended, so if one changes, change all six and compare them with `md5`.

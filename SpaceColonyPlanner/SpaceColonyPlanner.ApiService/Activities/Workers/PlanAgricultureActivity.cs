@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace SpaceColonyPlanner.Activities.Workers;
 
-public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePlan>
+public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, Metered<StructurePlan>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -16,7 +16,7 @@ public class PlanAgricultureActivity : WorkflowActivity<WorkerInput, StructurePl
         _conversationClient = conversationClient;
     }
     
-    public override async Task<StructurePlan> RunAsync(
+    public override async Task<Metered<StructurePlan>> RunAsync(
         WorkflowActivityContext context, 
         WorkerInput input)
     {
@@ -74,7 +74,9 @@ Design food production system.")
             ],
             conversationOptions);
         
-        return ParseStructurePlan(response.Outputs.First().Choices.First().Message.Content);
+        return new Metered<StructurePlan>(
+            ParseStructurePlan(response.Outputs.First().Choices.First().Message.Content),
+            response.ToUsage());
     }
     
     private static StructurePlan ParseStructurePlan(string jsonContent)

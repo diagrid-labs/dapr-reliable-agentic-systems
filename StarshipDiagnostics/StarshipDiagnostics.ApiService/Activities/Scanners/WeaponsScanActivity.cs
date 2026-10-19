@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace StarshipDiagnostics.Activities.Scanners;
 
-public class WeaponsScanActivity : WorkflowActivity<Starship, ScanResult>
+public class WeaponsScanActivity : WorkflowActivity<Starship, Metered<ScanResult>>
 {
     private readonly DaprConversationClient _conversationClient;
 
@@ -16,7 +16,7 @@ public class WeaponsScanActivity : WorkflowActivity<Starship, ScanResult>
         _conversationClient = conversationClient;
     }
 
-    public override async Task<ScanResult> RunAsync(
+    public override async Task<Metered<ScanResult>> RunAsync(
         WorkflowActivityContext context,
         Starship input)
     {
@@ -69,7 +69,9 @@ Scan tactical systems:")
             ],
             conversationOptions);
 
-        return ParseScanResult("Tactical Systems", response.Outputs.First().Choices.First().Message.Content);
+        return new Metered<ScanResult>(
+            ParseScanResult("Tactical Systems", response.Outputs.First().Choices.First().Message.Content),
+            response.ToUsage());
     }
 
     private ScanResult ParseScanResult(string subsystem, string jsonContent)
