@@ -226,7 +226,7 @@ The whole palette switches to salmon/red, the header reads `RED ALERT`, the risk
 ### Other suggestions (optional)
 
 - A thin "SUBSPACE LINK" indicator in the footer bar, green while polling succeeds, amber on retries.
-- A "VIEW IN DAPR DASHBOARD" pill linking to `http://localhost:9090`, to connect the UI to the Dev Dashboard in demos.
+- A "VIEW IN DAPR DASHBOARD" pill linking to `http://localhost:9090/workflows`, to connect the UI to the Dev Dashboard in demos.
 - A tiny `LCARS` easter egg: clicking the header elbow cycles between the TNG palette and a "nemesis" (blue/violet) palette.
 
 ## Documentation updates
@@ -240,7 +240,7 @@ The whole palette switches to salmon/red, the header reads `RED ALERT`, the risk
 1. `dotnet build AnomalyAnalysis.sln` succeeds.
 2. `aspire run` shows the `web` resource healthy and the URL opens the LCARS page.
 3. Manual run: starting the wormhole preset shows five stages filling in order, then the findings; a critical preset shows Red Alert; reloading mid-run is out of scope (the instance ID is not persisted).
-4. Compare with the Diagrid Dapr Dev Dashboard (http://localhost:9090): the same instance ID with matching stage outputs.
+4. Compare with the Diagrid Dapr Dev Dashboard (http://localhost:9090/workflows): the same instance ID with matching stage outputs.
 5. Check the browser console for errors and that no server text is injected as HTML.
 
 The repository has no automated test projects, so no unit tests are added.

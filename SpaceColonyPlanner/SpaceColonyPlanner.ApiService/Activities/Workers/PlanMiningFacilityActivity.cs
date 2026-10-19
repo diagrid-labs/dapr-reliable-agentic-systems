@@ -4,14 +4,14 @@ using System.Text.Json;
 
 namespace SpaceColonyPlanner.Activities.Workers;
 
-public class PlanMiningFacilityActivity : WorkflowActivity<WorkerInput, StructurePlan>
+public class PlanMiningFacilityActivity : WorkflowActivity<WorkerInput, Metered<StructurePlan>>
 {
-    public override Task<StructurePlan> RunAsync(
+    public override Task<Metered<StructurePlan>> RunAsync(
         WorkflowActivityContext context, 
         WorkerInput input)
     {
         // Simplified mining facility plan
-        return Task.FromResult(new StructurePlan(
+        return Task.FromResult(new Metered<StructurePlan>(new StructurePlan(
             "MiningFacility",
             input.Request.Quantity,
             ["Mining equipment", "Ore processing units", "Storage silos", "Transport systems"],
@@ -19,6 +19,6 @@ public class PlanMiningFacilityActivity : WorkflowActivity<WorkerInput, Structur
             15000,
             ["Power supply", "Access roads", "Water supply"],
             "Automated mining and processing facility for resource extraction with minimal human oversight."
-        ));
+        ), TokenUsage.Zero));
     }
 }

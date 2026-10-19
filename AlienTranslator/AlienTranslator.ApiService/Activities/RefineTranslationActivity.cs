@@ -5,7 +5,7 @@ using Dapr.Workflow;
 using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
-public class RefineTranslationActivity : WorkflowActivity<RefineInput, Translation>
+public class RefineTranslationActivity : WorkflowActivity<RefineInput, Metered<Translation>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -14,7 +14,7 @@ public class RefineTranslationActivity : WorkflowActivity<RefineInput, Translati
         _conversationClient = conversationClient;
     }
     
-    public override async Task<Translation> RunAsync(
+    public override async Task<Metered<Translation>> RunAsync(
         WorkflowActivityContext context, 
         RefineInput input)
     {
@@ -82,12 +82,14 @@ Provide an improved translation that addresses the weaknesses while preserving t
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
 
-        return new Translation(
-            input.Iteration,
-            json.GetProperty("translation").GetString()!,
-            json.GetProperty("reasoning").GetString()!,
-            DateTime.UtcNow
-        );
+        return new Metered<Translation>(
+            new Translation(
+                input.Iteration,
+                json.GetProperty("translation").GetString()!,
+                json.GetProperty("reasoning").GetString()!,
+                DateTime.UtcNow
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

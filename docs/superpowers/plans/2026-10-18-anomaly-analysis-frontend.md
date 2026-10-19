@@ -124,7 +124,7 @@ Run `aspire run`; `aspire describe` shows `web` as `Running`/`Healthy` at `http:
   - Form `#anomaly-form` with inputs `#coordinates`, `#detectedAt`, `#subspaceFrequency`, `#gravimetricDistortion`, `#temporalVariance`, `#radiationLevel`, `#rawSensorData`, submit button `#begin`, preset buttons `button[data-preset="wormhole|temporal-rift|quantum-flux"]`
   - Progress: `#progress-panel` containing `<ol id="stage-list">` with five `<li data-stage="ProcessSensorDataActivity|ClassifyAnomalyActivity|ScientificAnalysisActivity|RiskAssessmentActivity|GenerateRecommendationActivity">`, each with `.stage-name`, `.stage-bar`, `.stage-state`, `.stage-output`; plus `#instance-id`, `#run-status`, `#elapsed`
   - Findings: `#findings-panel` with `#anomaly-type`, `#risk-level`, `#scientific-analysis`, `#tactical-recommendation`, `#new-analysis` button
-  - Footer: `#link-indicator`, `#link-lost` banner, link to `http://localhost:9090` ("View in Dapr Dashboard")
+  - Footer: `#link-indicator`, `#link-lost` banner, link to `http://localhost:9090/workflows` ("View in Dapr Dashboard")
   - Panel visibility via `data-view` on `<body>`: `idle | running | completed | failed`; Red Alert via `body.red-alert`.
 
 - [ ] **Step 1: Write `index.html`** with the structure above: top bar with elbow, left sidebar with decorative number blocks and labels (SENSOR DATA, ANALYSIS, FINDINGS), main area with the three panels. Static labels in the five `<li>` use the display names (SENSOR DATA PROCESSING, ANOMALY CLASSIFICATION, SCIENTIFIC ANALYSIS, RISK ASSESSMENT, TACTICAL RECOMMENDATION).
@@ -161,7 +161,7 @@ Expected: each view shows the right panels, no horizontal scroll at 768 px width
 - [ ] **Step 3: Verify the happy path**
 
 Run `aspire run` with a working conversation component (keep only one of `conversation.yaml` / `conversation-openai.yaml` in `AnomalyAnalysis.AppHost/Resources`; for OpenAI export `OPENAI_API_KEY`). Open `http://localhost:5501/`, click the wormhole preset, then "Begin analysis".
-Expected: the view switches to running, the five stages complete in order with expandable output, the view then switches to completed with all four findings filled; the same instance ID appears in the Dev Dashboard at `http://localhost:9090`.
+Expected: the view switches to running, the five stages complete in order with expandable output, the view then switches to completed with all four findings filled; the same instance ID appears in the Dev Dashboard at `http://localhost:9090/workflows`.
 
 - [ ] **Step 4: Verify the Review Focus cases**
 

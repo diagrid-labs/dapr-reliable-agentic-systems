@@ -5,7 +5,7 @@ using Dapr.Workflow;
 using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
-public class TranslateActivity : WorkflowActivity<TranslateInput, Translation>
+public class TranslateActivity : WorkflowActivity<TranslateInput, Metered<Translation>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -14,7 +14,7 @@ public class TranslateActivity : WorkflowActivity<TranslateInput, Translation>
         _conversationClient = conversationClient;
     }
     
-    public override async Task<Translation> RunAsync(
+    public override async Task<Metered<Translation>> RunAsync(
         WorkflowActivityContext context, 
         TranslateInput input)
     {
@@ -73,12 +73,14 @@ Provide your translation and explain your reasoning for important translation ch
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new Translation(
-            input.Iteration,
-            json.GetProperty("translation").GetString()!,
-            json.GetProperty("reasoning").GetString()!,
-            DateTime.UtcNow
-        );
+        return new Metered<Translation>(
+            new Translation(
+                input.Iteration,
+                json.GetProperty("translation").GetString()!,
+                json.GetProperty("reasoning").GetString()!,
+                DateTime.UtcNow
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

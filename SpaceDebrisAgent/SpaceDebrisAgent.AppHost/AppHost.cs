@@ -34,6 +34,7 @@ builder
 
 builder.AddExecutable("dapr-dev-dashboard", "diagrid-dev-dashboard", ".",
         "--port", "9090", "--no-open")
-    .WithHttpEndpoint(port: 9090, isProxied: false);
+    .WithHttpEndpoint(port: 9090, isProxied: false)
+    .WithUrlForEndpoint("http", url => url.Url = "http://localhost:9090/workflows");
 
 builder.Build().Run();

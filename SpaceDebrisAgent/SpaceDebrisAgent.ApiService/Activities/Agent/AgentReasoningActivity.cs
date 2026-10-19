@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace SpaceDebrisAgent.Activities.Agent;
 
-public class AgentReasoningActivity : WorkflowActivity<ReasoningInput, AgentDecision>
+public class AgentReasoningActivity : WorkflowActivity<ReasoningInput, Metered<AgentDecision>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -17,7 +17,7 @@ public class AgentReasoningActivity : WorkflowActivity<ReasoningInput, AgentDeci
         _conversationClient = conversationClient;
     }
     
-    public override async Task<AgentDecision> RunAsync(
+    public override async Task<Metered<AgentDecision>> RunAsync(
         WorkflowActivityContext context, 
         ReasoningInput input)
     {
@@ -107,15 +107,17 @@ What is your next action?";
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new AgentDecision(
-            input.CurrentState.StepCount,
-            json.GetProperty("reasoning").GetString()!,
-            json.GetProperty("chosenAction").GetString()!,
-            JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("actionParameters").GetString()!)!,
-            json.GetProperty("expectedOutcome").GetString()!,
-            DateTime.UtcNow
-        );
+        return new Metered<AgentDecision>(
+            new AgentDecision(
+                input.CurrentState.StepCount,
+                json.GetProperty("reasoning").GetString()!,
+                json.GetProperty("chosenAction").GetString()!,
+                JsonSerializer.Deserialize<Dictionary<string, object>>(
+                    json.GetProperty("actionParameters").GetString()!)!,
+                json.GetProperty("expectedOutcome").GetString()!,
+                DateTime.UtcNow
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

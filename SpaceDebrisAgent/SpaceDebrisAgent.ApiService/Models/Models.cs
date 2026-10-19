@@ -80,7 +80,8 @@ public record SpaceDebrisCleanupWorkflowInput(
     MissionParameters MissionParameters,
     AgentState? AgentState,
     List<AgentDecision> Decisions,
-    List<ToolCall> ToolCalls
+    List<ToolCall> ToolCalls,
+    TokenUsage? Usage = null
 );
 
 public record CaptureResult(
@@ -128,7 +129,8 @@ public record MissionProgress(
     int MaxSteps,
     bool Thinking,
     List<DecisionProgress> Decisions,
-    ApprovalWait? AwaitingApproval
+    ApprovalWait? AwaitingApproval,
+    TokenUsage Usage
 );
 
 public record DecisionProgress(int Step, string Action, string Reasoning);

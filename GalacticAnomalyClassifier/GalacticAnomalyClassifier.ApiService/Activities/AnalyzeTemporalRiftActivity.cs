@@ -15,7 +15,7 @@ public record TemporalAnalysis(
     string TimelineStability
 );
 
-public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, TemporalAnalysis>
+public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Metered<TemporalAnalysis>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -24,7 +24,7 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
         _conversationClient = conversationClient;
     }
     
-    public override async Task<TemporalAnalysis> RunAsync(
+    public override async Task<Metered<TemporalAnalysis>> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
@@ -75,14 +75,16 @@ public class AnalyzeTemporalRiftActivity : WorkflowActivity<SpaceAnomaly, Tempor
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new TemporalAnalysis(
-            json.GetProperty("analysis").GetString()!,
-            JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("quantumMetrics").GetString()!)!,
-            JsonSerializer.Deserialize<List<string>>(
-                json.GetProperty("safetyProtocols").GetRawText())!,
-            json.GetProperty("timelineStability").GetString()!
-        );
+        return new Metered<TemporalAnalysis>(
+            new TemporalAnalysis(
+                json.GetProperty("analysis").GetString()!,
+                JsonSerializer.Deserialize<Dictionary<string, object>>(
+                    json.GetProperty("quantumMetrics").GetString()!)!,
+                JsonSerializer.Deserialize<List<string>>(
+                    json.GetProperty("safetyProtocols").GetRawText())!,
+                json.GetProperty("timelineStability").GetString()!
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

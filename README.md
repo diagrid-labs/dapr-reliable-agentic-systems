@@ -241,7 +241,7 @@ graph TD
 4. Install [Ollama](https://ollama.com/)
 5. Initialize Dapr: `dapr init`
 6. Run Ollama server: `ollama serve` and run a model: `ollama run llama3.2:3b`
-7. Install the [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) (see the install commands in the demo READMEs). `aspire run` starts it automatically at http://localhost:9090
+7. Install the [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) (see the install commands in the demo READMEs). `aspire run` starts it automatically at http://localhost:9090/workflows
 
 See the individual demo README files for specific instructions how to run the applications.
 

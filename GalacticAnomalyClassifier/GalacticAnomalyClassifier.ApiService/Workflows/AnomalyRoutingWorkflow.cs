@@ -19,15 +19,18 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
         WorkflowContext context, 
         SpaceAnomaly input)
     {
-        context.SetCustomStatus(new RoutingProgress("Classifying", null, null));
+        context.SetCustomStatus(new RoutingProgress("Classifying", null, null, TokenUsage.Zero));
 
-        var classification = await context.CallActivityAsync<AnomalyClassification>(
+        var classified = await context.CallActivityAsync<Metered<AnomalyClassification>>(
             nameof(ClassifyAnomalyActivity),
             input,
             GetDefaultRetryPolicy());
 
+        var classification = classified.Value;
+        var usage = classified.Usage;
+
         var anomalyType = ParseAnomalyType(classification.Type);
-        context.SetCustomStatus(new RoutingProgress("Analyzing", anomalyType.ToString(), classification.Confidence));
+        context.SetCustomStatus(new RoutingProgress("Analyzing", anomalyType.ToString(), classification.Confidence, usage));
 
         string specializedAnalysis;
         Dictionary<string, object> metrics;
@@ -37,10 +40,12 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
         switch (anomalyType)
         {
             case AnomalyType.TemporalRift:
-                var temporalResult = await context.CallActivityAsync<TemporalAnalysis>(
+                var temporalResultMetered = await context.CallActivityAsync<Metered<TemporalAnalysis>>(
                     nameof(AnalyzeTemporalRiftActivity),
                     input,
                     GetDefaultRetryPolicy());
+                var temporalResult = temporalResultMetered.Value;
+                usage += temporalResultMetered.Usage;
                 specializedAnalysis = temporalResult.Analysis;
                 metrics = temporalResult.QuantumMetrics;
                 recommendations = temporalResult.SafetyProtocols;
@@ -48,10 +53,12 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
                 break;
                 
             case AnomalyType.DarkMatterCluster:
-                var darkMatterResult = await context.CallActivityAsync<DarkMatterAnalysis>(
+                var darkMatterResultMetered = await context.CallActivityAsync<Metered<DarkMatterAnalysis>>(
                     nameof(AnalyzeDarkMatterActivity),
                     input,
                     GetDefaultRetryPolicy());
+                var darkMatterResult = darkMatterResultMetered.Value;
+                usage += darkMatterResultMetered.Usage;
                 specializedAnalysis = darkMatterResult.Analysis;
                 metrics = darkMatterResult.GravitationalData;
                 recommendations = darkMatterResult.HarvestingOpportunities;
@@ -59,10 +66,12 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
                 break;
                 
             case AnomalyType.AlienArtifact:
-                var artifactResult = await context.CallActivityAsync<ArtifactAnalysis>(
+                var artifactResultMetered = await context.CallActivityAsync<Metered<ArtifactAnalysis>>(
                     nameof(AnalyzeAlienArtifactActivity),
                     input,
                     GetDefaultRetryPolicy());
+                var artifactResult = artifactResultMetered.Value;
+                usage += artifactResultMetered.Usage;
                 specializedAnalysis = artifactResult.Analysis;
                 metrics = artifactResult.XenoarchaeologyData;
                 recommendations = artifactResult.ExtractionProcedures;
@@ -70,10 +79,12 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
                 break;
                 
             case AnomalyType.StellarPhenomenon:
-                var stellarResult = await context.CallActivityAsync<StellarAnalysis>(
+                var stellarResultMetered = await context.CallActivityAsync<Metered<StellarAnalysis>>(
                     nameof(AnalyzeStellarPhenomenonActivity),
                     input,
                     GetDefaultRetryPolicy());
+                var stellarResult = stellarResultMetered.Value;
+                usage += stellarResultMetered.Usage;
                 specializedAnalysis = stellarResult.Analysis;
                 metrics = stellarResult.AstrophysicsData;
                 recommendations = stellarResult.ObservationProtocols;
@@ -81,10 +92,12 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
                 break;
                 
             case AnomalyType.DimensionalTear:
-                var dimensionalResult = await context.CallActivityAsync<DimensionalAnalysis>(
+                var dimensionalResultMetered = await context.CallActivityAsync<Metered<DimensionalAnalysis>>(
                     nameof(AnalyzeDimensionalTearActivity),
                     input,
                     GetDefaultRetryPolicy());
+                var dimensionalResult = dimensionalResultMetered.Value;
+                usage += dimensionalResultMetered.Usage;
                 specializedAnalysis = dimensionalResult.Analysis;
                 metrics = dimensionalResult.MultiverseMetrics;
                 recommendations = dimensionalResult.ContainmentProcedures;
@@ -99,6 +112,8 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
                 break;
         }
         
+        context.SetCustomStatus(new RoutingProgress("Analyzing", anomalyType.ToString(), classification.Confidence, usage));
+
         return new AnalysisResult(
             input.AnomalyId,
             anomalyType,

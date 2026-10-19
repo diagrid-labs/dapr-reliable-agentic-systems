@@ -46,4 +46,4 @@ public record ScanProgress(string Activity, string Subsystem, string? Status, do
 
 public record VoteProgress(string Category, string Consensus, double AgreementLevel);
 
-public record DiagnosticsProgress(string Stage, List<ScanProgress> Scans, List<VoteProgress> Votes);
+public record DiagnosticsProgress(string Stage, List<ScanProgress> Scans, List<VoteProgress> Votes, TokenUsage Usage);

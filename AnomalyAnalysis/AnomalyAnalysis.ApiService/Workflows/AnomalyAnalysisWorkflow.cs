@@ -19,19 +19,22 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         SpatialAnomaly input)
     {
         var stages = new List<AnalysisStage>();
+        var usage = TokenUsage.Zero;
         
         // Stage 1: Process Sensor Data
-        var processedData = await context.CallActivityAsync<string>(
+        var processedDataResult = await context.CallActivityAsync<Metered<string>>(
             nameof(ProcessSensorDataActivity),
             input.RawSensorData,
             GetDefaultRetryPolicy());
+        var processedData = processedDataResult.Value;
+        usage += processedDataResult.Usage;
         
         stages.Add(new AnalysisStage(
             nameof(ProcessSensorDataActivity), 
             input.RawSensorData,
             processedData,
             true));
-        context.SetCustomStatus(stages);
+        context.SetCustomStatus(new AnalysisProgress(stages.ToList(), usage));
         
         // Gate check: Ensure sensor data processing was successful
         if (string.IsNullOrEmpty(processedData))
@@ -40,43 +43,49 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         }
         
         // Stage 2: Classify Anomaly
-        var anomalyType = await context.CallActivityAsync<string>(
+        var anomalyTypeResult = await context.CallActivityAsync<Metered<string>>(
             nameof(ClassifyAnomalyActivity),
             processedData,
             GetDefaultRetryPolicy());
+        var anomalyType = anomalyTypeResult.Value;
+        usage += anomalyTypeResult.Usage;
         
         stages.Add(new AnalysisStage(
             nameof(ClassifyAnomalyActivity), 
             processedData, 
             anomalyType, 
             true));
-        context.SetCustomStatus(stages);
+        context.SetCustomStatus(new AnalysisProgress(stages.ToList(), usage));
         
         // Stage 3: Scientific Analysis
-        var scientificAnalysis = await context.CallActivityAsync<string>(
+        var scientificAnalysisResult = await context.CallActivityAsync<Metered<string>>(
             nameof(ScientificAnalysisActivity),
             new ScientificAnalysisInput(processedData, anomalyType),
             GetDefaultRetryPolicy());
+        var scientificAnalysis = scientificAnalysisResult.Value;
+        usage += scientificAnalysisResult.Usage;
         
         stages.Add(new AnalysisStage(
             nameof(ScientificAnalysisActivity),
             anomalyType,
             scientificAnalysis,
             true));
-        context.SetCustomStatus(stages);
+        context.SetCustomStatus(new AnalysisProgress(stages.ToList(), usage));
         
         // Stage 4: Risk Assessment
-        var riskLevel = await context.CallActivityAsync<string>(
+        var riskLevelResult = await context.CallActivityAsync<Metered<string>>(
             nameof(RiskAssessmentActivity),
             new RiskAssessmentInput(anomalyType, scientificAnalysis),
             GetDefaultRetryPolicy());
+        var riskLevel = riskLevelResult.Value;
+        usage += riskLevelResult.Usage;
         
         stages.Add(new AnalysisStage(
             nameof(RiskAssessmentActivity),
             scientificAnalysis,
             riskLevel,
             true));
-        context.SetCustomStatus(stages);
+        context.SetCustomStatus(new AnalysisProgress(stages.ToList(), usage));
         
         // Gate check: Alert bridge if critical risk detected
         if (riskLevel.Contains("CRITICAL", StringComparison.OrdinalIgnoreCase))
@@ -88,7 +97,7 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
         }
         
         // Stage 5: Generate Tactical Recommendation
-        var recommendation = await context.CallActivityAsync<string>(
+        var recommendationResult = await context.CallActivityAsync<Metered<string>>(
             nameof(GenerateRecommendationActivity),
             new GenerateRecommendationInput(
                 anomalyType,
@@ -96,13 +105,15 @@ public class AnomalyAnalysisWorkflow : Workflow<SpatialAnomaly, AnalysisResult>
                 riskLevel
             ),
             GetDefaultRetryPolicy());
+        var recommendation = recommendationResult.Value;
+        usage += recommendationResult.Usage;
         
         stages.Add(new AnalysisStage(
             nameof(GenerateRecommendationActivity),
             riskLevel,
             recommendation,
             true));
-        context.SetCustomStatus(stages);
+        context.SetCustomStatus(new AnalysisProgress(stages.ToList(), usage));
         
         return new AnalysisResult(
             input.AnomalyId,

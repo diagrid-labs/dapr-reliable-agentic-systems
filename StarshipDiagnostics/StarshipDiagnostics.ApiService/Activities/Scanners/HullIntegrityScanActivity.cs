@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace StarshipDiagnostics.Activities.Scanners;
 
-public class HullIntegrityScanActivity : WorkflowActivity<Starship, ScanResult>
+public class HullIntegrityScanActivity : WorkflowActivity<Starship, Metered<ScanResult>>
 {
     private readonly DaprConversationClient _conversationClient;
 
@@ -16,7 +16,7 @@ public class HullIntegrityScanActivity : WorkflowActivity<Starship, ScanResult>
         _conversationClient = conversationClient;
     }
 
-    public override async Task<ScanResult> RunAsync(
+    public override async Task<Metered<ScanResult>> RunAsync(
         WorkflowActivityContext context,
         Starship input)
     {
@@ -69,7 +69,9 @@ Scan hull integrity:")
             ],
             conversationOptions);
 
-        return ParseScanResult("Hull Integrity", response.Outputs.First().Choices.First().Message.Content);
+        return new Metered<ScanResult>(
+            ParseScanResult("Hull Integrity", response.Outputs.First().Choices.First().Message.Content),
+            response.ToUsage());
     }
 
     private ScanResult ParseScanResult(string subsystem, string jsonContent)

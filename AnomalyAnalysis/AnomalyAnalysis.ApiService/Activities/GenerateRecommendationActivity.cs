@@ -1,10 +1,11 @@
 using Dapr.Workflow;
+using AnomalyAnalysis.Models;
 using Dapr.AI.Conversation;
 using Dapr.AI.Conversation.ConversationRoles;
 
 namespace AnomalyAnalysis.Activities;
 
-public class GenerateRecommendationActivity : WorkflowActivity<GenerateRecommendationInput, string>
+public class GenerateRecommendationActivity : WorkflowActivity<GenerateRecommendationInput, Metered<string>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -13,7 +14,7 @@ public class GenerateRecommendationActivity : WorkflowActivity<GenerateRecommend
         _conversationClient = conversationClient;
     }
     
-    public override async Task<string> RunAsync(
+    public override async Task<Metered<string>> RunAsync(
         WorkflowActivityContext context, 
         GenerateRecommendationInput input)
     {
@@ -51,7 +52,9 @@ public class GenerateRecommendationActivity : WorkflowActivity<GenerateRecommend
             ],
             conversationOptions);
         
-        return response.Outputs.First().Choices.First().Message.Content;
+        return new Metered<string>(
+            response.Outputs.First().Choices.First().Message.Content,
+            response.ToUsage());
     }
 }
 

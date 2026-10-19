@@ -40,20 +40,23 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         var progressDecisions = input.Decisions
             .Select(d => new DecisionProgress(d.StepNumber + 1, d.ChosenAction, d.Reasoning))
             .ToList();
+        var usage = input.Usage ?? TokenUsage.Zero;
         // Republished every iteration so the status keeps the history after ContinueAsNew
-        context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, true, progressDecisions, null));
+        context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, true, progressDecisions, null, usage));
 
         // Agent reasoning: decide next action
-        var decision = await context.CallActivityAsync<AgentDecision>(
+        var reasoned = await context.CallActivityAsync<Metered<AgentDecision>>(
             nameof(AgentReasoningActivity),
             new ReasoningInput(input.MissionParameters, agentState, input.ToolCalls),
             GetDefaultRetryPolicy());
-        
+        var decision = reasoned.Value;
+        usage += reasoned.Usage;
+
         var decisions = input.Decisions.Append(decision).ToList();
         progressDecisions = progressDecisions
             .Append(new DecisionProgress(decision.StepNumber + 1, decision.ChosenAction, decision.Reasoning))
             .ToList();
-        context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, false, progressDecisions, null));
+        context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, false, progressDecisions, null, usage));
         
         // Check if agent decided mission is complete
         if (decision.ChosenAction == "COMPLETE_MISSION")
@@ -87,7 +90,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 GetDefaultRetryPolicy());
             
             context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, false, progressDecisions,
-                new ApprovalWait(context.CurrentUtcDateTime, decision.ActionParameters)));
+                new ApprovalWait(context.CurrentUtcDateTime, decision.ActionParameters), usage));
 
             HumanApproval approval;
             try
@@ -104,7 +107,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 );
             }
 
-            context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, false, progressDecisions, null));
+            context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, false, progressDecisions, null, usage));
 
             toolCall = new ToolCall(
                 "HUMAN_APPROVAL",
@@ -133,14 +136,17 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 );
             }
         }
+        else if (decision.ChosenAction == "SCAN_DEBRIS_FIELD")
+        {
+            var scan = await ExecuteScan(context, decision.ActionParameters);
+            toolCall = scan.Value;
+            usage += scan.Usage;
+            context.SetCustomStatus(new MissionProgress(step, MAX_STEPS, false, progressDecisions, null, usage));
+        }
         else
         {
             toolCall = decision.ChosenAction switch
             {
-                "SCAN_DEBRIS_FIELD" => await ExecuteTool<DebrisField>(
-                    context, nameof(ScanDebrisFieldActivity), 
-                    decision.ActionParameters),
-                
                 "ANALYZE_DEBRIS" => await ExecuteTool<DebrisAnalysis>(
                     context, nameof(AnalyzeDebrisActivity), 
                     decision.ActionParameters),
@@ -207,7 +213,8 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             input.MissionParameters with { StepNumber = input.MissionParameters.StepNumber + 1 },
             agentState,
             decisions,
-            toolCalls
+            toolCalls,
+            usage
         );
 
         context.ContinueAsNew(nextInput);
@@ -215,6 +222,23 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         return null!; // This line will never be reached
     }
     
+    private async Task<Metered<ToolCall>> ExecuteScan(
+        WorkflowContext context,
+        Dictionary<string, object> parameters)
+    {
+        var name = nameof(ScanDebrisFieldActivity);
+        try
+        {
+            var scan = await context.CallActivityAsync<Metered<DebrisField>>(
+                name, parameters, GetDefaultRetryPolicy());
+            return new Metered<ToolCall>(new ToolCall(name, parameters, scan.Value, true, null), scan.Usage);
+        }
+        catch (Exception ex)
+        {
+            return new Metered<ToolCall>(new ToolCall(name, parameters, null!, false, ex.Message), TokenUsage.Zero);
+        }
+    }
+
     private async Task<ToolCall> ExecuteTool<TResult>(
         WorkflowContext context,
         string activityName,

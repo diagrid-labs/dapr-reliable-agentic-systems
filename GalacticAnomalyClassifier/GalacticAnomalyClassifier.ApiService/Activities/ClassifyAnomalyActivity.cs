@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace GalacticAnomalyClassifier.Activities;
 
-public class ClassifyAnomalyActivity : WorkflowActivity<SpaceAnomaly, AnomalyClassification>
+public class ClassifyAnomalyActivity : WorkflowActivity<SpaceAnomaly, Metered<AnomalyClassification>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -17,7 +17,7 @@ public class ClassifyAnomalyActivity : WorkflowActivity<SpaceAnomaly, AnomalyCla
         _conversationClient = conversationClient;
     }
     
-    public override async Task<AnomalyClassification> RunAsync(
+    public override async Task<Metered<AnomalyClassification>> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
@@ -74,11 +74,13 @@ Measurements: {string.Join(", ", input.Measurements.Select(m => $"{m.Key}={m.Val
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new AnomalyClassification(
-            json.GetProperty("type").GetString()!,
-            json.GetProperty("confidence").GetDouble(),
-            json.GetProperty("reasoning").GetString()!
-        );
+        return new Metered<AnomalyClassification>(
+            new AnomalyClassification(
+                json.GetProperty("type").GetString()!,
+                json.GetProperty("confidence").GetDouble(),
+                json.GetProperty("reasoning").GetString()!
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

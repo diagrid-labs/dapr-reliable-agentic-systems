@@ -89,4 +89,4 @@ public record SynthesizePlanInput(
 
 public record StructureProgress(string Type, string Priority, int Quantity, bool Done);
 
-public record ColonyProgress(string Stage, List<StructureProgress> Structures);
+public record ColonyProgress(string Stage, List<StructureProgress> Structures, TokenUsage Usage);

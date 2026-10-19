@@ -15,7 +15,7 @@ public record DarkMatterAnalysis(
     string CollapseProbability
 );
 
-public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatterAnalysis>
+public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, Metered<DarkMatterAnalysis>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -24,7 +24,7 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
         _conversationClient = conversationClient;
     }
     
-    public override async Task<DarkMatterAnalysis> RunAsync(
+    public override async Task<Metered<DarkMatterAnalysis>> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
@@ -74,14 +74,16 @@ public class AnalyzeDarkMatterActivity : WorkflowActivity<SpaceAnomaly, DarkMatt
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new DarkMatterAnalysis(
-            json.GetProperty("analysis").GetString()!,
-            JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("gravitationalData").GetString()!)!,
-            JsonSerializer.Deserialize<List<string>>(
-                json.GetProperty("harvestingOpportunities").GetRawText())!,
-            json.GetProperty("collapseProbability").GetString()!
-        );
+        return new Metered<DarkMatterAnalysis>(
+            new DarkMatterAnalysis(
+                json.GetProperty("analysis").GetString()!,
+                JsonSerializer.Deserialize<Dictionary<string, object>>(
+                    json.GetProperty("gravitationalData").GetString()!)!,
+                JsonSerializer.Deserialize<List<string>>(
+                    json.GetProperty("harvestingOpportunities").GetRawText())!,
+                json.GetProperty("collapseProbability").GetString()!
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

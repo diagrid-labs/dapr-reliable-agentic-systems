@@ -23,15 +23,16 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
             .Select((x, i) => new IterationProgress(
                 i + 1, x.First.TranslatedText, x.Second.OverallQuality, x.Second.MeetsStandards))
             .ToList();
+        var usage = input.Usage ?? TokenUsage.Zero;
         if (iterations.Count > 0)
         {
-            context.SetCustomStatus(new TranslationProgress(iterations.ToList(), QUALITY_THRESHOLD, MAX_ITERATIONS));
+            context.SetCustomStatus(new TranslationProgress(iterations.ToList(), QUALITY_THRESHOLD, MAX_ITERATIONS, usage));
         }
 
-        Translation translation;
+        Metered<Translation> translated;
         if (input.Evaluations.Count == 0)
         {
-            translation = await context.CallActivityAsync<Translation>(
+            translated = await context.CallActivityAsync<Metered<Translation>>(
                 nameof(TranslateActivity),
                 new TranslateInput(input.AlienText, null, input.Evaluations.Count + 1),
                 GetDefaultRetryPolicy());
@@ -39,7 +40,7 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
         }
         else
         {
-            translation = await context.CallActivityAsync<Translation>(
+            translated = await context.CallActivityAsync<Metered<Translation>>(
                 nameof(RefineTranslationActivity),
                 new RefineInput(
                     input.AlienText,
@@ -49,17 +50,23 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
                 GetDefaultRetryPolicy());
         }
 
+        var translation = translated.Value;
+        usage += translated.Usage;
+        context.SetCustomStatus(new TranslationProgress(iterations.ToList(), QUALITY_THRESHOLD, MAX_ITERATIONS, usage));
+
         var translations = input.Translations.Append(translation).ToList();
 
-        var evaluation = await context.CallActivityAsync<Evaluation>(
+        var evaluated = await context.CallActivityAsync<Metered<Evaluation>>(
             nameof(EvaluateTranslationActivity),
             new EvaluateInput(input.AlienText, translation),
             GetDefaultRetryPolicy());
 
+        var evaluation = evaluated.Value;
+        usage += evaluated.Usage;
         var evaluations = input.Evaluations.Append(evaluation).ToList();
         iterations.Add(new IterationProgress(
             iterations.Count + 1, translation.TranslatedText, evaluation.OverallQuality, evaluation.MeetsStandards));
-        context.SetCustomStatus(new TranslationProgress(iterations.ToList(), QUALITY_THRESHOLD, MAX_ITERATIONS));
+        context.SetCustomStatus(new TranslationProgress(iterations.ToList(), QUALITY_THRESHOLD, MAX_ITERATIONS, usage));
 
         if (evaluation.MeetsStandards && evaluation.OverallQuality >= QUALITY_THRESHOLD)
         {
@@ -92,7 +99,8 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
             // Continue to next iteration
             input = input with {
                  Translations = translations,
-                 Evaluations = evaluations
+                 Evaluations = evaluations,
+                 Usage = usage
             };
 
             context.ContinueAsNew(input);

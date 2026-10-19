@@ -6,7 +6,7 @@ using StarshipDiagnostics.Models;
 
 namespace StarshipDiagnostics.Activities.Voters;
 
-public class SafetyVoterActivity : WorkflowActivity<ScanResult, KeyValuePair<string, string>>
+public class SafetyVoterActivity : WorkflowActivity<ScanResult, Metered<KeyValuePair<string, string>>>
 {
     private readonly DaprConversationClient _conversationClient;
 
@@ -15,7 +15,7 @@ public class SafetyVoterActivity : WorkflowActivity<ScanResult, KeyValuePair<str
         _conversationClient = conversationClient;
     }
 
-    public override async Task<KeyValuePair<string, string>> RunAsync(
+    public override async Task<Metered<KeyValuePair<string, string>>> RunAsync(
         WorkflowActivityContext context,
         ScanResult input)
     {
@@ -67,8 +67,10 @@ Vote on safety classification:")
             ],
             conversationOptions);
 
-        return new KeyValuePair<string, string>(
-            "SafetyVoter",
-            response.Outputs.First().Choices.First().Message.Content.Trim());
+        return new Metered<KeyValuePair<string, string>>(
+            new KeyValuePair<string, string>(
+                "SafetyVoter",
+                response.Outputs.First().Choices.First().Message.Content.Trim()),
+            response.ToUsage());
     }
 }

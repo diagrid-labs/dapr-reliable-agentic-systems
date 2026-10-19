@@ -15,7 +15,7 @@ public record DimensionalAnalysis(
     string RealityStability
 );
 
-public class AnalyzeDimensionalTearActivity : WorkflowActivity<SpaceAnomaly, DimensionalAnalysis>
+public class AnalyzeDimensionalTearActivity : WorkflowActivity<SpaceAnomaly, Metered<DimensionalAnalysis>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -24,7 +24,7 @@ public class AnalyzeDimensionalTearActivity : WorkflowActivity<SpaceAnomaly, Dim
         _conversationClient = conversationClient;
     }
     
-    public override async Task<DimensionalAnalysis> RunAsync(
+    public override async Task<Metered<DimensionalAnalysis>> RunAsync(
         WorkflowActivityContext context, 
         SpaceAnomaly input)
     {
@@ -75,14 +75,16 @@ public class AnalyzeDimensionalTearActivity : WorkflowActivity<SpaceAnomaly, Dim
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new DimensionalAnalysis(
-            json.GetProperty("analysis").GetString()!,
-            JsonSerializer.Deserialize<Dictionary<string, object>>(
-                json.GetProperty("multiverseMetrics").GetString()!)!,
-            JsonSerializer.Deserialize<List<string>>(
-                json.GetProperty("containmentProcedures").GetRawText())!,
-            json.GetProperty("spacetimeTearSeverity").GetString()!
-        );
+        return new Metered<DimensionalAnalysis>(
+            new DimensionalAnalysis(
+                json.GetProperty("analysis").GetString()!,
+                JsonSerializer.Deserialize<Dictionary<string, object>>(
+                    json.GetProperty("multiverseMetrics").GetString()!)!,
+                JsonSerializer.Deserialize<List<string>>(
+                    json.GetProperty("containmentProcedures").GetRawText())!,
+                json.GetProperty("spacetimeTearSeverity").GetString()!
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

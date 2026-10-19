@@ -5,7 +5,7 @@ using Dapr.Workflow;
 using Google.Protobuf.WellKnownTypes;
 using System.Text.Json;
 
-public class EvaluateTranslationActivity : WorkflowActivity<EvaluateInput, Evaluation>
+public class EvaluateTranslationActivity : WorkflowActivity<EvaluateInput, Metered<Evaluation>>
 {
     private readonly DaprConversationClient _conversationClient;
     
@@ -14,7 +14,7 @@ public class EvaluateTranslationActivity : WorkflowActivity<EvaluateInput, Evalu
         _conversationClient = conversationClient;
     }
     
-    public override async Task<Evaluation> RunAsync(
+    public override async Task<Metered<Evaluation>> RunAsync(
         WorkflowActivityContext context, 
         EvaluateInput input)
     {
@@ -87,19 +87,21 @@ Keep `detailedFeedback` <=100 words. `strengths` and `weaknesses` <=5 items each
         var json = JsonSerializer.Deserialize<JsonElement>(
             response.Outputs.First().Choices.First().Message.Content);
         
-        return new Evaluation(
-            input.CurrentTranslation.IterationNumber,
-            json.GetProperty("accuracyScore").GetDouble(),
-            json.GetProperty("culturalNuanceScore").GetDouble(),
-            json.GetProperty("idiomaticScore").GetDouble(),
-            json.GetProperty("overallQuality").GetDouble(),
-            JsonSerializer.Deserialize<List<string>>(
-                json.GetProperty("strengths").GetRawText())!,
-            JsonSerializer.Deserialize<List<string>>(
-                json.GetProperty("weaknesses").GetRawText())!,
-            json.GetProperty("detailedFeedback").GetString()!,
-            json.GetProperty("meetsStandards").GetBoolean()
-        );
+        return new Metered<Evaluation>(
+            new Evaluation(
+                input.CurrentTranslation.IterationNumber,
+                json.GetProperty("accuracyScore").GetDouble(),
+                json.GetProperty("culturalNuanceScore").GetDouble(),
+                json.GetProperty("idiomaticScore").GetDouble(),
+                json.GetProperty("overallQuality").GetDouble(),
+                JsonSerializer.Deserialize<List<string>>(
+                    json.GetProperty("strengths").GetRawText())!,
+                JsonSerializer.Deserialize<List<string>>(
+                    json.GetProperty("weaknesses").GetRawText())!,
+                json.GetProperty("detailedFeedback").GetString()!,
+                json.GetProperty("meetsStandards").GetBoolean()
+            ),
+            response.ToUsage());
     }
 
     private static Struct GetResponseFormat()

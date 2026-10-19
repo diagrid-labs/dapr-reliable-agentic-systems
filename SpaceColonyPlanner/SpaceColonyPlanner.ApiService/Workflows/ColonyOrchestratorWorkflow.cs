@@ -20,25 +20,30 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
         ColonyRequest input)
     {
         var structures = new List<StructureProgress>();
+        var usage = TokenUsage.Zero;
         void Publish(string stage) =>
-            context.SetCustomStatus(new ColonyProgress(stage, structures.ToList()));
+            context.SetCustomStatus(new ColonyProgress(stage, structures.ToList(), usage));
 
         Publish("AnalyzingPlanet");
 
         // Step 1: Analyze planet to understand constraints
-        var planetAnalysis = await context.CallActivityAsync<PlanetAnalysis>(
+        var analyzed = await context.CallActivityAsync<Metered<PlanetAnalysis>>(
             nameof(AnalyzePlanetActivity),
             input.Planet,
             GetDefaultRetryPolicy());
+        var planetAnalysis = analyzed.Value;
+        usage += analyzed.Usage;
         
         Publish("DeterminingStructures");
 
         // Step 2: Orchestrator determines what structures are needed
         // This is DYNAMIC - different planets need different structures
-        var structureRequests = await context.CallActivityAsync<List<StructureRequest>>(
+        var determined = await context.CallActivityAsync<Metered<List<StructureRequest>>>(
             nameof(DetermineStructuresActivity),
             new DetermineStructuresInput(input.Planet, input.Requirements, planetAnalysis),
             GetDefaultRetryPolicy());
+        var structureRequests = determined.Value;
+        usage += determined.Usage;
         
         structures.AddRange(structureRequests.Select(r =>
             new StructureProgress(r.StructureType, r.Priority.ToString(), r.Quantity, false)));
@@ -46,7 +51,7 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
 
         // Step 3: Dynamically spawn worker tasks for each structure type
         // The orchestrator doesn't know ahead of time how many workers needed!
-        var workerTasks = new List<Task<StructurePlan>>();
+        var workerTasks = new List<Task<Metered<StructurePlan>>>();
         
         foreach (var request in structureRequests)
         {
@@ -69,7 +74,7 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
             );
             
             workerTasks.Add(
-                context.CallActivityAsync<StructurePlan>(workerActivity, workerInput, GetDefaultRetryPolicy())
+                context.CallActivityAsync<Metered<StructurePlan>>(workerActivity, workerInput, GetDefaultRetryPolicy())
             );
         }
         
@@ -79,22 +84,24 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
         {
             var done = await Task.WhenAny(pending);
             pending.Remove(done);
-            await done;
+            usage += (await done).Usage;
             var index = workerTasks.IndexOf(done);
             structures[index] = structures[index] with { Done = true };
             Publish("PlanningStructures");
         }
 
         // All workers are complete here, this only collects the plans in the request order
-        var structurePlans = await Task.WhenAll(workerTasks);
+        var structurePlans = (await Task.WhenAll(workerTasks)).Select(m => m.Value).ToList();
 
         Publish("Synthesizing");
         
         // Step 4: Synthesize individual plans into master plan
-        var masterPlan = await context.CallActivityAsync<ColonyMasterPlan>(
+        var synthesized = await context.CallActivityAsync<Metered<ColonyMasterPlan>>(
             nameof(SynthesizePlanActivity),
-            new SynthesizePlanInput(input.Planet.PlanetId, structurePlans.ToList()),
+            new SynthesizePlanInput(input.Planet.PlanetId, structurePlans),
             GetDefaultRetryPolicy());
+        var masterPlan = synthesized.Value;
+        usage += synthesized.Usage;
         
         Publish("Optimizing");
 

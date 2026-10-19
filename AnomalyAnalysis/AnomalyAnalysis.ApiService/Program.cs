@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Dapr.Workflow;
 using Dapr.Workflow.Versioning;
@@ -52,12 +53,19 @@ app.MapGet("/anomaly/status/{instanceId}", async (
         result = state.RuntimeStatus == WorkflowRuntimeStatus.Completed
             ? state.ReadOutputAs<AnalysisResult>()
             : null,
-        progress = state.ReadCustomStatusAs<List<AnalysisStage>>(),
+        progress = ReadProgress(state),
         createdAt = state.CreatedAt,
         lastUpdatedAt = state.LastUpdatedAt
     });
 });
 
+
+// Instances persisted with an older, non-JSON-object custom status have no usable progress
+static AnalysisProgress? ReadProgress(WorkflowState state)
+{
+    try { return state.ReadCustomStatusAs<AnalysisProgress>(); }
+    catch (JsonException) { return null; }
+}
 
 app.MapDefaultEndpoints();
 

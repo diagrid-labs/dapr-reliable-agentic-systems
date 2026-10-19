@@ -7,7 +7,7 @@ using SpaceColonyPlanner.Models;
 
 namespace SpaceColonyPlanner.Activities.Workers;
 
-public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePlan>
+public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, Metered<StructurePlan>>
 {
     private readonly DaprConversationClient _conversationClient;
 
@@ -16,7 +16,7 @@ public class PlanPowerPlantActivity : WorkflowActivity<WorkerInput, StructurePla
         _conversationClient = conversationClient;
     }
 
-    public override async Task<StructurePlan> RunAsync(
+    public override async Task<Metered<StructurePlan>> RunAsync(
         WorkflowActivityContext context,
         WorkerInput input)
     {
@@ -73,7 +73,9 @@ Design appropriate power plant(s).")
             ],
             options);
 
-        return ParseStructurePlan(response.Outputs.First().Choices.First().Message.Content);
+        return new Metered<StructurePlan>(
+            ParseStructurePlan(response.Outputs.First().Choices.First().Message.Content),
+            response.ToUsage());
     }
 
     private static StructurePlan ParseStructurePlan(string jsonContent)

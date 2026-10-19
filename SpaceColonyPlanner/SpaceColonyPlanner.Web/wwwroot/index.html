@@ -111,12 +111,16 @@
         <p id="success-factors" class="prose"></p>
         <h3>Risk assessment</h3>
         <p id="risk-assessment" class="prose"></p>
+        <h3>Token usage</h3>
+        <p id="findings-tokens" class="prose">--</p>
         <div class="actions"><button type="button" id="new-analysis" class="pill p-orange">New colony plan</button></div>
       </section>
 
       <section id="progress-panel" class="panel">
         <h2 tabindex="-1">Planning <span id="run-status" class="status" aria-live="polite">--</span></h2>
-        <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
+        <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span>
+          <span class="tokens" aria-hidden="true"><span class="tokens-label">Tokens</span><b id="tokens-total">--</b></span>
+          <span id="tokens-detail" class="tokens-detail" aria-hidden="true"></span></p>
         <p id="run-note" class="note" role="alert" hidden></p>
         <div id="durable" class="durable" aria-hidden="true"></div>
         <p id="durable-caption" class="durable-caption" role="status"></p>
@@ -147,7 +151,7 @@
     <div class="corner-bottom"><span>03-1701</span></div>
     <footer class="bar-bottom">
       <span id="link-indicator" class="link ok">Subspace link</span>
-      <a href="http://localhost:9090" target="_blank" rel="noopener">View in Dapr dashboard</a>
+      <a href="http://localhost:9090/workflows" target="_blank" rel="noopener">View in Dapr dashboard</a>
     </footer>
   </div>
   <script type="module" src="js/engine.js"></script>

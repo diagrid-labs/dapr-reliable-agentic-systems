@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace StarshipDiagnostics.Activities.Scanners;
 
-public class NavigationScanActivity : WorkflowActivity<Starship, ScanResult>
+public class NavigationScanActivity : WorkflowActivity<Starship, Metered<ScanResult>>
 {
     private readonly DaprConversationClient _conversationClient;
 
@@ -16,7 +16,7 @@ public class NavigationScanActivity : WorkflowActivity<Starship, ScanResult>
         _conversationClient = conversationClient;
     }
 
-    public override async Task<ScanResult> RunAsync(
+    public override async Task<Metered<ScanResult>> RunAsync(
         WorkflowActivityContext context,
         Starship input)
     {
@@ -69,7 +69,9 @@ Scan navigation systems:")
             ],
             conversationOptions);
 
-        return ParseScanResult("Navigation Systems", response.Outputs.First().Choices.First().Message.Content);
+        return new Metered<ScanResult>(
+            ParseScanResult("Navigation Systems", response.Outputs.First().Choices.First().Message.Content),
+            response.ToUsage());
     }
 
     private ScanResult ParseScanResult(string subsystem, string jsonContent)
