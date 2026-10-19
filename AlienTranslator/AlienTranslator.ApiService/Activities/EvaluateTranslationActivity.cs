@@ -33,7 +33,7 @@ For each translation, provide:
 - Specific strengths (what was done well)
 - Specific weaknesses (what needs improvement)
 - Detailed actionable feedback for refinement
-- Whether it meets publication standards (overall >= 8.0 and no major flaws)";
+- Whether it meets publication standards (overall >= 9.0 and no major flaws)";
 
         var userPrompt = $@"Evaluate this translation:
 

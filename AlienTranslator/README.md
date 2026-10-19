@@ -37,7 +37,7 @@ graph TD
     Check1 -->|No| A3[RefineTranslationActivity]
     A1 --> A2[EvaluateTranslationActivity]
     A3 --> A2
-    A2 --> Gate1{Quality ≥ 8.0 AND<br/>Meets Standards?}
+    A2 --> Gate1{Quality ≥ 9.0 AND<br/>Meets Standards?}
     Gate1 -->|Yes| Success([Return Success Result])
     Gate1 -->|No| Gate2{Max Iterations<br/>Reached?}
     Gate2 -->|Yes| MaxReached([Return Best Effort Result])
@@ -57,7 +57,7 @@ graph TD
 1. Generate initial translation
 2. Loop (max 5 iterations):
    - Evaluate current translation
-   - If quality ≥ 8.0 and meets standards → Success!
+   - If quality ≥ 9.0 and meets standards → Success!
    - If max iterations reached → Return best effort
    - Refine translation based on feedback
 3. Return final translation with iteration history

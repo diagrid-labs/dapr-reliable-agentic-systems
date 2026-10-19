@@ -8,9 +8,11 @@ const PRESETS = {
     knownVocabulary: {
       "Dif-tor heh smusma": "Live long and prosper (formal greeting)",
       "Kal-tor": "infinite diversity",
+      "pan shar": "together in peace",
       Taluhk: "cherish/treasure",
+      "nash-veh k'dular": "our shared future",
     },
-    culturalNotes: "Vulcans value logic and precision. Greetings often reference longevity and prosperity. IDIC (Infinite Diversity in Infinite Combinations) is a core philosophy.",
+    culturalNotes: "Vulcans value logic and precision. A plain, literal rendering is appropriate.",
   },
   klingon: {
     alienSpecies: "Klingon",
@@ -22,7 +24,7 @@ const PRESETS = {
       SIjlaH: "can imagine",
       qetbogh: "running",
     },
-    culturalNotes: "Klingon poetry emphasizes honor, battle prowess, and glory in death. Metaphors often involve warfare and physical strength. Direct translation may miss warrior ethos.",
+    culturalNotes: "Klingon poetry emphasizes honor, battle prowess, and glory in death. Metaphors must involve warfare and physical strength. The translation must keep the battle-cry opening, preserve the warrior ethos, and read as English verse rather than a literal gloss.",
   },
   romulan: {
     alienSpecies: "Romulan",
@@ -31,14 +33,12 @@ const PRESETS = {
     knownVocabulary: {
       "Jolan'tru": "hello (casual)",
       "Mnei sahe": "my friend",
-      Lhhei: "until",
-      khir: "stars",
     },
-    culturalNotes: "Romulans value secrecy and cunning. Even casual speech contains layers of meaning. References to stars and night are common in farewells.",
+    culturalNotes: "Romulans value secrecy and cunning. Even casual speech contains layers of meaning: every line must carry both a friendly surface reading and a veiled second meaning about concealment or distrust. Farewells must reference stars and night, keep the ambiguous double meaning of 'friend', stay casual in register, and read as natural idiomatic English without explanatory glosses.",
   },
 };
 
-const DEFAULT_THRESHOLD = 8;
+const DEFAULT_THRESHOLD = 9;
 const DEFAULT_MAX_ITERATIONS = 5;
 const SCORES = [
   ["accuracyScore", "Accuracy"],

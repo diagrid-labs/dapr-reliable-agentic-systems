@@ -3,7 +3,7 @@ using Dapr.Workflow;
 public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, AlienTranslationWorkflowOutput>
 {
     private const int MAX_ITERATIONS = 5;
-    private const double QUALITY_THRESHOLD = 8.0;
+    private const double QUALITY_THRESHOLD = 9.0;
 
     private static WorkflowTaskOptions GetDefaultRetryPolicy()
     {
@@ -106,7 +106,8 @@ public class AlienTranslationWorkflow : Workflow<AlienTranslationWorkflowInput, 
             context.ContinueAsNew(input);
         }
 
-        return null; // This line will never be reached
+        // ContinueAsNew restarts the workflow, so this return value is never used
+        return null!;
     }
 
     private string GenerateImprovementSummary(List<Evaluation> evaluations)
