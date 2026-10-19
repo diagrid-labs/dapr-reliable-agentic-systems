@@ -6,6 +6,7 @@
   <title>Anomaly Analysis</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="css/lcars.css">
+  <link rel="stylesheet" href="css/demo.css">
 </head>
 <body data-view="idle">
   <div class="frame">
@@ -65,6 +66,16 @@
         <h2 tabindex="-1">Analysis <span id="run-status" class="status" aria-live="polite">--</span></h2>
         <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
         <p id="run-note" class="note" role="alert" hidden></p>
+        <div id="durable" class="durable" aria-hidden="true"></div>
+        <p id="durable-caption" class="durable-caption" role="status"></p>
+        <div id="conduit" class="conduit" aria-hidden="true">
+          <div class="conduit-node" data-stage="ProcessSensorDataActivity"><span class="conduit-dot"></span><span class="conduit-label">Sensor</span><span class="conduit-out"></span></div>
+          <div class="conduit-node" data-stage="ClassifyAnomalyActivity"><span class="conduit-dot"></span><span class="conduit-label">Classify</span><span class="conduit-out"></span></div>
+          <div class="conduit-node" data-stage="ScientificAnalysisActivity"><span class="conduit-dot"></span><span class="conduit-label">Analyse</span><span class="conduit-out"></span></div>
+          <div class="conduit-node" data-stage="RiskAssessmentActivity"><span class="conduit-dot"></span><span class="conduit-label">Risk</span><span class="conduit-out"></span></div>
+          <div class="conduit-node" data-stage="GenerateRecommendationActivity"><span class="conduit-dot"></span><span class="conduit-label">Recommend</span><span class="conduit-out"></span></div>
+          <span class="conduit-packet"></span>
+        </div>
         <ol id="stage-list" aria-live="polite">
           <li data-stage="ProcessSensorDataActivity">
             <span class="stage-name">01 Sensor data processing</span><span class="stage-bar"></span><span class="stage-state">Standby</span>

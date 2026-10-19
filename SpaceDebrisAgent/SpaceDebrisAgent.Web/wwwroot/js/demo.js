@@ -1,4 +1,4 @@
-import { $, clean, uuid } from "./util.js";
+import { $, clean, reducedMotion, reveal, REVEAL_MAX_MS, runState, uuid } from "./util.js";
 
 const PRESETS = {
   leo: { orbitalZone: "LEO", maxDebrisPieces: 5, fuelBudget: 100.0, maxMissionHours: 8, requireHumanApproval: true },
@@ -9,6 +9,7 @@ const PRESETS = {
 const DEFAULT_MAX_STEPS = 15;
 const APPROVAL_TIMEOUT_MS = 5 * 60 * 1000; // the workflow denies after 5 minutes without an answer
 const MAX_TEXT = 600;
+const TYPE_MS = 15; // per character (the util.js default is REVEAL_STEP_MS = 20)
 const MISSION_ID = /^[A-Za-z0-9_-]+$/;
 const GENERATED_ID = /^(LEO|MEO|GEO)-[0-9a-f-]{36}$/;
 const ACTION_PILLS = {
@@ -29,6 +30,9 @@ let countdownTimer = null;
 let approvalSending = false;
 let approvalSent = false;
 let approvalRound = 0;
+// decisions already shown in this run, and the first decision of the newest batch (only that batch keeps its preview)
+let shown = 0;
+let batchStart = 0;
 
 const asArray = (value) => (Array.isArray(value) ? value : []);
 const isObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -57,6 +61,12 @@ const json = (value, max) => {
 // request values are plain JSON: strings as they are, everything else as JSON
 const display = (value) => clamp(typeof value === "string" ? value : json(value), 200);
 const pillFor = (action) => (Object.hasOwn(ACTION_PILLS, action) ? ACTION_PILLS[action] : "p-blue");
+const setText = (element, text) => {
+  if (element.textContent !== text) element.textContent = text;
+};
+const setHidden = (element, hidden) => {
+  if (element.hidden !== hidden) element.hidden = hidden;
+};
 const newMissionId = (zone) => `${zone}-${uuid()}`;
 
 function build() {
@@ -103,33 +113,69 @@ function stardate() {
   return (1000 * (2368 - 2323) + (1000 * dayOfYear) / daysInYear).toFixed(1);
 }
 
-// log row: step number, action or tool pill, expandable detail
+// log row: step number, action or tool pill, expandable detail; the summary also holds a visible preview
+// that types out the reasoning of a decision that arrives while the run is watched
 function entryElement() {
   const item = make("li", "entry");
   const details = make("details", "entry-detail");
-  details.append(make("summary"), make("pre"));
+  const summary = make("summary");
+  summary.append(make("span", "entry-label"), make("span", "entry-preview"));
+  details.append(summary, make("pre"));
   item.append(make("span", "entry-step"), make("span", "pill"), details);
   return item;
 }
 
 function setEntry(item, step, label, pillClass, summary, text) {
-  item.querySelector(".entry-step").textContent = String(step).padStart(2, "0");
+  setText(item.querySelector(".entry-step"), String(step).padStart(2, "0"));
   const pill = item.querySelector(".pill");
-  pill.className = `pill ${pillClass}`;
-  pill.textContent = label;
-  item.querySelector("summary").textContent = summary;
-  item.querySelector("pre").textContent = text;
+  if (pill.dataset.tone !== pillClass) {
+    if (pill.dataset.tone) pill.classList.remove(pill.dataset.tone);
+    pill.classList.add(pillClass);
+    pill.dataset.tone = pillClass;
+  }
+  setText(pill, label);
+  setText(item.querySelector(".entry-label"), summary);
+  setText(item.querySelector("pre"), text);
 }
 
 // rows are positional and reused so an expanded reasoning stays open across polls
 function renderLog(decisions) {
   while (log.children.length > decisions.length) log.lastChild.remove();
   while (log.children.length < decisions.length) log.append(entryElement());
+  const arrivals = runState.animate && decisions.length > shown;
+  batchStart = arrivals ? shown : Math.min(batchStart, decisions.length);
   decisions.forEach((decision, index) => {
+    const item = log.children[index];
     const step = num(decision.step) ?? index + 1;
     const action = clean(decision.action) || "UNKNOWN";
-    setEntry(log.children[index], step, action, pillFor(action), "Reasoning", clean(decision.reasoning));
+    const reasoning = clean(decision.reasoning);
+    setEntry(item, step, action, pillFor(action), "Reasoning", reasoning);
+    const preview = item.querySelector(".entry-preview");
+    const previewText = clamp(reasoning, 300);
+    if (arrivals && index >= shown) {
+      reveal(preview, previewText, { mode: "type", ms: TYPE_MS });
+      pulseAfter(item.querySelector(".pill"), Math.min(Array.from(previewText).length * TYPE_MS, REVEAL_MAX_MS));
+    } else if (index < batchStart && preview.firstChild) {
+      reveal(preview, "");
+    }
   });
+  shown = decisions.length;
+}
+
+// the pill pulses once when the reasoning has been typed; the class goes away on animationend
+function pulseAfter(pill, delayMs) {
+  if (reducedMotion()) return;
+  pill.style.setProperty("--pulse-delay", `${delayMs}ms`);
+  pill.classList.remove("pulse-once");
+  void pill.offsetWidth;
+  pill.classList.add("pulse-once");
+}
+log.addEventListener("animationend", (event) => event.target.classList.remove("pulse-once"));
+
+// one checkpoint per decision; the limit is a ghost target, the agent can finish earlier
+function checkpoints(status, progress) {
+  const limit = num(progress?.maxSteps);
+  return { done: objects(progress?.decisions).length, total: Number.isInteger(limit) && limit > 0 ? limit : DEFAULT_MAX_STEPS };
 }
 
 function renderProgress(status, progress) {
@@ -139,13 +185,14 @@ function renderProgress(status, progress) {
   const limit = num(progress?.maxSteps);
   const maxSteps = Number.isInteger(limit) && limit > 0 ? limit : DEFAULT_MAX_STEPS;
 
-  $("step-meter").textContent = `Step ${step ?? "--"} / ${maxSteps}`;
-  const share = step === null ? 0 : Math.min(100, Math.max(0, (step / maxSteps) * 100));
-  $("step-track").style.setProperty("--width", `${share}%`);
+  if (status === "Pending" && !progress) shown = batchStart = 0;
+  setText($("step-meter"), `Step ${step ?? "--"} / ${maxSteps}`);
+  const share = `${step === null ? 0 : Math.min(100, Math.max(0, (step / maxSteps) * 100))}%`;
+  if ($("step-track").style.getPropertyValue("--width") !== share) $("step-track").style.setProperty("--width", share);
 
   renderLog(decisions);
-  $("thinking-row").hidden = !(running && progress?.thinking === true);
-  $("thinking-name").textContent = `Step ${step ?? decisions.length + 1}`;
+  setHidden($("thinking-row"), !(running && progress?.thinking === true));
+  setText($("thinking-name"), `Step ${step ?? decisions.length + 1}`);
 
   const wait = progress?.awaitingApproval;
   if (running && isObject(wait)) openApproval(wait);
@@ -247,6 +294,7 @@ async function sendApproval(approved) {
 }
 
 function resetUi() {
+  shown = batchStart = 0;
   closeApproval();
   $("missionId").value = newMissionId($("orbitalZone").value);
 }
@@ -308,6 +356,7 @@ export default {
   initialPreset: "leo",
   stardate,
   renderProgress,
+  checkpoints,
   renderResult,
   resetUi,
   messages: {

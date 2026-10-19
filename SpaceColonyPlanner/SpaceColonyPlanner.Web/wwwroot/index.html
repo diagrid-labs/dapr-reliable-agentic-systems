@@ -118,6 +118,8 @@
         <h2 tabindex="-1">Planning <span id="run-status" class="status" aria-live="polite">--</span></h2>
         <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
         <p id="run-note" class="note" role="alert" hidden></p>
+        <div id="durable" class="durable" aria-hidden="true"></div>
+        <p id="durable-caption" class="durable-caption" role="status"></p>
         <ol id="pre-stages" class="stages" aria-live="polite">
           <li class="node" data-stage="AnalyzingPlanet">
             <span class="stage-name">01 Planet analysis</span><span class="stage-bar"></span><span class="stage-state">Standby</span>
@@ -128,6 +130,7 @@
         </ol>
         <h3>03 Specialist planning <small id="worker-count"></small></h3>
         <p id="worker-placeholder" class="placeholder">Awaiting structure selection</p>
+        <div id="colony-scene" class="scene" aria-hidden="true" hidden><span class="planet"></span></div>
         <ol id="worker-board" class="stages" aria-live="polite"></ol>
         <ol id="post-stages" class="stages" aria-live="polite">
           <li class="node" data-stage="Synthesizing">

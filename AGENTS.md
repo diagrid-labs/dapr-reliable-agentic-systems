@@ -31,3 +31,4 @@ You are a proficient C# .NET & Web developer with extensive experience in buildi
 - Keep front-end code simple and lightweight.
 - Use vanilla JavaScript unless a specific library is requested.
 - Do not use any front-end frameworks like React, Angular, or Vue.js unless explicitly requested.
+- Animations in the web UIs are driven by real workflow data (no timer-driven fake progress), respect `prefers-reduced-motion`, and keep decorative elements out of live regions (`aria-hidden`). The shared files (`engine.js`, `util.js`, `lcars.css` and the YARP `appsettings.json`) are copied identically into every demo; this duplication across the Aspire projects is intended, so if one changes, change all six and compare them with `md5`.

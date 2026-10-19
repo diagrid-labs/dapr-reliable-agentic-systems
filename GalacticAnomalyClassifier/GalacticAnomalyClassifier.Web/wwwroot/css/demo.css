@@ -5,7 +5,41 @@ fieldset.measure-set { margin: 14px 0 0; padding: 0; border: 0; min-width: 0; }
 .measure-row .pill { margin: 0; padding: 0 16px; }
 .p-salmon { background: var(--salmon); }
 
-#routing-board { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+/* arc fills first, then the lever throws, then the routed lane lights up: one set of timings for all three */
+#progress-panel { --lever-delay: 0.9s; --lever-move: 0.7s; --lane-delay: calc(var(--lever-delay) + var(--lever-move)); }
+#routing-board { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.classify { display: flex; align-items: center; gap: 14px; }
+.classify .node { flex: 1; min-width: 0; }
+.arc { position: relative; width: 84px; height: 52px; flex: none; }
+.arc svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.arc path { fill: none; stroke-width: 7; }
+.arc-track { stroke: #2a2a2a; }
+.arc-fill { stroke: var(--accent); stroke-dasharray: 100 100; stroke-dashoffset: 100; transition: stroke-dashoffset var(--lever-delay) ease-out; }
+.arc-text { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; font-size: 15px; color: var(--sky); }
+
+.routing { display: grid; grid-template-columns: 56px 1fr; gap: 10px; margin-top: 14px; }
+.switch { position: relative; }
+/* input rail from the classifier down to the pivot */
+.switch::before { content: ""; position: absolute; left: 4px; top: 0; height: 50%; width: 4px; background: var(--blue); }
+.switch::after { content: ""; position: absolute; left: 0; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--peach); }
+.lever {
+  --len: 58px;
+  --angle: 0rad;
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  width: var(--len);
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 3px;
+  background: var(--blue);
+  transform-origin: 0 50%;
+  transform: rotate(var(--angle));
+  transition: transform var(--lever-move) cubic-bezier(0.3, 1.4, 0.5, 1) var(--lever-delay), width var(--lever-move) ease var(--lever-delay), background-color 0.3s ease var(--lever-delay);
+}
+.lever.thrown { background: var(--accent); }
+.arc.snap .arc-fill, .lever.snap { transition: none; }
+
 .lane, .node {
   display: grid;
   grid-template-columns: minmax(180px, 280px) 1fr 110px;
@@ -17,6 +51,10 @@ fieldset.measure-set { margin: 14px 0 0; padding: 0; border: 0; min-width: 0; }
 .lane.skipped .stage-name { opacity: 0.45; }
 .lane.skipped .stage-state { color: var(--salmon); }
 .lane.active .stage-bar { background: var(--accent); }
+/* when the lever is animating the lane lights up after it lands (--lane-delay = delay + throw) */
+.lane.active[data-follow] .stage-bar { transition: background-color 0s linear var(--lane-delay); }
+.lane.active[data-follow] .stage-bar::after { animation: sweep 1.2s linear var(--lane-delay) infinite, lane-in 0.01s linear var(--lane-delay) backwards; }
+@keyframes lane-in { from { opacity: 0; } }
 /* the classifier node is a div, so lcars.css li.done / li.active does not reach it */
 .node.done .stage-bar { background: var(--accent); }
 .node.done .stage-state { color: var(--accent); }
@@ -38,9 +76,14 @@ h3 { margin: 16px 0 4px; font-size: 14px; font-weight: 400; color: var(--sky); }
 
 @media (prefers-reduced-motion: reduce) {
   .node.active .stage-bar::after { animation: none; }
+  .arc-fill, .lever { transition: none; }
+  .lane.active[data-follow] .stage-bar { transition: none; }
+  .lane.active[data-follow] .stage-bar::after { animation: none; }
 }
 
 @media (max-width: 760px) {
+  .routing { grid-template-columns: 34px 1fr; gap: 8px; }
+  .arc { width: 64px; height: 42px; }
   .lane, .node { grid-template-columns: 1fr 90px; }
   .node .stage-bar { grid-column: 1 / -1; order: 3; }
   .measure-row { grid-template-columns: 1fr 1fr; }

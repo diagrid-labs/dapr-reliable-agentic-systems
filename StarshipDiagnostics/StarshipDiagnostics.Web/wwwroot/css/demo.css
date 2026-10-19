@@ -20,6 +20,8 @@ fieldset.telemetry { margin: 14px 0 0; padding: 0; border: 0; min-width: 0; }
   overflow: hidden;
 }
 .tile-name { color: var(--text); font-size: 16px; }
+/* keeps the name and the health value clear of the 30px radar in the top-right corner */
+.tile-name, .tile-health { padding-right: 36px; }
 .tile-health { font-size: 34px; line-height: 1.1; color: var(--blue); }
 .tile-state { font-size: 14px; color: var(--blue); }
 .tile-status { min-height: 18px; font-size: 14px; font-weight: 700; }
@@ -33,6 +35,25 @@ fieldset.telemetry { margin: 14px 0 0; padding: 0; border: 0; min-width: 0; }
   background: repeating-linear-gradient(90deg, var(--sky) 0 24px, transparent 24px 32px);
   animation: sweep 1.2s linear infinite;
 }
+.tile-bar { height: 6px; border-radius: 3px; background: #2a2a2a; overflow: hidden; }
+.tile-bar i { display: block; height: 100%; width: var(--health, 0%); background: var(--blue); transition: width 0.9s ease-out; }
+.tile-bar.snap i { transition: none; }
+.tile.done.ok .tile-bar i { background: #6fcf97; }
+.tile.done.warning .tile-bar i { background: var(--gold); }
+.tile.done.critical .tile-bar i { background: #ff3b30; }
+.tile.done.neutral .tile-bar i { background: var(--text); }
+.radar, .ping { position: absolute; border-radius: 50%; pointer-events: none; display: none; }
+.radar { top: 10px; right: 10px; width: 30px; height: 30px; }
+.ping { top: 50%; left: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; }
+.radar { background: radial-gradient(circle, transparent 0 8px, rgba(255,255,255,0.18) 8px 9px, transparent 9px 14px, rgba(255,255,255,0.18) 14px 15px, transparent 15px), conic-gradient(from 0deg, transparent 0 250deg, var(--sky) 360deg); opacity: 0.8; }
+.tile.scanning .radar { display: block; animation: radar-spin 1.8s linear infinite; }
+.ping { border: 3px solid currentColor; color: var(--sky); }
+.tile.done.ok .ping { color: #6fcf97; }
+.tile.done.warning .ping { color: var(--gold); }
+.tile.done.critical .ping { color: #ff3b30; }
+.ping.go { display: block; animation: ping 1.3s ease-out 1 forwards; }
+@keyframes radar-spin { to { transform: rotate(360deg); } }
+@keyframes ping { from { transform: scale(0.3); opacity: 0.95; } 50% { opacity: 0.8; } to { transform: scale(3.4); opacity: 0; } }
 .tile.done.ok { border-left-color: #6fcf97; }
 .tile.done.ok .tile-health, .tile.done.ok .tile-status { color: #6fcf97; }
 .tile.done.warning { border-left-color: var(--gold); }
@@ -86,6 +107,8 @@ body.red-alert .departure.held { animation: pulse 1.6s ease-in-out infinite; }
 .repair-hours strong { color: var(--text); font-size: 22px; }
 
 @media (prefers-reduced-motion: reduce) {
+  .tile-bar i { transition: none; }
+  .ping.go, .radar { display: none !important; }
   .tile.scanning::after, .vote-row.pending .vote-state, body.red-alert .departure.held { animation: none; }
 }
 

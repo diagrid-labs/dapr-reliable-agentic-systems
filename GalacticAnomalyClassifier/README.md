@@ -115,6 +115,12 @@ Open http://localhost:5503, pick a preset (Temporal rift, Dark matter, Alien art
 
 The status endpoint (`GET /anomaly/status/{instanceId}`) returns `instanceId`, `status`, `result`, `progress` (the current stage and, once routed, the anomaly type and confidence, taken from the workflow custom status), `createdAt` and `lastUpdatedAt`.
 
+**Durable timeline.** A strip of beads under the progress heading shows the saved steps of the run: one bead per saved checkpoint, with two beads in total (classification, specialist analysis). A bead flashes `saved` when it appears while you watch. The strip is driven by the status the workflow reports, not by a timer.
+
+**Confidence arc and track switch.** Once the classifier has routed the anomaly, a semicircular arc fills to the classifier's confidence (the real value from the workflow status, shown as a percentage) and then a switch lever swings from the classifier to the lane of the chosen anomaly type. A finished run keeps the final arc and lever position.
+
+**Show the crash.** Start a run, then stop only the ApiService resource `wf-app` while the run is going: use the Stop action for `wf-app` in the Aspire dashboard at https://localhost:15000, or run `aspire resource wf-app stop`. Within a few seconds (typically 5 to 7) the page shows `Subspace link lost: state is safe`, the current bead turns red, the beads freeze and a counter shows how long the link has been down. Start `wf-app` again (the dashboard, or `aspire resource wf-app start`). The page reports that the link is restored and how many checkpoints were saved, and the run continues with the saved steps kept. The step that was running at the moment of the crash is executed again. The animations respect the browser's reduced-motion setting and show the final state at once.
+
 ### Test with REST Client
 
 Open `GalacticAnomalyClassifier.ApiService/GalacticAnomalyClassifier.ApiService.http` in VS Code and execute the requests to classify different anomalies. The ApiService HTTP port is shown in the Aspire dashboard.

@@ -112,6 +112,12 @@ Open http://localhost:5502, pick a preset (Wormhole, Temporal rift or Quantum fl
 
 The status endpoint (`GET /anomaly/status/{instanceId}`) returns `instanceId`, `status`, `result`, `progress` (the stages recorded so far, taken from the workflow custom status), `createdAt` and `lastUpdatedAt`.
 
+**Durable timeline.** A strip of beads under the progress heading shows the saved steps of the run: one bead per finished stage, with ghost beads for the five stages. A bead flashes `saved` when it appears while you watch. The strip is driven by the status the workflow reports, not by a timer.
+
+**Conduit packet.** Above the stage list a conduit shows the five stages (Sensor, Classify, Analyse, Risk, Recommend). A gold packet sits at the first stage that has not finished yet and glides to the next node when a stage completes, and the first characters of each stage output decode next to its node. Stages that were already finished when the page first rendered appear instantly.
+
+**Show the crash.** Start a run, then stop only the ApiService resource `wf-app` while the run is going: use the Stop action for `wf-app` in the Aspire dashboard at https://localhost:15000, or run `aspire resource wf-app stop`. Within a few seconds (typically 5 to 7) the page shows `Subspace link lost: state is safe`, the current bead turns red, the beads freeze and a counter shows how long the link has been down. Start `wf-app` again (the dashboard, or `aspire resource wf-app start`). The page reports that the link is restored and how many checkpoints were saved, and the run continues with the saved steps kept. The step that was running at the moment of the crash is executed again. The animations respect the browser's reduced-motion setting and show the final state at once.
+
 ### Test with REST Client
 
 Open `AnomalyAnalysis.ApiService/AnomalyAnalysis.ApiService.http` in VS Code and execute the requests to analyze anomalies. The ApiService HTTP port is shown in the Aspire dashboard.

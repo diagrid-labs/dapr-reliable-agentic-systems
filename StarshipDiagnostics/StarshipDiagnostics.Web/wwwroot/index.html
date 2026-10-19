@@ -89,21 +89,28 @@
         <h2 tabindex="-1">Scans <span id="run-status" class="status" aria-live="polite">--</span></h2>
         <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
         <p id="run-note" class="note" role="alert" hidden></p>
+        <div id="durable" class="durable" aria-hidden="true"></div>
+        <p id="durable-caption" class="durable-caption" role="status"></p>
         <ol id="scan-board" aria-live="polite">
           <li class="tile" data-activity="HullIntegrityScanActivity">
             <span class="tile-name">Hull integrity</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+            <span class="tile-bar" aria-hidden="true"><i></i></span><span class="radar" aria-hidden="true"></span><span class="ping" aria-hidden="true"></span>
           </li>
           <li class="tile" data-activity="ReactorCoreScanActivity">
             <span class="tile-name">Reactor core</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+            <span class="tile-bar" aria-hidden="true"><i></i></span><span class="radar" aria-hidden="true"></span><span class="ping" aria-hidden="true"></span>
           </li>
           <li class="tile" data-activity="NavigationScanActivity">
             <span class="tile-name">Navigation</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+            <span class="tile-bar" aria-hidden="true"><i></i></span><span class="radar" aria-hidden="true"></span><span class="ping" aria-hidden="true"></span>
           </li>
           <li class="tile" data-activity="LifeSupportScanActivity">
             <span class="tile-name">Life support</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+            <span class="tile-bar" aria-hidden="true"><i></i></span><span class="radar" aria-hidden="true"></span><span class="ping" aria-hidden="true"></span>
           </li>
           <li class="tile" data-activity="WeaponsScanActivity">
             <span class="tile-name">Weapons</span><span class="tile-health">--</span><span class="tile-state">Standby</span><span class="tile-status"></span>
+            <span class="tile-bar" aria-hidden="true"><i></i></span><span class="radar" aria-hidden="true"></span><span class="ping" aria-hidden="true"></span>
           </li>
         </ol>
         <div id="vote-panel" hidden>

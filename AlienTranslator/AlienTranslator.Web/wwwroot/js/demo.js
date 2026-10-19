@@ -1,4 +1,4 @@
-import { $, clean, uuid } from "./util.js";
+import { $, clean, reveal, runState, uuid } from "./util.js";
 
 const PRESETS = {
   vulcan: {
@@ -51,6 +51,9 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const board = $("iteration-board");
 const processingRow = $("processing-row");
 let threshold = DEFAULT_THRESHOLD;
+// iteration indexes already shown in this run, and the text each row was last given
+const seen = new Set();
+const shownText = new WeakMap();
 
 const asArray = (value) => (Array.isArray(value) ? value : []);
 const objects = (value) => asArray(value).filter((item) => item && typeof item === "object");
@@ -152,16 +155,22 @@ function iterationElement() {
   bar.append(make("span", "q-track"), make("span", "q-score"));
   const text = make("details", "iter-text");
   text.append(make("summary", "", "Translation"), make("p", "prose"));
-  item.append(make("span", "stage-name"), bar, make("span", "verdict"), text);
+  const preview = make("p", "iter-preview");
+  preview.setAttribute("aria-hidden", "true");
+  item.append(make("span", "stage-name"), bar, make("span", "verdict"), preview, text);
   return item;
 }
 
 // rows are positional and reused so an expanded translation stays open across polls;
 // the processing row is the board's last child, iteration rows are inserted before it
+// a row first shown while watching gets "fresh": CSS grows its bar and fades in the verdict afterwards
 function setIteration(item, entry, index) {
   const quality = score(entry.overallQuality);
   const meets = entry.meetsStandards === true;
-  setClass(item, `iter ${meets ? "meets" : "below"}`);
+  const isNew = !seen.has(index);
+  seen.add(index);
+  const fresh = item.classList.contains("fresh") || (isNew && runState.animate);
+  setClass(item, `iter ${meets ? "meets" : "below"}${fresh ? " fresh" : ""}`);
   const number = entry.iteration;
   setText(item.querySelector(".stage-name"), `Iteration ${Number.isInteger(number) && number > 0 ? number : index + 1}`);
   const track = item.querySelector(".q-track");
@@ -169,7 +178,20 @@ function setIteration(item, entry, index) {
   setVar(track, "--mark", percent(threshold));
   setText(item.querySelector(".q-score"), quality === null ? "--" : quality.toFixed(1));
   setText(item.querySelector(".verdict"), meets ? "Meets standard" : "Below standard");
-  setText(item.querySelector(".iter-text p"), clean(entry.translatedText));
+  const text = clean(entry.translatedText);
+  if (shownText.get(item) === text) return;
+  shownText.set(item, text);
+  // the details copy is the accessible one; the aria-hidden preview shows the decode without a click
+  setText(item.querySelector(".iter-text p"), text);
+  const preview = item.querySelector(".iter-preview");
+  if (isNew) reveal(preview, text, { mode: "decode", ms: 15 });
+  else setText(preview, text);
+}
+
+// one checkpoint per iteration; the limit is a ghost target, the loop can end earlier
+function checkpoints(status, progress) {
+  const limit = Number(progress?.maxIterations);
+  return { done: objects(progress?.iterations).length, total: Number.isInteger(limit) && limit > 0 ? limit : DEFAULT_MAX_ITERATIONS };
 }
 
 function renderProgress(status, progress) {
@@ -180,6 +202,8 @@ function renderProgress(status, progress) {
   const level = Number(progress?.threshold);
   threshold = Number.isFinite(level) && level > 0 ? score(level) : DEFAULT_THRESHOLD;
 
+  if (status === "Pending" && !progress) seen.clear();
+  for (const index of seen) if (index >= iterations.length) seen.delete(index);
   while (board.children.length - 1 > iterations.length) processingRow.previousElementSibling.remove();
   while (board.children.length - 1 < iterations.length) processingRow.before(iterationElement());
   iterations.forEach((entry, index) => setIteration(board.children[index], entry, index));
@@ -231,7 +255,7 @@ function renderResult(result) {
 
   // the result does not carry the original text; it is still in the form
   $("original-text").textContent = $("originalText").value.trim();
-  $("final-translation").textContent = clean(finalTranslation.translatedText);
+  reveal($("final-translation"), clean(finalTranslation.translatedText), { mode: "decode", ms: 15 });
   $("reasoning-text").textContent = reasoning;
   $("reasoning").hidden = !reasoning;
   $("scores").replaceChildren(...SCORES.map(([key, label]) => scoreRow(label, score(finalEvaluation[key]))));
@@ -257,6 +281,8 @@ export default {
   initialPreset: "vulcan",
   stardate,
   renderProgress,
+  resetUi: () => seen.clear(),
+  checkpoints,
   renderResult,
   messages: {
     refused: (status) => `The ship's computer refused the request (${status})`,

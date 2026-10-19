@@ -1,4 +1,4 @@
-import { $, clean, levelFrom, uuid } from "./util.js";
+import { $, clean, levelFrom, runState, uuid } from "./util.js";
 
 const lanes = [...document.querySelectorAll("#routing-board li")];
 
@@ -105,13 +105,86 @@ function stardate() {
 }
 
 function setNode(state) {
-  $("classifier-node").className = `node ${state}`;
-  $("classifier-node").querySelector(".stage-state").textContent = { done: "Complete", active: "Classifying", pending: "Standby" }[state];
+  const node = $("classifier-node");
+  const className = `node ${state}`;
+  if (node.className !== className) node.className = className;
+  const text = { done: "Complete", active: "Classifying", pending: "Standby" }[state];
+  const label = node.querySelector(".stage-state");
+  if (label.textContent !== text) label.textContent = text;
 }
 
 function setLane(item, state) {
-  item.className = `lane ${state}`;
-  item.querySelector(".stage-state").textContent = { active: "Analyzing", done: "Complete", skipped: "Not routed", pending: "Standby" }[state];
+  const className = `lane ${state}`;
+  if (item.className !== className) item.className = className;
+  const text = { active: "Analyzing", done: "Complete", skipped: "Not routed", pending: "Standby" }[state];
+  const label = item.querySelector(".stage-state");
+  if (label.textContent !== text) label.textContent = text;
+}
+
+// what the decorative arc and lever show now: confidence 0-1 (null = empty) and the chosen lane (-1 = centred)
+const gauge = { confidence: null, lane: -1 };
+
+// an animated aim takes the lever delay plus its throw (see --lever-delay and --lever-move in demo.css)
+const AIM_MS = 1600;
+let animatingUntil = 0;
+
+function aimLever() {
+  const box = $("switch").getBoundingClientRect();
+  // the lever pivots 6px from the left edge and reaches across the column and its gap to the lane
+  const reach = Math.max(box.width + 2, 0);
+  let rise = 0;
+  if (gauge.lane >= 0 && box.height > 0) {
+    const lane = lanes[gauge.lane].getBoundingClientRect();
+    rise = lane.top + lane.height / 2 - (box.top + box.height / 2);
+  }
+  $("lever").style.setProperty("--len", `${Math.hypot(reach, rise).toFixed(1)}px`);
+  $("lever").style.setProperty("--angle", `${Math.atan2(rise, reach).toFixed(4)}rad`);
+  $("lever").classList.toggle("thrown", gauge.lane >= 0);
+}
+
+function showGauge(confidence, lane, animate) {
+  for (const element of [$("arc"), $("lever")]) element.classList.toggle("snap", !animate);
+  if (animate) animatingUntil = performance.now() + AIM_MS;
+  gauge.confidence = confidence;
+  gauge.lane = lane;
+  // the routed lane lights up after the lever lands, only when the lever actually moves
+  lanes.forEach((item, index) => item.toggleAttribute("data-follow", animate && index === lane));
+  $("arc-fill").style.strokeDashoffset = String(100 - 100 * (confidence ?? 0));
+  const text = confidence === null ? "--" : `${Math.round(confidence * 100)}%`;
+  if ($("arc-text").textContent !== text) $("arc-text").textContent = text;
+  aimLever();
+}
+
+// the switch changes size when the progress panel appears and when the lanes wrap
+// (a resize during an animated aim leaves it running; later ones re-aim without the delay)
+new ResizeObserver(() => {
+  if (performance.now() >= animatingUntil) $("lever").classList.add("snap");
+  aimLever();
+}).observe($("switch"));
+
+function renderSwitch(status, progress, routed) {
+  const running = status === "Running" || status === "Pending";
+  if (progress?.stage !== "Analyzing") {
+    if (running && (gauge.confidence !== null || gauge.lane >= 0)) showGauge(null, -1, false);
+    return;
+  }
+  const value = Number.isFinite(progress.confidence)
+    ? Math.min(1, Math.max(0, progress.confidence))
+    : null;
+  const lane = routed ? lanes.indexOf(routed) : -1;
+  // a finished run shows its final state without moving
+  const animate = running && runState.animate;
+  if (value === gauge.confidence && lane === gauge.lane) {
+    for (const element of [$("arc"), $("lever")]) element.classList.toggle("snap", !animate);
+    return;
+  }
+  showGauge(value, lane, animate);
+}
+
+// two checkpoints: the classification and the specialist analysis
+function checkpoints(status, progress) {
+  if (status === "Completed") return { done: 2, total: 2 };
+  return { done: progress?.stage === "Analyzing" ? 1 : 0, total: 2 };
 }
 
 function renderProgress(status, progress) {
@@ -129,8 +202,11 @@ function renderProgress(status, progress) {
   }
 
   const unrouted = analyzing && !routed;
-  $("routing-note").hidden = !unrouted;
-  $("routing-note").textContent = unrouted ? "No specialist route for this anomaly — it will need manual review" : "";
+  if ($("routing-note").hidden === unrouted) $("routing-note").hidden = !unrouted;
+  const note = unrouted ? "No specialist route for this anomaly — it will need manual review" : "";
+  if ($("routing-note").textContent !== note) $("routing-note").textContent = note;
+
+  renderSwitch(status, progress, routed);
 }
 
 const MAX_TEXT = 160;
@@ -183,6 +259,7 @@ export default {
   initialPreset: "temporal-rift",
   stardate,
   renderProgress,
+  checkpoints,
   renderResult,
   messages: {
     refused: (status) => `The ship's computer refused the request (${status})`,

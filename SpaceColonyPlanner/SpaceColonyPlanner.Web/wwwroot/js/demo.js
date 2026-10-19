@@ -1,8 +1,13 @@
-import { $, clean } from "./util.js";
+import { $, clean, runState } from "./util.js";
 
 const STAGES = ["AnalyzingPlanet", "DeterminingStructures", "PlanningStructures", "Synthesizing", "Optimizing"];
 const nodes = [...document.querySelectorAll(".node")];
 const board = $("worker-board");
+const scene = $("colony-scene");
+const MAX_DOTS = 8;
+const BLOCKS = 6;
+// lanes whose structure was already seen done in this run; cleared by resetUi (engine calls it on every reset)
+const finished = new Set();
 
 const PRESETS = {
   arrakis: {
@@ -33,6 +38,10 @@ const objects = (value) => asArray(value).filter((item) => item && typeof item =
 const priorityClass = (priority) => (Object.hasOwn(PRIORITY_CLASS, priority) ? PRIORITY_CLASS[priority] : "neutral");
 // HabitatDome -> Habitat Dome
 const spaced = (text) => clean(text).replace(/([a-z])([A-Z])/g, "$1 $2");
+// write only when the value changed, so identical polls cause no DOM mutations in the live regions
+const put = (element, property, value) => {
+  if (element[property] !== value) element[property] = value;
+};
 const make = (tag, className, text) => {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -111,27 +120,70 @@ function stateOf(index, current, status, running) {
 }
 
 function setNode(node, state) {
-  node.className = `node ${state}`;
-  node.querySelector(".stage-state").textContent = { done: "Complete", active: "Processing", pending: "Standby" }[state];
+  put(node, "className", `node ${state}`);
+  put(node.querySelector(".stage-state"), "textContent", { done: "Complete", active: "Processing", pending: "Standby" }[state]);
 }
 
 function laneElement() {
   const lane = make("li", "lane");
-  lane.append(make("span", "stage-name"), make("span", "prio"), make("span", "qty"), make("span", "stage-bar"), make("span", "stage-state"));
+  const blocks = make("span", "blocks");
+  blocks.setAttribute("aria-hidden", "true");
+  blocks.append(...Array.from({ length: BLOCKS }, () => make("i")));
+  lane.append(make("span", "stage-name"), make("span", "prio"), make("span", "qty"), make("span", "stage-bar"), make("span", "stage-state"), blocks);
   return lane;
 }
 
-// lanes are positional and reused so the sweep animation does not restart on every poll
-function setLane(lane, entry, running) {
+// lanes are positional and reused so the sweep animation does not restart on every poll.
+// fill: true = blocks fill with a stagger, false = instantly, null = keep what is there
+function setLane(lane, entry, running, fill) {
   const state = entry.done === true ? "done" : running ? "active" : "pending";
-  lane.className = `lane ${state}`;
-  lane.querySelector(".stage-name").textContent = spaced(entry.type) || "Structure";
+  put(lane, "className", `lane ${state}`);
+  put(lane.querySelector(".stage-name"), "textContent", spaced(entry.type) || "Structure");
   const prio = lane.querySelector(".prio");
-  prio.className = `prio ${priorityClass(entry.priority)}`;
-  prio.textContent = clean(entry.priority).slice(0, 10).toUpperCase() || "--";
+  put(prio, "className", `prio ${priorityClass(entry.priority)}`);
+  put(prio, "textContent", clean(entry.priority).slice(0, 10).toUpperCase() || "--");
   const quantity = Number(entry.quantity);
-  lane.querySelector(".qty").textContent = Number.isFinite(quantity) ? `×${quantity}` : "";
-  lane.querySelector(".stage-state").textContent = { done: "Complete", active: "Planning", pending: "Standby" }[state];
+  put(lane.querySelector(".qty"), "textContent", Number.isFinite(quantity) ? `×${quantity}` : "");
+  put(lane.querySelector(".stage-state"), "textContent", { done: "Complete", active: "Planning", pending: "Standby" }[state]);
+  if (fill !== null) put(lane.querySelector(".blocks"), "className", fill ? "blocks fill" : "blocks");
+}
+
+// one orbiting dot per structure (capped), positional like the lanes; a dot moves while its structure is being planned
+function dotElement(index) {
+  const orbit = make("span", "orbit");
+  orbit.style.setProperty("--i", index);
+  orbit.style.setProperty("--d", `${40 + 16 * index}px`);
+  orbit.style.setProperty("--dur", `${5 + 1.4 * index}s`);
+  const dot = make("i", "dot");
+  orbit.append(dot);
+  return orbit;
+}
+
+function renderScene(structures, running) {
+  const dots = structures.slice(0, MAX_DOTS);
+  while (scene.children.length - 1 > dots.length) scene.lastChild.remove();
+  while (scene.children.length - 1 < dots.length) scene.append(dotElement(scene.children.length - 1));
+  put(scene, "hidden", dots.length === 0);
+  if (scene.style.getPropertyValue("--n") !== String(dots.length)) scene.style.setProperty("--n", dots.length);
+  dots.forEach((entry, index) => {
+    put(scene.children[index + 1], "className", `orbit${entry.done === true ? " done" : running ? " go" : ""}`);
+  });
+}
+
+// planet analysis and structure selection, one checkpoint per structure, then synthesis and optimization
+function checkpoints(status, progress) {
+  const structures = objects(progress?.structures);
+  const count = structures.length;
+  const total = count > 0 ? 2 + count + 2 : null;
+  if (status === "Completed") return { done: 2 + count + 2, total: 2 + count + 2 };
+  const planned = structures.filter((entry) => entry.done === true).length;
+  const done = { AnalyzingPlanet: 0, DeterminingStructures: 1, PlanningStructures: 2 + planned, Synthesizing: 2 + count, Optimizing: 2 + count + 1 }[progress?.stage];
+  return { done: done ?? 0, total };
+}
+
+// the lanes, dots and blocks are derived from progress, so only the bookkeeping needs clearing (idempotent)
+function resetUi() {
+  finished.clear();
 }
 
 function renderProgress(status, progress) {
@@ -144,11 +196,20 @@ function renderProgress(status, progress) {
   const structures = objects(progress?.structures);
   while (board.children.length > structures.length) board.lastChild.remove();
   while (board.children.length < structures.length) board.append(laneElement());
-  structures.forEach((entry, index) => setLane(board.children[index], entry, running));
+  for (const index of [...finished]) if (index >= structures.length) finished.delete(index);
+  structures.forEach((entry, index) => {
+    const isDone = entry.done === true;
+    // only a lane that completes in a render after the first of the run fills with a stagger
+    const fill = isDone ? (finished.has(index) ? null : runState.animate) : false;
+    if (isDone) finished.add(index);
+    else finished.delete(index);
+    setLane(board.children[index], entry, running, fill);
+  });
+  renderScene(structures, running);
 
-  $("worker-placeholder").hidden = structures.length > 0;
-  const finished = structures.filter((entry) => entry.done === true).length;
-  $("worker-count").textContent = structures.length > 0 ? `${finished} / ${structures.length} complete` : "";
+  put($("worker-placeholder"), "hidden", structures.length > 0);
+  const complete = structures.filter((entry) => entry.done === true).length;
+  put($("worker-count"), "textContent", structures.length > 0 ? `${complete} / ${structures.length} complete` : "");
 }
 
 function textList(items) {
@@ -230,6 +291,8 @@ export default {
   initialPreset: "arrakis",
   stardate,
   renderProgress,
+  resetUi,
+  checkpoints,
   renderResult,
   messages: {
     refused: (status) => `The ship's computer refused the request (${status})`,

@@ -1,4 +1,4 @@
-import { $, clean, levelFrom } from "./util.js";
+import { $, clean, levelFrom, reducedMotion, runState } from "./util.js";
 
 const tiles = [...document.querySelectorAll("#scan-board .tile")];
 
@@ -84,14 +84,56 @@ function stardate() {
   return (1000 * (year - 2323) + (1000 * dayOfYear) / daysInYear).toFixed(1);
 }
 
+// write only when the value differs: an identical poll must not touch the live region
+function put(element, name, value) {
+  if (element[name] !== value) element[name] = value;
+}
+
+// tiles whose scan was already shown in this run
+const shown = new Set();
+
+for (const tile of tiles) {
+  const ping = tile.querySelector(".ping");
+  ping.addEventListener("animationend", () => ping.classList.remove("go"));
+}
+
 function setTile(tile, scan, running) {
   const state = scan ? "done" : running ? "scanning" : "standby";
   const level = scan ? levelOf(scan.status) : null;
-  tile.className = `tile ${state}${scan ? ` ${statusClass(level)}` : ""}`;
-  tile.dataset.state = state;
-  tile.querySelector(".tile-health").textContent = scan ? percentText(scan.healthPercentage) : "--";
-  tile.querySelector(".tile-state").textContent = { done: "Complete", scanning: "Scanning", standby: "Standby" }[state];
-  tile.querySelector(".tile-status").textContent = scan ? (level ?? clean(scan.status).slice(0, 14).toUpperCase()) : "";
+  put(tile, "className", `tile ${state}${scan ? ` ${statusClass(level)}` : ""}`);
+  if (tile.dataset.state !== state) tile.dataset.state = state;
+  put(tile.querySelector(".tile-health"), "textContent", scan ? percentText(scan.healthPercentage) : "--");
+  put(tile.querySelector(".tile-state"), "textContent", { done: "Complete", scanning: "Scanning", standby: "Standby" }[state]);
+  put(tile.querySelector(".tile-status"), "textContent", scan ? (level ?? clean(scan.status).slice(0, 14).toUpperCase()) : "");
+  animateTile(tile, scan);
+}
+
+// the bar grows from 0 to the real health value; a scan that is new in a later render also pings once
+function animateTile(tile, scan) {
+  const activity = tile.dataset.activity;
+  const bar = tile.querySelector(".tile-bar");
+  const value = `${scan ? (percent(scan.healthPercentage) ?? 0) : 0}%`;
+  const fresh = scan && !shown.has(activity);
+  const animated = fresh && runState.animate;
+  if (scan) shown.add(activity);
+  else shown.delete(activity);
+  if (animated && !reducedMotion()) {
+    bar.classList.remove("snap");
+    tile.querySelector(".ping").classList.add("go");
+  } else if (fresh) {
+    bar.classList.add("snap");
+  }
+  if (bar.style.getPropertyValue("--health") !== value) bar.style.setProperty("--health", value);
+}
+
+function resetTiles() {
+  shown.clear();
+  for (const tile of tiles) {
+    const ping = tile.querySelector(".ping");
+    const bar = tile.querySelector(".tile-bar");
+    if (ping.classList.contains("go")) ping.classList.remove("go");
+    if (!bar.classList.contains("snap")) bar.classList.add("snap");
+  }
 }
 
 function voteRow(category, vote) {
@@ -128,11 +170,21 @@ function renderVotePanel(progress, scans) {
     const category = clean(vote.category);
     if (!seen.has(category)) rows.push(voteRow(category, vote));
   }
-  $("vote-rows").replaceChildren(...rows);
-  $("vote-panel").hidden = rows.length === 0;
+  const current = [...$("vote-rows").children];
+  const same = current.length === rows.length && current.every((row, i) => row.outerHTML === rows[i].outerHTML);
+  if (!same) $("vote-rows").replaceChildren(...rows);
+  if ($("vote-panel").hidden !== (rows.length === 0)) $("vote-panel").hidden = rows.length === 0;
+}
+
+// five scans plus the report
+function checkpoints(status, progress) {
+  if (status === "Completed") return { done: 6, total: 6 };
+  const scans = asArray(progress?.scans).filter((scan) => scan && typeof scan === "object");
+  return { done: Math.min(scans.length, 5), total: 6 };
 }
 
 function renderProgress(status, progress) {
+  if (status === "Pending" && !progress) resetTiles();
   const scans = asArray(progress?.scans).filter((scan) => scan && typeof scan === "object");
   const byActivity = new Map(scans.map((scan) => [scan.activity, scan]));
   const running = status === "Running" || status === "Pending";
@@ -260,6 +312,8 @@ export default {
   initialPreset: "enterprise-d",
   stardate,
   renderProgress,
+  resetUi: resetTiles,
+  checkpoints,
   renderResult,
   messages: {
     refused: (status) => `The ship's computer refused the request (${status})`,

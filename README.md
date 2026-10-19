@@ -256,6 +256,8 @@ Every demo ships a Star Trek TNG (LCARS) styled web UI when started with `aspire
 | SpaceDebrisAgent | http://localhost:5505 |
 | StarshipDiagnostics | http://localhost:5506 |
 
+The UIs show animated durability (a timeline of saved checkpoints that stays put while you stop the ApiService mid-run, so you can watch the run continue) and a per-demo animation driven by the real workflow state.
+
 ## Next Steps
 
 - Join the [Dapr Discord](https://bit.ly/dapr-discord) to connect with the community.

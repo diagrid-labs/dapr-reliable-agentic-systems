@@ -75,27 +75,38 @@
         <h2 tabindex="-1">Routing <span id="run-status" class="status" aria-live="polite">--</span></h2>
         <p class="meta">Instance <span id="instance-id">--</span> &middot; Elapsed <span id="elapsed">00:00</span></p>
         <p id="run-note" class="note" role="alert" hidden></p>
-        <div id="classifier-node" class="node">
-          <span class="stage-name">Classifier<small>Classifying the sensor data</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+        <div id="durable" class="durable" aria-hidden="true"></div>
+        <p id="durable-caption" class="durable-caption" role="status"></p>
+        <div class="classify">
+          <div id="classifier-node" class="node">
+            <span class="stage-name">Classifier<small>Classifying the sensor data</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+          </div>
+          <div id="arc" class="arc" aria-hidden="true">
+            <svg viewBox="0 0 100 56" focusable="false"><path class="arc-track" d="M8 50 A42 42 0 0 1 92 50" pathLength="100"/><path id="arc-fill" class="arc-fill" d="M8 50 A42 42 0 0 1 92 50" pathLength="100"/></svg>
+            <span id="arc-text" class="arc-text">--</span>
+          </div>
         </div>
         <p id="routing-note" class="note" aria-live="polite" hidden></p>
-        <ol id="routing-board" aria-live="polite">
-          <li class="lane" data-type="TemporalRift">
-            <span class="stage-name">Temporal rift<small>Quantum chronodynamics</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
-          </li>
-          <li class="lane" data-type="DarkMatterCluster">
-            <span class="stage-name">Dark matter cluster<small>Gravitational physics</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
-          </li>
-          <li class="lane" data-type="AlienArtifact">
-            <span class="stage-name">Alien artifact<small>Xenoarchaeology</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
-          </li>
-          <li class="lane" data-type="StellarPhenomenon">
-            <span class="stage-name">Stellar phenomenon<small>Astrophysics</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
-          </li>
-          <li class="lane" data-type="DimensionalTear">
-            <span class="stage-name">Dimensional tear<small>Multiverse theory</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
-          </li>
-        </ol>
+        <div class="routing">
+          <div id="switch" class="switch" aria-hidden="true"><span id="lever" class="lever"></span></div>
+          <ol id="routing-board" aria-live="polite">
+            <li class="lane" data-type="TemporalRift">
+              <span class="stage-name">Temporal rift<small>Quantum chronodynamics</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+            <li class="lane" data-type="DarkMatterCluster">
+              <span class="stage-name">Dark matter cluster<small>Gravitational physics</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+            <li class="lane" data-type="AlienArtifact">
+              <span class="stage-name">Alien artifact<small>Xenoarchaeology</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+            <li class="lane" data-type="StellarPhenomenon">
+              <span class="stage-name">Stellar phenomenon<small>Astrophysics</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+            <li class="lane" data-type="DimensionalTear">
+              <span class="stage-name">Dimensional tear<small>Multiverse theory</small></span><span class="stage-bar"></span><span class="stage-state">Standby</span>
+            </li>
+          </ol>
+        </div>
         <div id="restart-actions" class="actions"><button type="button" id="restart" class="pill p-orange">New analysis</button></div>
       </section>
     </main>
