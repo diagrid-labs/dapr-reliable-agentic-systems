@@ -89,3 +89,35 @@ h3 { margin: 16px 0 4px; font-size: 14px; font-weight: 400; color: var(--sky); }
   .measure-row { grid-template-columns: 1fr 1fr; }
   .measure-row .pill { grid-column: 1 / -1; }
 }
+
+/* Idle-page wireframe */
+.panel-head { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: start; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 2px solid var(--blue); }
+.panel-head h2 { margin-bottom: 8px; }
+.panel-head .lede { margin: 0; font-size: 17px; color: var(--text); max-width: 46ch; line-height: 1.35; }
+.idle-intro { margin: 0; min-width: 0; }
+@media (max-width: 760px) { .panel-head { grid-template-columns: 1fr; } }
+.idle-intro svg { height: 160px; width: auto; max-width: 100%; display: block; }
+.idle-intro .ln { fill: none; stroke-width: 1.5; }
+.idle-intro .so { stroke: var(--orange); } .idle-intro .sp { stroke: var(--peach); }
+.idle-intro .sl { stroke: var(--lilac); } .idle-intro .sb { stroke: var(--blue); }
+.idle-intro .sk { stroke: var(--sky); } .idle-intro .sr { stroke: var(--salmon); }
+.idle-intro .dim { opacity: .35; }
+.idle-intro .fo { fill: var(--orange); } .idle-intro .fl { fill: var(--lilac); }
+.idle-intro .fk { fill: var(--sky); } .idle-intro .fp { fill: var(--peach); }
+.idle-intro text { fill: var(--text); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.idle-intro .sm { font-size: 8px; }
+.idle-intro .hi { fill: var(--orange); }
+.idle-intro .fb { transform-box: fill-box; }
+@keyframes gc-lane{0%{opacity:1}40%{opacity:1}45%{opacity:.3}100%{opacity:.3}}
+@keyframes gc-pick{0%{opacity:0}40%{opacity:0}45%{opacity:1}100%{opacity:1}}
+@keyframes gc-pickbox{0%{opacity:0}40%{opacity:0}45%{opacity:1}100%{opacity:1}}
+@keyframes gc-sig{0%{offset-distance:0%}7.5%{offset-distance:0%}40%{offset-distance:100%}100%{offset-distance:100%}}
+@keyframes gc-fade{0%{opacity:0}3.75%{opacity:1}91.25%{opacity:1}100%{opacity:0}}
+.idle-intro .lane{animation:gc-lane 8s linear infinite;}
+.idle-intro .pick{animation:gc-pick 8s linear infinite;}
+.idle-intro .pickbox{animation:gc-pickbox 8s linear infinite;}
+.idle-intro .sig{animation:gc-sig 8s linear infinite;}
+.idle-intro .loop{animation:gc-fade 8s linear infinite;}
+@media (prefers-reduced-motion: reduce) {
+  .idle-intro * { animation: none !important; }
+}

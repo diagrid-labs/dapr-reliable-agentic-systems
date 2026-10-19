@@ -119,3 +119,41 @@ body.red-alert .departure.held { animation: pulse 1.6s ease-in-out infinite; }
   .subsystem summary { grid-template-columns: 1fr 60px 80px; }
   .subsystem .health-bar { grid-column: 1 / -1; order: 3; }
 }
+
+/* Idle-page wireframe */
+.panel-head { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: start; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 2px solid var(--blue); }
+.panel-head h2 { margin-bottom: 8px; }
+.panel-head .lede { margin: 0; font-size: 17px; color: var(--text); max-width: 46ch; line-height: 1.35; }
+.idle-intro { margin: 0; min-width: 0; }
+@media (max-width: 760px) { .panel-head { grid-template-columns: 1fr; } }
+.idle-intro svg { height: 160px; width: auto; max-width: 100%; display: block; }
+.idle-intro .ln { fill: none; stroke-width: 1.5; }
+.idle-intro .so { stroke: var(--orange); } .idle-intro .sp { stroke: var(--peach); }
+.idle-intro .sl { stroke: var(--lilac); } .idle-intro .sb { stroke: var(--blue); }
+.idle-intro .sk { stroke: var(--sky); } .idle-intro .sr { stroke: var(--salmon); }
+.idle-intro .dim { opacity: .35; }
+.idle-intro .fo { fill: var(--orange); } .idle-intro .fl { fill: var(--lilac); }
+.idle-intro .fk { fill: var(--sky); } .idle-intro .fp { fill: var(--peach); }
+.idle-intro text { fill: var(--text); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.idle-intro .sm { font-size: 8px; }
+.idle-intro .hi { fill: var(--orange); }
+.idle-intro .fb { transform-box: fill-box; }
+@keyframes sd-bar0{0%{transform:scaleX(0)}10%{transform:scaleX(0)}45%{transform:scaleX(1)}100%{transform:scaleX(1)}}
+@keyframes sd-bar1{0%{transform:scaleX(0)}13.75%{transform:scaleX(0)}48.75%{transform:scaleX(1)}100%{transform:scaleX(1)}}
+@keyframes sd-bar2{0%{transform:scaleX(0)}17.5%{transform:scaleX(0)}52.5%{transform:scaleX(1)}100%{transform:scaleX(1)}}
+@keyframes sd-bar3{0%{transform:scaleX(0)}21.25%{transform:scaleX(0)}56.25%{transform:scaleX(1)}100%{transform:scaleX(1)}}
+@keyframes sd-lamp0{0%{opacity:0}57.5%{opacity:0}62.5%{opacity:1}100%{opacity:1}}
+@keyframes sd-lamp1{0%{opacity:0}63.75%{opacity:0}68.75%{opacity:1}100%{opacity:1}}
+@keyframes sd-lamp2{0%{opacity:0}70%{opacity:0}75%{opacity:1}100%{opacity:1}}
+@keyframes sd-fade{0%{opacity:0}3.75%{opacity:1}91.25%{opacity:1}100%{opacity:0}}
+.idle-intro .bar0{animation:sd-bar0 8s linear infinite;}
+.idle-intro .bar1{animation:sd-bar1 8s linear infinite;}
+.idle-intro .bar2{animation:sd-bar2 8s linear infinite;}
+.idle-intro .bar3{animation:sd-bar3 8s linear infinite;}
+.idle-intro .lamp0{animation:sd-lamp0 8s linear infinite;}
+.idle-intro .lamp1{animation:sd-lamp1 8s linear infinite;}
+.idle-intro .lamp2{animation:sd-lamp2 8s linear infinite;}
+.idle-intro .loop{animation:sd-fade 8s linear infinite;}
+@media (prefers-reduced-motion: reduce) {
+  .idle-intro * { animation: none !important; }
+}

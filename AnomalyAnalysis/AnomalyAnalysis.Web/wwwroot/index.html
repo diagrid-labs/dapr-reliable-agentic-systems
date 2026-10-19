@@ -28,7 +28,13 @@
       <div id="link-lost" class="banner warn" role="alert" hidden>Subspace link lost &mdash; retrying</div>
 
       <section id="form-panel" class="panel">
-        <h2 tabindex="-1">Sensor input</h2>
+        <div class="panel-head">
+          <div>
+            <h2 tabindex="-1">Sensor input</h2>
+            <p class="lede">Feed in sensor readings from a spatial anomaly. Data works through them in five steps, from raw readings to a risk report.</p>
+          </div>
+          <div id="idle-intro" class="idle-intro" aria-hidden="true"><svg viewBox="0 0 300 150" role="presentation" focusable="false"><g class="loop"><text x="8" y="14">Spatial anomaly</text><path class="ln sk wave" pathLength="1" style="stroke-dasharray:1" d="M10 44q10-20 20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0"/><line class="ln sb" x1="35" y1="95" x2="267" y2="95"/><rect class="ln so st0" x="20" y="80" width="30" height="30" rx="3"/><text class="sm" x="35" y="128" text-anchor="middle">Data</text><rect class="ln sp st1" x="78" y="80" width="30" height="30" rx="3"/><text class="sm" x="93" y="128" text-anchor="middle">Class</text><rect class="ln sl st2" x="136" y="80" width="30" height="30" rx="3"/><text class="sm" x="151" y="128" text-anchor="middle">Science</text><rect class="ln sk st3" x="194" y="80" width="30" height="30" rx="3"/><text class="sm" x="209" y="128" text-anchor="middle">Risk</text><rect class="ln sr st4" x="252" y="80" width="30" height="30" rx="3"/><text class="sm" x="267" y="128" text-anchor="middle">Report</text><circle class="fo dot" cx="35" cy="95" r="4" style="transform:translateX(232px)"/></g></svg></div>
+        </div>
         <form id="demo-form" novalidate>
           <div class="grid">
             <label>Coordinates<input id="coordinates" type="text" required></label>
@@ -41,9 +47,9 @@
           <label class="wide">Raw sensor log<textarea id="rawSensorData" rows="3" required></textarea></label>
           <p id="form-error" class="error" role="alert" hidden></p>
           <div class="actions">
-            <button type="button" class="pill p-lilac" data-preset="wormhole">Wormhole</button>
-            <button type="button" class="pill p-blue" data-preset="temporal-rift">Temporal rift</button>
-            <button type="button" class="pill p-sky" data-preset="quantum-flux">Quantum flux</button>
+            <button type="button" class="pill p-lilac" data-preset="wormhole">Anomaly A</button>
+            <button type="button" class="pill p-blue" data-preset="temporal-rift">Anomaly B</button>
+            <button type="button" class="pill p-sky" data-preset="quantum-flux">Anomaly C</button>
             <button type="submit" id="begin" class="pill p-orange go">Begin analysis</button>
           </div>
         </form>

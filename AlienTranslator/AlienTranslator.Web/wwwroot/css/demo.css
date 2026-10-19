@@ -74,3 +74,35 @@ fieldset.vocab-set { margin: 14px 0 0; padding: 0; border: 0; min-width: 0; }
 @media (prefers-reduced-motion: reduce) {
   .iter.fresh .q-track::before, .iter.fresh .verdict { animation: none; }
 }
+
+/* Idle-page wireframe */
+.panel-head { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: start; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 2px solid var(--blue); }
+.panel-head h2 { margin-bottom: 8px; }
+.panel-head .lede { margin: 0; font-size: 17px; color: var(--text); max-width: 46ch; line-height: 1.35; }
+.idle-intro { margin: 0; min-width: 0; }
+@media (max-width: 760px) { .panel-head { grid-template-columns: 1fr; } }
+.idle-intro svg { height: 160px; width: auto; max-width: 100%; display: block; }
+.idle-intro .ln { fill: none; stroke-width: 1.5; }
+.idle-intro .so { stroke: var(--orange); } .idle-intro .sp { stroke: var(--peach); }
+.idle-intro .sl { stroke: var(--lilac); } .idle-intro .sb { stroke: var(--blue); }
+.idle-intro .sk { stroke: var(--sky); } .idle-intro .sr { stroke: var(--salmon); }
+.idle-intro .dim { opacity: .35; }
+.idle-intro .fo { fill: var(--orange); } .idle-intro .fl { fill: var(--lilac); }
+.idle-intro .fk { fill: var(--sky); } .idle-intro .fp { fill: var(--peach); }
+.idle-intro text { fill: var(--text); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.idle-intro .sm { font-size: 8px; }
+.idle-intro .hi { fill: var(--orange); }
+.idle-intro .fb { transform-box: fill-box; }
+@keyframes at-glyphs{0%{opacity:0}3.75%{opacity:0}12.5%{opacity:1}52.5%{opacity:1}60%{opacity:.35}100%{opacity:.35}}
+@keyframes at-bad{0%{opacity:0}15%{opacity:0}20%{opacity:1}50%{opacity:1}55%{opacity:0}100%{opacity:0}}
+@keyframes at-good{0%{opacity:0}52.5%{opacity:0}60%{opacity:1}100%{opacity:1}}
+@keyframes at-q{0%{transform:scaleX(0)}15%{transform:scaleX(0)}47.5%{transform:scaleX(.35)}55%{transform:scaleX(.35)}77.5%{transform:scaleX(1)}100%{transform:scaleX(1)}}
+@keyframes at-fade{0%{opacity:0}3.75%{opacity:1}91.25%{opacity:1}100%{opacity:0}}
+.idle-intro .glyphs{animation:at-glyphs 8s linear infinite;}
+.idle-intro .bad{animation:at-bad 8s linear infinite;}
+.idle-intro .good{animation:at-good 8s linear infinite;}
+.idle-intro .q{animation:at-q 8s linear infinite;}
+.idle-intro .loop{animation:at-fade 8s linear infinite;}
+@media (prefers-reduced-motion: reduce) {
+  .idle-intro * { animation: none !important; }
+}

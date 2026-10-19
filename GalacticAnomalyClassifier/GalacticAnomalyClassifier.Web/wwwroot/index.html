@@ -28,7 +28,13 @@
       <div id="link-lost" class="banner warn" role="alert" hidden>Subspace link lost &mdash; retrying</div>
 
       <section id="form-panel" class="panel">
-        <h2 tabindex="-1">Sensor input</h2>
+        <div class="panel-head">
+          <div>
+            <h2 tabindex="-1">Sensor input</h2>
+            <p class="lede">Identify an unknown anomaly from its sensor signature and send it to the right specialist lab for analysis.</p>
+          </div>
+          <div id="idle-intro" class="idle-intro" aria-hidden="true"><svg viewBox="0 0 300 150" role="presentation" focusable="false"><g class="loop"><text x="8" y="14">Unknown signature</text><circle class="ln so" cx="40" cy="80" r="14"/><path class="ln sb" d="M54 80H94"/><path class="ln sb lane dim" d="M94 80C130 80 130 30 170 30H222"/><rect class="ln sb box" x="222" y="22" width="72" height="16"/><text class="sm" x="258" y="33" text-anchor="middle">Temporal</text><path class="ln sb lane dim" d="M94 80C130 80 130 55 170 55H222"/><rect class="ln sb box" x="222" y="47" width="72" height="16"/><text class="sm" x="258" y="58" text-anchor="middle">Dark matter</text><path class="ln sb lane dim" d="M94 80C130 80 130 80 170 80H222"/><rect class="ln sb box" x="222" y="72" width="72" height="16"/><text class="sm" x="258" y="83" text-anchor="middle">Wormhole</text><rect class="ln sb box" x="222" y="97" width="72" height="16"/><text class="sm" x="258" y="108" text-anchor="middle">Subspace</text><path class="ln sb lane dim" d="M94 80C130 80 130 130 170 130H222"/><rect class="ln sb box" x="222" y="122" width="72" height="16"/><text class="sm" x="258" y="133" text-anchor="middle">Nebula</text><path class="ln so pick" d="M94 80C130 80 130 105 170 105H222"/><rect class="ln so pickbox" x="222" y="97" width="72" height="16"/><circle class="fo sig" r="4" style="offset-path:path('M54 80H94C130 80 130 105 170 105H222');offset-distance:100%"/></g></svg></div>
+        </div>
         <form id="demo-form" novalidate>
           <div class="grid">
             <label>Coordinates<input id="coordinates" type="text" required></label>
@@ -42,11 +48,11 @@
           </fieldset>
           <p id="form-error" class="error" role="alert" hidden></p>
           <div class="actions">
-            <button type="button" class="pill p-lilac" data-preset="temporal-rift">Temporal rift</button>
-            <button type="button" class="pill p-blue" data-preset="dark-matter">Dark matter</button>
-            <button type="button" class="pill p-sky" data-preset="alien-artifact">Alien artifact</button>
-            <button type="button" class="pill p-lilac" data-preset="stellar-phenomenon">Stellar phenomenon</button>
-            <button type="button" class="pill p-blue" data-preset="dimensional-tear">Dimensional tear</button>
+            <button type="button" class="pill p-lilac" data-preset="temporal-rift">Anomaly A</button>
+            <button type="button" class="pill p-blue" data-preset="dark-matter">Anomaly B</button>
+            <button type="button" class="pill p-sky" data-preset="alien-artifact">Anomaly C</button>
+            <button type="button" class="pill p-lilac" data-preset="stellar-phenomenon">Anomaly D</button>
+            <button type="button" class="pill p-blue" data-preset="dimensional-tear">Anomaly E</button>
             <button type="submit" id="begin" class="pill p-orange go">Classify anomaly</button>
           </div>
         </form>

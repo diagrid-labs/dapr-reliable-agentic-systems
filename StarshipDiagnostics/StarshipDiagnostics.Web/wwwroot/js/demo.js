@@ -4,12 +4,12 @@ const tiles = [...document.querySelectorAll("#scan-board .tile")];
 
 const PRESETS = {
   "enterprise-d": {
-    shipId: "NCC-1701-D", name: "USS Enterprise", class: "Galaxy", yearsInService: 15, lastMaintenance: "2424-12-01T00:00:00Z",
-    telemetry: { hullStressLevel: 0.67, reactorTemperature: 1250, shieldIntegrity: 0.85, oxygenLevel: 0.98, navigationAccuracy: 0.95, weaponsPower: 0.88 },
+    shipId: "NCC-1701-D", name: "USS Enterprise", class: "Galaxy", yearsInService: 15, lastMaintenance: "2424-09-01T00:00:00Z",
+    telemetry: { hullStressLevel: 0.72, reactorTemperature: 1340, shieldIntegrity: 0.72, oxygenLevel: 0.94, navigationAccuracy: 0.9, weaponsPower: 0.82 },
   },
   "enterprise-original": {
-    shipId: "NCC-1701", name: "USS Enterprise (Original)", class: "Constitution", yearsInService: 40, lastMaintenance: "2420-06-15T00:00:00Z",
-    telemetry: { hullStressLevel: 0.89, reactorTemperature: 1450, shieldIntegrity: 0.62, oxygenLevel: 0.91, navigationAccuracy: 0.88, weaponsPower: 0.75 },
+    shipId: "NCC-1701", name: "USS Enterprise (Original)", class: "Constitution", yearsInService: 40, lastMaintenance: "2415-03-15T00:00:00Z",
+    telemetry: { hullStressLevel: 0.95, reactorTemperature: 1650, shieldIntegrity: 0.35, oxygenLevel: 0.76, navigationAccuracy: 0.68, weaponsPower: 0.52 },
   },
   "enterprise-e": {
     shipId: "NCC-1701-E", name: "USS Enterprise-E", class: "Sovereign", yearsInService: 3, lastMaintenance: "2425-01-01T00:00:00Z",

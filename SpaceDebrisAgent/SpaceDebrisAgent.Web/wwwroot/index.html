@@ -28,7 +28,13 @@
       <div id="alert-banner" class="banner alert" role="alert" hidden>Red alert &mdash; mission aborted</div>
 
       <section id="form-panel" class="panel">
-        <h2 tabindex="-1">Mission parameters</h2>
+        <div class="panel-head">
+          <div>
+            <h2 tabindex="-1">Mission parameters</h2>
+            <p class="lede">Set the mission and let the salvage ship decide for itself how to scan, track and capture debris. It asks a human before any risky maneuver.</p>
+          </div>
+          <div id="idle-intro" class="idle-intro" aria-hidden="true"><svg viewBox="0 0 300 150" role="presentation" focusable="false"><g class="loop"><text x="8" y="14">Orbital cleanup</text><path class="ln so" d="M30 100l22-9 22 9-22 9z"/><path class="ln so" d="M52 91v-8"/><circle class="ln sk ring fb" cx="52" cy="100" r="60" style="opacity:0;transform:scale(.07);transform-origin:center"/><path class="ln sr tgt" style="opacity:0" d="M150 50l10 4-3 10-10-2z"/><path class="ln sb" d="M210 36l8 8-9 6zM110 120l8 2-3 8-8-3zM250 128l9 3-2 9-9-2z"/><circle class="ln so ret" cx="153" cy="57" r="16" stroke-dasharray="4 3" style="opacity:0"/><text class="sm retl" x="134" y="36" text-anchor="end" style="opacity:0">Target locked</text><path class="ln sk beam" pathLength="1" style="stroke-dasharray:1;stroke-dashoffset:1" d="M74 100L146 62"/><path class="ln sp dia" d="M240 70l9 9-9 9-9-9z"/><path class="fo dia ok" style="opacity:.5" d="M240 70l9 9-9 9-9-9z"/><text class="sm ask" style="opacity:0" x="240" y="104" text-anchor="middle">Approval?</text><text class="sm hi okl" x="240" y="104" text-anchor="middle">Approved</text></g></svg></div>
+        </div>
         <form id="demo-form" novalidate>
           <label class="wide">Mission id
             <input id="missionId" type="text" maxlength="64" autocomplete="off" spellcheck="false" required>

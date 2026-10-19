@@ -125,3 +125,35 @@ label.check input:focus-visible { outline: 2px solid var(--sky); outline-offset:
   .lane .blocks i, .orbit { animation: none !important; }
   .dot { transition: none; }
 }
+
+/* Idle-page wireframe */
+.panel-head { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: start; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 2px solid var(--blue); }
+.panel-head h2 { margin-bottom: 8px; }
+.panel-head .lede { margin: 0; font-size: 17px; color: var(--text); max-width: 46ch; line-height: 1.35; }
+.idle-intro { margin: 0; min-width: 0; }
+@media (max-width: 760px) { .panel-head { grid-template-columns: 1fr; } }
+.idle-intro svg { height: 160px; width: auto; max-width: 100%; display: block; }
+.idle-intro .ln { fill: none; stroke-width: 1.5; }
+.idle-intro .so { stroke: var(--orange); } .idle-intro .sp { stroke: var(--peach); }
+.idle-intro .sl { stroke: var(--lilac); } .idle-intro .sb { stroke: var(--blue); }
+.idle-intro .sk { stroke: var(--sky); } .idle-intro .sr { stroke: var(--salmon); }
+.idle-intro .dim { opacity: .35; }
+.idle-intro .fo { fill: var(--orange); } .idle-intro .fl { fill: var(--lilac); }
+.idle-intro .fk { fill: var(--sky); } .idle-intro .fp { fill: var(--peach); }
+.idle-intro text { fill: var(--text); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.idle-intro .sm { font-size: 8px; }
+.idle-intro .hi { fill: var(--orange); }
+.idle-intro .fb { transform-box: fill-box; }
+@keyframes sc-bld0{0%{opacity:0;transform:scale(.2)}10%{opacity:0;transform:scale(.2)}17.5%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+@keyframes sc-bld1{0%{opacity:0;transform:scale(.2)}25%{opacity:0;transform:scale(.2)}32.5%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+@keyframes sc-bld2{0%{opacity:0;transform:scale(.2)}40%{opacity:0;transform:scale(.2)}47.5%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+@keyframes sc-bld3{0%{opacity:0;transform:scale(.2)}55%{opacity:0;transform:scale(.2)}62.5%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+@keyframes sc-fade{0%{opacity:0}3.75%{opacity:1}91.25%{opacity:1}100%{opacity:0}}
+.idle-intro .bld0{animation:sc-bld0 8s linear infinite;}
+.idle-intro .bld1{animation:sc-bld1 8s linear infinite;}
+.idle-intro .bld2{animation:sc-bld2 8s linear infinite;}
+.idle-intro .bld3{animation:sc-bld3 8s linear infinite;}
+.idle-intro .loop{animation:sc-fade 8s linear infinite;}
+@media (prefers-reduced-motion: reduce) {
+  .idle-intro * { animation: none !important; }
+}

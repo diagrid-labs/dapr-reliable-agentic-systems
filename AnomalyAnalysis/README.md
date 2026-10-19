@@ -108,7 +108,7 @@ The Aspire dashboard opens automatically in the browser at https://localhost:150
 
 ### Use the web UI
 
-Open http://localhost:5502, pick a preset (Wormhole, Temporal rift or Quantum flux) or edit the sensor values, and choose **Begin analysis**. The page polls the status endpoint every 2 seconds, shows each of the five stages as it completes (expand a stage to read its output) and then shows the findings. A critical risk level switches the page to Red Alert.
+Open http://localhost:5502, pick a preset (Anomaly A, B or C) or edit the sensor values, and choose **Begin analysis**. The page polls the status endpoint every 2 seconds, shows each of the five stages as it completes (expand a stage to read its output) and then shows the findings. A critical risk level switches the page to Red Alert.
 
 The status endpoint (`GET /anomaly/status/{instanceId}`) returns `instanceId`, `status`, `result`, `progress` (the stages recorded so far, taken from the workflow custom status), `createdAt` and `lastUpdatedAt`.
 

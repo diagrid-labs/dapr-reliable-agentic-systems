@@ -94,3 +94,45 @@ label.check input { width: 22px; height: 22px; padding: 0; accent-color: var(--a
   .kv { grid-template-columns: 1fr; gap: 0; }
   .kv dd { margin-bottom: 8px; }
 }
+
+/* Idle-page wireframe */
+.panel-head { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: start; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 2px solid var(--blue); }
+.panel-head h2 { margin-bottom: 8px; }
+.panel-head .lede { margin: 0; font-size: 17px; color: var(--text); max-width: 46ch; line-height: 1.35; }
+.idle-intro { margin: 0; min-width: 0; }
+@media (max-width: 760px) { .panel-head { grid-template-columns: 1fr; } }
+.idle-intro svg { height: 160px; width: auto; max-width: 100%; display: block; }
+.idle-intro .ln { fill: none; stroke-width: 1.5; }
+.idle-intro .so { stroke: var(--orange); } .idle-intro .sp { stroke: var(--peach); }
+.idle-intro .sl { stroke: var(--lilac); } .idle-intro .sb { stroke: var(--blue); }
+.idle-intro .sk { stroke: var(--sky); } .idle-intro .sr { stroke: var(--salmon); }
+.idle-intro .dim { opacity: .35; }
+.idle-intro .fo { fill: var(--orange); } .idle-intro .fl { fill: var(--lilac); }
+.idle-intro .fk { fill: var(--sky); } .idle-intro .fp { fill: var(--peach); }
+.idle-intro text { fill: var(--text); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.idle-intro .sm { font-size: 8px; }
+.idle-intro .hi { fill: var(--orange); }
+.idle-intro .fb { transform-box: fill-box; }
+@keyframes sa-ring{0%{opacity:0;transform:scale(.07)}6.25%{opacity:.9;transform:scale(.07)}22.5%{opacity:0;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
+@keyframes sa-ret{0%{opacity:0}22.5%{opacity:0}27.5%{opacity:1}60%{opacity:1}65%{opacity:0}100%{opacity:0}}
+@keyframes sa-retl{0%{opacity:0}22.5%{opacity:0}27.5%{opacity:1}60%{opacity:1}65%{opacity:0}100%{opacity:0}}
+@keyframes sa-dia{0%{opacity:0}32.5%{opacity:0}37.5%{opacity:1}100%{opacity:1}}
+@keyframes sa-ask{0%{opacity:0}32.5%{opacity:0}37.5%{opacity:1}45%{opacity:1}48.75%{opacity:0}100%{opacity:0}}
+@keyframes sa-ok{0%{opacity:0}45%{opacity:0}48.75%{opacity:.5}100%{opacity:.5}}
+@keyframes sa-okl{0%{opacity:0}45%{opacity:0}48.75%{opacity:1}100%{opacity:1}}
+@keyframes sa-beam{0%{stroke-dashoffset:1}48.75%{stroke-dashoffset:1}57.5%{stroke-dashoffset:0}65%{stroke-dashoffset:0}72.5%{stroke-dashoffset:1}100%{stroke-dashoffset:1}}
+@keyframes sa-tgt{0%{opacity:1}60%{opacity:1}65%{opacity:0}100%{opacity:0}}
+@keyframes sa-fade{0%{opacity:0}3.75%{opacity:1}91.25%{opacity:1}100%{opacity:0}}
+.idle-intro .ring{animation:sa-ring 8s linear infinite;}
+.idle-intro .ret{animation:sa-ret 8s linear infinite;}
+.idle-intro .retl{animation:sa-retl 8s linear infinite;}
+.idle-intro .dia{animation:sa-dia 8s linear infinite;}
+.idle-intro .ask{animation:sa-ask 8s linear infinite;}
+.idle-intro .ok{animation:sa-ok 8s linear infinite;}
+.idle-intro .okl{animation:sa-okl 8s linear infinite;}
+.idle-intro .beam{animation:sa-beam 8s linear infinite;}
+.idle-intro .tgt{animation:sa-tgt 8s linear infinite;}
+.idle-intro .loop{animation:sa-fade 8s linear infinite;}
+@media (prefers-reduced-motion: reduce) {
+  .idle-intro * { animation: none !important; }
+}
