@@ -8,10 +8,10 @@ builder.AddDapr();
 string executingPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
     ?? throw new("Where am I?");
 
-var cachePassword = builder.AddParameter("cache-password", "state-store-123", secret: true);
+var wfStatePassword = builder.AddParameter("wf-state-password", "state-store-123", secret: true);
 
-var cache = builder
-    .AddValkey("cache", 16379, cachePassword)
+var wfState = builder
+    .AddValkey("wf-state", 16379, wfStatePassword)
     .WithContainerName("anomaly-analysis-state")
     .WithDataVolume("anomaly-analysis-state-data");
 
@@ -24,7 +24,7 @@ var workflowApp = builder
         ResourcesPaths = [ Path.Join(executingPath, "Resources") ],
     });
 
-workflowApp.WaitFor(cache);
+workflowApp.WaitFor(wfState);
 
 builder
     .AddProject<Projects.AnomalyAnalysis_Web>("web")
