@@ -84,7 +84,7 @@ graph TD
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
 - [Aspire CLI](https://aspire.dev/get-started/install-cli/) — install with `dotnet tool install -g Aspire.Cli`
 - [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation)
-- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.18+)
+- [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.19+)
 - [Ollama](https://ollama.com/) with the `llama3.2:3b` model pulled
 
 ### Start Ollama
