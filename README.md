@@ -4,7 +4,7 @@ This repository demonstrates how to build reliable agentic systems by combining 
 
 ## Overview
 
-The demos showcase the patterns described in [Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) by Anthropic, implemented using Dapr Workflow to orchestrate reliable multi-step processes and the Dapr Conversation API to interact with LLMs. Ollama is used as the local LLM provider for all demos.
+The demos showcase the patterns described in [Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) by Anthropic, implemented using Dapr Workflow to orchestrate reliable multi-step processes and the Dapr Conversation API to interact with LLMs. OpenAI (`gpt-4.1-mini`) is used as the LLM provider for all demos.
 
 ## Benefits of Dapr Workflow and Conversation API
 
@@ -236,12 +236,11 @@ graph TD
 ## Prerequisites
 
 1. Install a container orchestration tool such as Docker Desktop or Podman.
-2. Install [.NET 9 SDK](https://dotnet.microsoft.com/download)
+2. Install [.NET 10 SDK](https://dotnet.microsoft.com/download)
 3. Install [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
-4. Install [Ollama](https://ollama.com/)
-5. Initialize Dapr: `dapr init`
-6. Run Ollama server: `ollama serve` and run a model: `ollama run llama3.2:3b`
-7. Install the [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) (see the install commands in the demo READMEs). `aspire run` starts it automatically at http://localhost:9090/workflows
+4. Initialize Dapr: `dapr init`
+5. Get an [OpenAI API key](https://platform.openai.com/api-keys) and set it as the `OPENAI_API_KEY` environment variable
+6. Install the [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) (see the install commands in the demo READMEs). `aspire run` starts it automatically at http://localhost:9090/workflows
 
 See the individual demo README files for specific instructions how to run the applications.
 

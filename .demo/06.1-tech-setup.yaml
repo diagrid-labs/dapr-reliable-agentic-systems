@@ -8,23 +8,11 @@ demos:
       - action: openSlide
         path: .demo/slides/06-combining-workflow-llm/06-02-tech-setup.md
       - action: setPresentationView
-  - id: scene-mkcnxl2j-koo2
-    title: Run model
-    steps:
-      - action: executeTerminalCommand
-        terminalId: ollama-run
-        insertTypingMode: character-by-character
-        insertTypingSpeed: 75
-        autoExecute: true
-        command: ollama run llama3.2:3b
-    icons:
-      start: terminal
-      end: ''
   - id: scene-mkqthaom-gju9
     title: Conversation component
     steps:
       - action: open
-        path: AnomalyAnalysis/AnomalyAnalysis.AppHost/Resources/conversation.yaml
+        path: AnomalyAnalysis/AnomalyAnalysis.AppHost/Resources/conversation-openai.yaml
   - id: demo-mpnui7mw-i74j
     title: State component
     steps:

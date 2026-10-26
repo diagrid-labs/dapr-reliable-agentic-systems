@@ -3,7 +3,7 @@
 {
 	"name": "C# (.NET)",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/dotnet:1-9.0-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/dotnet:1-10.0-noble",
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
 		"ghcr.io/devcontainers/features/dotnet:2": {},
@@ -23,6 +23,11 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "bash .devcontainer/post-create.sh",
+
+	// Pass the OpenAI API key from the host so the conversation component can read it.
+	"remoteEnv": {
+		"OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}"
+	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
