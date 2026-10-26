@@ -6,38 +6,14 @@ demos:
     title: Unset presentation view
     steps:
       - action: unsetPresentationView
-  - id: scene-mkcnyqe1-xk4s
-    title: Stop model
-    steps:
-      - action: focusTerminal
-        terminalId: ollama-run
-      - action: sendKeybinding
-        keybinding: ctrl+d
-      - action: executeTerminalCommand
-        command: clear
-        terminalId: ollama-run
-    icons:
-      start: terminal
-      end: ''
-  - id: scene-mkcnyrus-dg35
-    title: Stop Ollama
-    steps:
-      - action: focusTerminal
-        terminalId: ollama-server
-      - action: sendKeybinding
-        keybinding: ctrl+c
-      - action: executeTerminalCommand
-        command: clear
-        terminalId: ollama-server
-    icons:
-      start: terminal
-      end: ''
   - id: scene-mkl5zvcz-5n4u
     title: Close polls
     steps:
       - action: closeEngageTimePoll
-        pollId: 11ctbq
+        pollId: tlu0rq
       - action: closeEngageTimePoll
-        pollId: y1mzx3
+        pollId: 5de7r7
+      - action: closeEngageTimePoll
+        pollId: vlaqrq
 engageTime:
   sessionId: xlpnv9

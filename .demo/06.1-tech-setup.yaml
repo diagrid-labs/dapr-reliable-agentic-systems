@@ -8,19 +8,6 @@ demos:
       - action: openSlide
         path: .demo/slides/06-combining-workflow-llm/06-02-tech-setup.md
       - action: setPresentationView
-  - id: scene-mkcnxjt6-bakh
-    title: Start Ollama
-    steps:
-      - action: executeTerminalCommand
-        terminalId: ollama-server
-        insertTypingMode: character-by-character
-        insertTypingSpeed: 50
-        autoExecute: true
-        command: OLLAMA_CONTEXT_LENGTH=8192 ollama serve
-    icons:
-      start: terminal
-      end: ''
-    disabled: true
   - id: scene-mkcnxl2j-koo2
     title: Run model
     steps:
