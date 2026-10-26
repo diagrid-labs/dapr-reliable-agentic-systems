@@ -8,7 +8,7 @@ graph TD
     Check1 -->|No| A3[RefineTranslationActivity]
     A1 --> A2[EvaluateTranslationActivity]
     A3 --> A2
-    A2 --> Gate1{Quality ≥ 8.0 AND<br/>Meets Standards?}
+    A2 --> Gate1{Quality ≥ 9.0 AND<br/>Meets Standards?}
     Gate1 -->|Yes| Success([Return Success Result])
     Gate1 -->|No| Gate2{Max Iterations<br/>Reached?}
     Gate2 -->|Yes| MaxReached([Return Best Effort Result])

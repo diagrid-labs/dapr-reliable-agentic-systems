@@ -93,6 +93,7 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true
   - id: scene-hl11w-0
     title: 'Optimizer: translate or refine'
     steps:
@@ -153,3 +154,4 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true

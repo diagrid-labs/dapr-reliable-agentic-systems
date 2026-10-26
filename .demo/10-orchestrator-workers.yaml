@@ -93,6 +93,7 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true
   - id: scene-hl10w-0
     title: 'Orchestrator: decide the work'
     steps:
@@ -133,6 +134,7 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true
   - id: scene-hl10a-0
     title: 'AnalyzePlanetActivity: structured output'
     steps:
@@ -143,3 +145,4 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true

@@ -93,6 +93,7 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true
   - id: scene-hl08w-0
     title: 'Router: classify call'
     steps:

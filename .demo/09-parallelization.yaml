@@ -93,6 +93,7 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true
   - id: scene-hl09w-0
     title: 'Fan-out: scan tasks'
     steps:
@@ -133,3 +134,4 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true

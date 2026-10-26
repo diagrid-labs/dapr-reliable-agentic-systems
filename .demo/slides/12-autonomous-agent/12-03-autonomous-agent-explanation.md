@@ -12,5 +12,4 @@ layout: default
 
 ## Use Cases
 
-- Coding assistants
 - Research agents

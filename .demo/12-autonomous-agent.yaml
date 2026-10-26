@@ -93,6 +93,7 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true
   - id: scene-hl12w-0
     title: Agent decides the next action
     steps:
