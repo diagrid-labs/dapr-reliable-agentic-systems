@@ -76,11 +76,15 @@ demos:
         command: cd ..
         autoExecute: true
         terminalId: aspire-run
+      - action: waitForTimeout
+        timeout: 500
+      - action: executeVSCodeCommand
+        command: workbench.action.terminal.toggleTerminal
     icons:
       start: terminal
       end: ''
   - id: scene-hl11p-0
-    title: "Dapr configuration"
+    title: Dapr configuration
     steps:
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Program.cs
@@ -90,7 +94,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl11w-0
-    title: "Optimizer: translate or refine"
+    title: 'Optimizer: translate or refine'
     steps:
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
@@ -100,7 +104,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl11w-1
-    title: "Evaluator: score the translation"
+    title: 'Evaluator: score the translation'
     steps:
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
@@ -110,7 +114,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl11w-2
-    title: "Exit: quality threshold met"
+    title: 'Exit: quality threshold met'
     steps:
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
@@ -120,7 +124,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl11w-3
-    title: "Exit: max iterations"
+    title: 'Exit: max iterations'
     steps:
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
@@ -130,7 +134,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl11w-4
-    title: "Loop: ContinueAsNew"
+    title: 'Loop: ContinueAsNew'
     steps:
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
@@ -140,7 +144,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl11a-0
-    title: "TranslateActivity: structured output"
+    title: 'TranslateActivity: structured output'
     steps:
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Activities/TranslateActivity.cs
@@ -149,10 +153,3 @@ demos:
     icons:
       start: code
       end: ''
-  - title: Evaluator-Optimizer Pros/Cons
-    id: scene-mkvn94gj-1lqm
-    steps:
-      - action: setPresentationView
-      - action: markdownPreview
-        path: .demo/slides/11-evaluator-optimizer/11-02-diagram.md
-    disabled: true

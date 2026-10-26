@@ -76,6 +76,10 @@ demos:
         command: cd ..
         autoExecute: true
         terminalId: aspire-run
+      - action: waitForTimeout
+        timeout: 500
+      - action: executeVSCodeCommand
+        command: workbench.action.terminal.toggleTerminal
     icons:
       start: terminal
       end: ''
@@ -85,7 +89,7 @@ demos:
       - action: open
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
   - id: scene-hl07p-0
-    title: "Dapr configuration"
+    title: Dapr configuration
     steps:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
@@ -95,7 +99,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl07w-0
-    title: "Retry policy method"
+    title: Retry policy method
     steps:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
@@ -105,7 +109,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl07w-1
-    title: "Stage 1: sequential activity call"
+    title: 'Stage 1: sequential activity call'
     steps:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
@@ -115,7 +119,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl07w-2
-    title: "Gate check: empty data"
+    title: 'Gate check: empty data'
     steps:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
@@ -125,7 +129,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl07w-3
-    title: "Gate check: critical risk"
+    title: 'Gate check: critical risk'
     steps:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
@@ -135,7 +139,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl07a-0
-    title: "ProcessSensorDataActivity: RunAsync"
+    title: 'ProcessSensorDataActivity: RunAsync'
     steps:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Activities/ProcessSensorDataActivity.cs
@@ -144,10 +148,3 @@ demos:
     icons:
       start: code
       end: ''
-  - title: Prompt Chaining Pros/Cons
-    id: scene-mkvn3xcf-9jlo
-    steps:
-      - action: setPresentationView
-      - action: markdownPreview
-        path: .demo/slides/07-prompt-chaining/07-02-diagram.md
-    disabled: true

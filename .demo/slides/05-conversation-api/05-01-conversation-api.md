@@ -8,6 +8,7 @@ layout: section
 
 ---
 layout: default
+hideFooter: true
 ---
 
 ![Conversation API](.demo/images/dapr-conversation-api.png)

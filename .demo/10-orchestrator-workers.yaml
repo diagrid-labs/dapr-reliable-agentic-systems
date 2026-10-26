@@ -76,11 +76,15 @@ demos:
         command: cd ..
         autoExecute: true
         terminalId: aspire-run
+      - action: waitForTimeout
+        timeout: 500
+      - action: executeVSCodeCommand
+        command: workbench.action.terminal.toggleTerminal
     icons:
       start: terminal
       end: ''
   - id: scene-hl10p-0
-    title: "Dapr configuration"
+    title: Dapr configuration
     steps:
       - action: highlight
         path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Program.cs
@@ -90,7 +94,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl10w-0
-    title: "Orchestrator: decide the work"
+    title: 'Orchestrator: decide the work'
     steps:
       - action: highlight
         path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
@@ -100,7 +104,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl10w-1
-    title: "Dynamic worker dispatch"
+    title: Dynamic worker dispatch
     steps:
       - action: highlight
         path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
@@ -110,7 +114,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl10w-2
-    title: "Collect worker results"
+    title: Collect worker results
     steps:
       - action: highlight
         path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
@@ -120,7 +124,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl10w-3
-    title: "Synthesize the plan"
+    title: Synthesize the plan
     steps:
       - action: highlight
         path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
@@ -130,7 +134,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl10a-0
-    title: "AnalyzePlanetActivity: structured output"
+    title: 'AnalyzePlanetActivity: structured output'
     steps:
       - action: highlight
         path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Activities/Analysis/AnalyzePlanetActivity.cs
@@ -139,10 +143,3 @@ demos:
     icons:
       start: code
       end: ''
-  - title: Orchestrator-Workers Pros/Cons
-    id: scene-mkvn8fcc-rble
-    steps:
-      - action: setPresentationView
-      - action: markdownPreview
-        path: .demo/slides/10-orchestrator-workers/10-02-diagram.md
-    disabled: true

@@ -76,11 +76,15 @@ demos:
         command: cd ..
         autoExecute: true
         terminalId: aspire-run
+      - action: waitForTimeout
+        timeout: 500
+      - action: executeVSCodeCommand
+        command: workbench.action.terminal.toggleTerminal
     icons:
       start: terminal
       end: ''
   - id: scene-hl12p-0
-    title: "Dapr configuration"
+    title: Dapr configuration
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Program.cs
@@ -90,7 +94,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl12w-0
-    title: "Agent decides the next action"
+    title: Agent decides the next action
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
@@ -100,7 +104,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl12w-1
-    title: "Tool dispatch"
+    title: Tool dispatch
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
@@ -110,7 +114,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl12w-2
-    title: "Human approval with timeout"
+    title: Human approval with timeout
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
@@ -120,7 +124,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl12w-3
-    title: "Guard: fuel exhausted"
+    title: 'Guard: fuel exhausted'
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
@@ -130,7 +134,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl12w-4
-    title: "Next step: ContinueAsNew"
+    title: 'Next step: ContinueAsNew'
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
@@ -140,7 +144,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl12a-0
-    title: "AgentReasoningActivity: system prompt with tools"
+    title: 'AgentReasoningActivity: system prompt with tools'
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Activities/Agent/AgentReasoningActivity.cs
@@ -149,10 +153,3 @@ demos:
     icons:
       start: code
       end: ''
-  - title: Autonomous Agent Pros/Cons
-    id: scene-mkvn9pni-m9uh
-    steps:
-      - action: setPresentationView
-      - action: markdownPreview
-        path: .demo/slides/12-autonomous-agent/12-02-diagram.md
-    disabled: true

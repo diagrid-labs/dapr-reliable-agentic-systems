@@ -76,11 +76,15 @@ demos:
         command: cd ..
         autoExecute: true
         terminalId: aspire-run
+      - action: waitForTimeout
+        timeout: 500
+      - action: executeVSCodeCommand
+        command: workbench.action.terminal.toggleTerminal
     icons:
       start: terminal
       end: ''
   - id: scene-hl08p-0
-    title: "Dapr configuration"
+    title: Dapr configuration
     steps:
       - action: highlight
         path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Program.cs
@@ -90,7 +94,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl08w-0
-    title: "Router: classify call"
+    title: 'Router: classify call'
     steps:
       - action: highlight
         path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
@@ -100,7 +104,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl08w-1
-    title: "Route: switch on type"
+    title: 'Route: switch on type'
     steps:
       - action: highlight
         path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
@@ -110,7 +114,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl08w-2
-    title: "Route: default branch"
+    title: 'Route: default branch'
     steps:
       - action: highlight
         path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
@@ -120,7 +124,7 @@ demos:
       start: code
       end: ''
   - id: scene-hl08a-0
-    title: "ClassifyAnomalyActivity: structured output"
+    title: 'ClassifyAnomalyActivity: structured output'
     steps:
       - action: highlight
         path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Activities/ClassifyAnomalyActivity.cs
@@ -129,10 +133,3 @@ demos:
     icons:
       start: code
       end: ''
-  - title: Routing Pros/Cons
-    id: scene-mkvn6ew2-ymgs
-    steps:
-      - action: setPresentationView
-      - action: markdownPreview
-        path: .demo/slides/08-routing/08-02-diagram.md
-    disabled: true

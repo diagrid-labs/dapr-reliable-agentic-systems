@@ -19,22 +19,28 @@ layout: default
 ### 5. Start simple, add complexity when needed
 
 ---
-layout: image
-image: ".demo/images/dapr-university.gif"
----
-
-
----
 layout: default
 ---
 
-![Diagrid Dev Dashboard](.demo/images/diagrid-dev-dashboard.png)
+# diagrid.io/university
+
+Free, online, hands-on courses that run in your browser.
+
+### 1. Make AI Agents Durable
+LangGraph, DeepAgents, Microsoft Agent Framework & Dapr Agents on Dapr Workflow
+
+### 2. Make Workflows Durable
+Task chaining, fan-out/fan-in, monitor, timers, external events & child workflows
+
+### 3. Make Applications Durable
+State management, pub/sub & service invocation with Dapr
 
 ---
 layout: default
+hideFooter: true
 ---
 
-![Diagrid Catalyst](.demo/images/diagrid-catalyst.png)
+![Dapr Dev Dashboard](.demo/images/diagrid-dev-dashboard.png)
 
 ---
 layout: two-columns
@@ -56,6 +62,14 @@ Use the QR code to:
 ![QR Code](.demo/images/session-xlpnv9-feedback-qr.png)
 
 ---
-layout: image
-image: .demo/images/feedback-session-19.png
+layout: two-columns
 ---
+
+# Feedback
+
+## For Techorama
+
+Will they invite me back next time? 😬
+
+::right::
+![QR Code](.demo/images/techorama-marc-qr-code.png)
