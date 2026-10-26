@@ -55,6 +55,30 @@ demos:
     icons:
       start: arrow-right
       end: ''
+  - id: demo-mpkw6pc4-8hzl
+    title: Inspect workflow state
+    steps:
+      - action: showInfoMessage
+        message: Open the Dapr Dev Dashboard
+    icons:
+      start: dashboard
+      end: ''
+  - id: scene-mkb26v5t-dwo0
+    title: Stop the workflow app
+    steps:
+      - action: focusTerminal
+        terminalId: aspire-run
+      - action: sendKeybinding
+        keybinding: ctrl+c
+      - action: waitForTimeout
+        timeout: 500
+      - action: executeTerminalCommand
+        command: cd ..
+        autoExecute: true
+        terminalId: aspire-run
+    icons:
+      start: terminal
+      end: ''
   - id: scene-mkpe5m83-bjuh
     title: Program.cs
     steps:
@@ -119,30 +143,6 @@ demos:
         highlightWholeLine: true
     icons:
       start: code
-      end: ''
-  - id: demo-mpkw6pc4-8hzl
-    title: Inspect workflow state
-    steps:
-      - action: showInfoMessage
-        message: Open the Diagrid Dev Dashboard
-    icons:
-      start: dashboard
-      end: ''
-  - id: scene-mkb26v5t-dwo0
-    title: Stop the workflow app
-    steps:
-      - action: focusTerminal
-        terminalId: aspire-run
-      - action: sendKeybinding
-        keybinding: ctrl+c
-      - action: waitForTimeout
-        timeout: 500
-      - action: executeTerminalCommand
-        command: cd ..
-        autoExecute: true
-        terminalId: aspire-run
-    icons:
-      start: terminal
       end: ''
   - title: Prompt Chaining Pros/Cons
     id: scene-mkvn3xcf-9jlo

@@ -55,6 +55,30 @@ demos:
     icons:
       start: arrow-right
       end: ''
+  - id: demo-mpkz5xdp-ejxy
+    title: Inspect workflow state
+    steps:
+      - action: showInfoMessage
+        message: Open the Dapr Dev Dashboard
+    icons:
+      start: dashboard
+      end: ''
+  - id: scene-mkb2cv2y-avsr
+    title: Stop the workflow app
+    steps:
+      - action: focusTerminal
+        terminalId: aspire-run
+      - action: sendKeybinding
+        keybinding: ctrl+c
+      - action: waitForTimeout
+        timeout: 500
+      - action: executeTerminalCommand
+        command: cd ..
+        autoExecute: true
+        terminalId: aspire-run
+    icons:
+      start: terminal
+      end: ''
   - id: scene-hl09p-0
     title: "Dapr configuration"
     steps:
@@ -104,30 +128,6 @@ demos:
         highlightWholeLine: true
     icons:
       start: code
-      end: ''
-  - id: demo-mpkz5xdp-ejxy
-    title: Inspect workflow state
-    steps:
-      - action: showInfoMessage
-        message: Open Diagrid Dev Dashboard
-    icons:
-      start: dashboard
-      end: ''
-  - id: scene-mkb2cv2y-avsr
-    title: Stop the workflow app
-    steps:
-      - action: focusTerminal
-        terminalId: aspire-run
-      - action: sendKeybinding
-        keybinding: ctrl+c
-      - action: waitForTimeout
-        timeout: 500
-      - action: executeTerminalCommand
-        command: cd ..
-        autoExecute: true
-        terminalId: aspire-run
-    icons:
-      start: terminal
       end: ''
   - title: Parallelization Pros/Cons
     id: scene-mkvn7jxc-2a8l
