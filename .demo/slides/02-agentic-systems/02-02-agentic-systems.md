@@ -20,6 +20,10 @@ They involve communication across services (LLMs), message brokers, and data sto
 - **Fault Tolerance** - Recovering from failures
 - **Observability** - Understanding system behavior
 
-## Good News
+---
+layout: section
+---
 
-We've been here before with microservices! Let's apply what we know and use existing tools, concepts and patterns.
+# Good News
+
+## We've been here before with microservices!
