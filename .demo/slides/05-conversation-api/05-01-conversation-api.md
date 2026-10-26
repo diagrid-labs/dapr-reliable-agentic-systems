@@ -19,25 +19,24 @@ layout: default
 # Conversation API code example
 
 ```csharp
+// DaprConversationClient is injected via the constructor
 var response = await _conversationClient.ConverseAsync(
   [
     new ConversationInput(new List<IConversationMessage>
     {
       new SystemMessage
       {
-        Content = [new MessageContent(@"You are a English to Klingon translator.")]
+        Content = [new MessageContent("You are Data's scientific classification system. Return only the classification type.")]
       },
       new UserMessage
       {
-        Content = [new MessageContent($"Translate this to Klingon: {message}")]
+        Content = [new MessageContent($"Classify this anomaly: {processedData}")]
       }
     })
   ],
-  new ConversationOptions("conversation")
-  {
-    Temperature = 0.7
-  }
-);
+  new ConversationOptions("conversation") { Temperature = 0.3 });
+
+var classification = response.Outputs.First().Choices.First().Message.Content.Trim();
 ```
 
 ---

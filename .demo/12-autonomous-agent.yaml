@@ -55,22 +55,72 @@ demos:
     icons:
       start: arrow-right
       end: ''
-  - id: scene-mkb3njij-6q2d
-    title: SpaceDebrisCleanupWorkflow
+  - id: scene-hl12p-0
+    title: "Dapr configuration"
     steps:
       - action: highlight
-        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
-        position: '8'
+        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Program.cs
+        position: '24:30'
         highlightWholeLine: true
     icons:
       start: code
       end: ''
-  - id: scene-mkb3njij-6q2e
-    title: AgentReasoningActivity
+  - id: scene-hl12w-0
+    title: "Agent decides the next action"
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
+        position: '48:51'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl12w-1
+    title: "Tool dispatch"
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
+        position: '154:178'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl12w-2
+    title: "Human approval with timeout"
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
+        position: '98:111'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl12w-3
+    title: "Guard: fuel exhausted"
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
+        position: '186:200'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl12w-4
+    title: "Next step: ContinueAsNew"
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
+        position: '220:228'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl12a-0
+    title: "AgentReasoningActivity: system prompt with tools"
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Activities/Agent/AgentReasoningActivity.cs
-        position: '11'
+        position: '24:52'
         highlightWholeLine: true
     icons:
       start: code

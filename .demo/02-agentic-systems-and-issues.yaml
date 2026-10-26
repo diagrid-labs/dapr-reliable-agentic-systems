@@ -13,9 +13,9 @@ demos:
     title: Agent Framework poll
     steps:
       - action: showEngageTimePoll
-        pollId: laoued
         startOnOpen: true
         closeOnOpen: false
+        pollId: vlaqrq
   - title: Do we need Agentic Systems?
     id: demo-mpnppfwg-4o76
     steps:
@@ -24,4 +24,4 @@ demos:
         slide: 1
       - action: setPresentationView
 engageTime:
-  sessionId: 6gx6rg
+  sessionId: xlpnv9

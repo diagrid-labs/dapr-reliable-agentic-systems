@@ -55,22 +55,62 @@ demos:
     icons:
       start: arrow-right
       end: ''
-  - id: scene-mkb32jje-lewd
-    title: ColonyOrchestratorWorkflow
+  - id: scene-hl10p-0
+    title: "Dapr configuration"
     steps:
       - action: highlight
-        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
-        position: '8'
+        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Program.cs
+        position: '21:27'
         highlightWholeLine: true
     icons:
       start: code
       end: ''
-  - id: scene-mkb32jje-lewe
-    title: AnalyzePlanetActivity
+  - id: scene-hl10w-0
+    title: "Orchestrator: decide the work"
+    steps:
+      - action: highlight
+        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
+        position: '41:44'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl10w-1
+    title: "Dynamic worker dispatch"
+    steps:
+      - action: highlight
+        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
+        position: '56:79'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl10w-2
+    title: "Collect worker results"
+    steps:
+      - action: highlight
+        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
+        position: '94'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl10w-3
+    title: "Synthesize the plan"
+    steps:
+      - action: highlight
+        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
+        position: '99:102'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl10a-0
+    title: "AnalyzePlanetActivity: structured output"
     steps:
       - action: highlight
         path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Activities/Analysis/AnalyzePlanetActivity.cs
-        position: '11'
+        position: '24:28'
         highlightWholeLine: true
     icons:
       start: code

@@ -12,9 +12,9 @@ demos:
     title: Dapr Poll
     steps:
       - action: showEngageTimePoll
-        pollId: ekll0z
         startOnOpen: true
         closeOnOpen: false
+        pollId: tlu0rq
     icons:
       start: question
       end: ''
@@ -33,9 +33,9 @@ demos:
     title: Workflow poll
     steps:
       - action: showEngageTimePoll
-        pollId: 7bx06w
         startOnOpen: true
         closeOnOpen: false
+        pollId: 5de7r7
   - title: Dapr Workflow Building Block
     id: scene-mk5gxdnf-idmp
     steps:
@@ -48,4 +48,4 @@ demos:
       - action: markdownPreview
         path: .demo/slides/04-dapr-workflow/04-05-workflow-sequence-diagram.md
 engageTime:
-  sessionId: 6gx6rg
+  sessionId: xlpnv9

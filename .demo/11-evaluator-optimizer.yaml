@@ -55,23 +55,73 @@ demos:
     icons:
       start: arrow-right
       end: ''
-  - id: scene-mkb3lue6-4q9m
-    title: AlienTranslationWorkflow
+  - id: scene-hl11p-0
+    title: "Dapr configuration"
     steps:
       - action: highlight
-        path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
-        position: '3'
+        path: AlienTranslator/AlienTranslator.ApiService/Program.cs
+        position: '18:23'
         highlightWholeLine: true
     icons:
       start: code
       end: ''
-  - id: scene-mkb3lue6-4q9n
-    title: TranslateActivity
+  - id: scene-hl11w-0
+    title: "Optimizer: translate or refine"
+    steps:
+      - action: highlight
+        path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
+        position: '32:51'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl11w-1
+    title: "Evaluator: score the translation"
+    steps:
+      - action: highlight
+        path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
+        position: '59:62'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl11w-2
+    title: "Exit: quality threshold met"
+    steps:
+      - action: highlight
+        path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
+        position: '71:82'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl11w-3
+    title: "Exit: max iterations"
+    steps:
+      - action: highlight
+        path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
+        position: '84:96'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl11w-4
+    title: "Loop: ContinueAsNew"
+    steps:
+      - action: highlight
+        path: AlienTranslator/AlienTranslator.ApiService/Workflows/AlienTranslationWorkflow.cs
+        position: '100:106'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl11a-0
+    title: "TranslateActivity: structured output"
     steps:
       - action: highlight
         path: AlienTranslator/AlienTranslator.ApiService/Activities/TranslateActivity.cs
+        position: '50:54'
         highlightWholeLine: true
-        position: '8'
     icons:
       start: code
       end: ''

@@ -60,22 +60,62 @@ demos:
     steps:
       - action: open
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
-  - id: scene-mkb26rj9-stw7
-    title: AnomalyAnalysisWorkflow
+  - id: scene-hl07p-0
+    title: "Dapr configuration"
     steps:
       - action: highlight
-        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
-        position: '7'
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
+        position: '14:19'
         highlightWholeLine: true
     icons:
       start: code
       end: ''
-  - id: scene-mkb26rj9-stw8
-    title: ProcessSensorDataActivity
+  - id: scene-hl07w-0
+    title: "Retry policy method"
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
+        position: '9:15'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl07w-1
+    title: "Stage 1: sequential activity call"
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
+        position: '25:28'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl07w-2
+    title: "Gate check: empty data"
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
+        position: '40:43'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl07w-3
+    title: "Gate check: critical risk"
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
+        position: '91:97'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl07a-0
+    title: "ProcessSensorDataActivity: RunAsync"
     steps:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Activities/ProcessSensorDataActivity.cs
-        position: '7'
+        position: '17:54'
         highlightWholeLine: true
     icons:
       start: code

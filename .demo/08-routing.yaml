@@ -55,23 +55,53 @@ demos:
     icons:
       start: arrow-right
       end: ''
-  - id: scene-mkb28oma-vekn
-    title: AnomalyRoutingWorkflow
+  - id: scene-hl08p-0
+    title: "Dapr configuration"
     steps:
       - action: highlight
-        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
-        position: '8'
+        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Program.cs
+        position: '21:27'
         highlightWholeLine: true
     icons:
       start: code
       end: ''
-  - id: scene-mkb28oma-veko
-    title: ClassifyAnomalyActivity
+  - id: scene-hl08w-0
+    title: "Router: classify call"
+    steps:
+      - action: highlight
+        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
+        position: '24:27'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl08w-1
+    title: "Route: switch on type"
+    steps:
+      - action: highlight
+        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
+        position: '40:53'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl08w-2
+    title: "Route: default branch"
+    steps:
+      - action: highlight
+        path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Workflows/AnomalyRoutingWorkflow.cs
+        position: '107:112'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl08a-0
+    title: "ClassifyAnomalyActivity: structured output"
     steps:
       - action: highlight
         path: GalacticAnomalyClassifier/GalacticAnomalyClassifier.ApiService/Activities/ClassifyAnomalyActivity.cs
-        position: '11'
-        highlightWholeLine: false
+        position: '30:34'
+        highlightWholeLine: true
     icons:
       start: code
       end: ''
