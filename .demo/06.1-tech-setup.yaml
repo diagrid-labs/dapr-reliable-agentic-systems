@@ -19,7 +19,37 @@ demos:
       - action: open
         path: AnomalyAnalysis/AnomalyAnalysis.AppHost/Resources/statestore.yaml
   - id: scene-mpnug4e0-yqvx
-    title: Aspire AppHost
+    title: 'Aspire AppHost: AddDapr'
     steps:
-      - action: open
+      - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.AppHost/AppHost.cs
+        position: '6'
+        highlightWholeLine: true
+  - id: scene-apphost-valkey
+    title: 'Aspire AppHost: Valkey state store'
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.AppHost/AppHost.cs
+        position: '13:16'
+        highlightWholeLine: true
+  - id: scene-apphost-wf-app
+    title: 'Aspire AppHost: Workflow app with Dapr'
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.AppHost/AppHost.cs
+        position: '18:25'
+        highlightWholeLine: true
+  - id: scene-apphost-web
+    title: 'Aspire AppHost: LCARS web front-end'
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.AppHost/AppHost.cs
+        position: '29:33'
+        highlightWholeLine: true
+  - id: scene-apphost-dashboard
+    title: 'Aspire AppHost: Dapr Dev Dashboard'
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.AppHost/AppHost.cs
+        position: '35:38'
+        highlightWholeLine: true

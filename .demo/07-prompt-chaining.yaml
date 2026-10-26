@@ -83,17 +83,32 @@ demos:
     icons:
       start: terminal
       end: ''
-  - id: scene-mkpe5m83-bjuh
-    title: Program.cs
-    steps:
-      - action: open
-        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
   - id: scene-hl07p-0
     title: Dapr configuration
     steps:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
-        position: '14:19'
+        position: '13:18'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: demo-mvpsh9wk-r4fm
+    title: Start Endpoint
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Program.cs
+        position: '22:36'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl07w-def
+    title: Workflow definition
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
+        position: '7'
         highlightWholeLine: true
     icons:
       start: code
@@ -108,12 +123,32 @@ demos:
     icons:
       start: code
       end: ''
+  - id: scene-hl07w-run
+    title: RunAsync method with input
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
+        position: '17:19'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
   - id: scene-hl07w-1
     title: 'Stage 1: sequential activity call'
     steps:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
         position: '25:28'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl07w-status
+    title: SetCustomStatus
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
+        position: '37'
         highlightWholeLine: true
     icons:
       start: code
@@ -134,6 +169,16 @@ demos:
       - action: highlight
         path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Workflows/AnomalyAnalysisWorkflow.cs
         position: '91:97'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: scene-hl07a-def
+    title: 'ProcessSensorDataActivity: definition'
+    steps:
+      - action: highlight
+        path: AnomalyAnalysis/AnomalyAnalysis.ApiService/Activities/ProcessSensorDataActivity.cs
+        position: '8'
         highlightWholeLine: true
     icons:
       start: code
