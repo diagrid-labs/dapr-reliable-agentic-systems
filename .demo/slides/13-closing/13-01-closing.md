@@ -53,7 +53,7 @@ Use the QR code to:
 ![Picard waving](.demo/images/picard-waving.gif)
 
 ::right::
-![QR Code](.demo/images/session-6gx6rg-feedback-qr.png)
+![QR Code](.demo/images/session-xlpnv9-feedback-qr.png)
 
 ---
 layout: image
