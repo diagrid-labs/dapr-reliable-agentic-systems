@@ -8,6 +8,7 @@
         "panel"],
     "demoTime.timer": 55,
     "demoTime.customTheme": ".demo/slides/theme/diagrid.css",
+    "demoTime.slideFooterTemplate": ".demo/slides/templates/footer.html",
     "demoTime.debug": false,
     "workbench.statusBar.visible": true,
     "workbench.editor.showTabs": "none",

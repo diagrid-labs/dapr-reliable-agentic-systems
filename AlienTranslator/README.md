@@ -77,18 +77,11 @@ graph TD
 - [Aspire CLI](https://aspire.dev/get-started/install-cli/) — install with `dotnet tool install -g Aspire.Cli`
 - [Docker](https://www.docker.com/products/docker-desktop/) or [Podman](https://podman.io/docs/installation)
 - [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/) (version 1.19+)
-- [Ollama](https://ollama.com/) with the `llama3.2:3b` model pulled
+- An [OpenAI API key](https://platform.openai.com/api-keys)
 
-### Start Ollama
+### Configure OpenAI
 
-```bash
-ollama serve
-ollama pull llama3.2:3b
-```
-
-### Use OpenAI instead of Ollama
-
-The `Resources` folder of the AppHost also contains `conversation-openai.yaml` (model `gpt-4.1-mini`) and `env-secret.yaml` (an environment variable secret store). Both Conversation components are named `conversation`, so keep only one of them in `Resources`. To use OpenAI, remove the Ollama component file and set the API key before starting the app:
+The Dapr Conversation component in the `Resources` folder of the AppHost (`conversation-openai.yaml`) uses OpenAI with model `gpt-4.1-mini`. It reads the API key from the `OPENAI_API_KEY` environment variable through the `env-secret.yaml` secret store, so set it before starting the app:
 
 ```bash
 export OPENAI_API_KEY=<your-key>

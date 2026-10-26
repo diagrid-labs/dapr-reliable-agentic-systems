@@ -1,5 +1,6 @@
 ---
 layout: intro
+hideFooter: true
 ---
 
 # Reliable Agentic Systems need Durable Execution
