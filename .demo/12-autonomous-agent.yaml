@@ -129,7 +129,7 @@ demos:
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
-        position: '186:200'
+        position: '188:202'
         highlightWholeLine: true
     icons:
       start: code
@@ -139,17 +139,37 @@ demos:
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Workflows/SpaceDebrisCleanupWorkflow.cs
-        position: '220:228'
+        position: '222:230'
         highlightWholeLine: true
     icons:
       start: code
       end: ''
   - id: scene-hl12a-0
-    title: 'AgentReasoningActivity: system prompt with tools'
+    title: 'AgentReasoningActivity: ConversationOptions'
     steps:
       - action: highlight
         path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Activities/Agent/AgentReasoningActivity.cs
-        position: '24:52'
+        position: '72:77'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: demo-mvpvf0fs-rbfl
+    title: 'AgentReasoningActivity: tools for the LLM'
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Activities/Agent/AgentReasoningActivity.cs
+        position: '138:153'
+        highlightWholeLine: true
+    icons:
+      start: code
+      end: ''
+  - id: demo-mvpvhz28-0kyn
+    title: 'AgentReasoningActivity: Extracting the selected tool'
+    steps:
+      - action: highlight
+        path: SpaceDebrisAgent/SpaceDebrisAgent.ApiService/Activities/Agent/AgentReasoningActivity.cs
+        position: '79:86'
         highlightWholeLine: true
     icons:
       start: code

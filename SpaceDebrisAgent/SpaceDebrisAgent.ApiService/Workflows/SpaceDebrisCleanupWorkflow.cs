@@ -47,7 +47,7 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
         // Agent reasoning: decide next action
         var reasoned = await context.CallActivityAsync<Metered<AgentDecision>>(
             nameof(AgentReasoningActivity),
-            new ReasoningInput(input.MissionParameters, agentState, input.ToolCalls),
+            new ReasoningInput(input.MissionParameters, agentState, input.Decisions, input.ToolCalls),
             GetDefaultRetryPolicy());
         var decision = reasoned.Value;
         usage += reasoned.Usage;
@@ -159,11 +159,11 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
                 
                 "MOVE_TO_LOCATION" => await ExecuteTool<NavigationResult>(
                     context, nameof(MoveToLocationActivity), 
-                    decision.ActionParameters),
+                    WithSpacecraftState(decision.ActionParameters, agentState, input.MissionParameters)),
                 
                 "CHECK_FUEL" => await ExecuteTool<FuelStatus>(
                     context, nameof(CheckFuelActivity), 
-                    decision.ActionParameters),
+                    WithSpacecraftState(decision.ActionParameters, agentState, input.MissionParameters)),
                 
                 "CAPTURE_DEBRIS" => await ExecuteTool<CaptureResult>(
                     context, nameof(CaptureDebrisActivity), 
@@ -178,6 +178,8 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             };
         }
 
+        // Keep the LLM tool call id so the result can be sent back with the matching id
+        toolCall = toolCall with { Id = decision.ToolCallId };
         var toolCalls = input.ToolCalls.Append(toolCall).ToList();
 
         agentState = UpdateAgentState(agentState, decision, toolCall);
@@ -246,6 +248,18 @@ public class SpaceDebrisCleanupWorkflow : Workflow<SpaceDebrisCleanupWorkflowInp
             return new Metered<ToolCall>(new ToolCall(name, parameters, null!, false, ex.Message), TokenUsage.Zero);
         }
     }
+
+    // The spacecraft state comes from the workflow, so the LLM can't supply its own position or fuel level
+    private static Dictionary<string, object> WithSpacecraftState(
+        Dictionary<string, object> parameters,
+        AgentState state,
+        MissionParameters mission) =>
+        new(parameters)
+        {
+            ["position"] = state.Position,
+            ["fuelRemaining"] = state.FuelRemaining,
+            ["fuelBudget"] = mission.FuelBudget
+        };
 
     private async Task<ToolCall> ExecuteTool<TResult>(
         WorkflowContext context,

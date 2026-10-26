@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace SpaceDebrisAgent.Models;
 
 public enum OrbitalZone
@@ -7,6 +9,7 @@ public enum OrbitalZone
     GEO   // Geostationary Earth Orbit
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum DebrisType
 {
     Satellite,
@@ -14,6 +17,7 @@ public enum DebrisType
     Fragment
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ThreatLevel
 {
     Low,

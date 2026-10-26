@@ -44,7 +44,8 @@ public record AgentDecision(
     string ChosenAction,
     Dictionary<string, object> ActionParameters,
     string ExpectedOutcome,
-    DateTime Timestamp
+    DateTime Timestamp,
+    string? ToolCallId = null // Id of the LLM tool call, echoed back with the tool result
 );
 
 public record ToolCall(
@@ -52,7 +53,8 @@ public record ToolCall(
     Dictionary<string, object> Parameters,
     object Result,
     bool Success,
-    string? ErrorMessage
+    string? ErrorMessage,
+    string? Id = null
 );
 
 public record HumanApproval(
@@ -86,6 +88,7 @@ public record MissionResult(
 public record ReasoningInput(
     MissionParameters Mission,
     AgentState CurrentState,
+    List<AgentDecision> PreviousDecisions,
     List<ToolCall> PreviousToolCalls
 );
 
@@ -108,7 +111,8 @@ public record NavigationResult(
     double[] NewPosition,
     double FuelUsed,
     int TimeSeconds,
-    bool Success
+    bool Success,
+    string? Message = null
 );
 
 public record ApprovalResult(

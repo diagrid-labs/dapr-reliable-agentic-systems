@@ -38,6 +38,8 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
                     {
                         Content = [new MessageContent(@"Generate a realistic space debris field scan result.
                     Include 3-8 debris objects with varied types, masses, and threat levels.
+                    Positions use a local frame centred on the spacecraft's start position [0, 0, 0],
+                    with each coordinate between -50 and 50 km.
 
                     JSON structure that describes the fields:
                     {
@@ -69,7 +71,7 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
         
         return new Metered<DebrisField>(
             JsonSerializer.Deserialize<DebrisField>(
-                response.Outputs.First().Choices.First().Message.Content)!,
+                response.Outputs.First().Choices.First().Message.Content, JsonSerializerOptions.Web)!, // The LLM returns camelCase properties
             response.ToUsage());
     }
 
@@ -81,6 +83,9 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
         var numberType = new Struct();
         numberType.Fields.Add("type", Value.ForString("number"));
 
+        var debrisTypeType = EnumType("Satellite", "RocketStage", "Fragment");
+        var threatLevelType = EnumType("Low", "Medium", "High", "Critical");
+
         var booleanType = new Struct();
         booleanType.Fields.Add("type", Value.ForString("boolean"));
 
@@ -91,10 +96,10 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
         var debrisProps = new Struct();
         debrisProps.Fields.Add("id", Value.ForStruct(stringType));
         debrisProps.Fields.Add("mass", Value.ForStruct(numberType));
-        debrisProps.Fields.Add("type", Value.ForStruct(stringType));
+        debrisProps.Fields.Add("type", Value.ForStruct(debrisTypeType));
         debrisProps.Fields.Add("position", Value.ForStruct(numberArrayType));
         debrisProps.Fields.Add("velocity", Value.ForStruct(numberArrayType));
-        debrisProps.Fields.Add("threatLevel", Value.ForStruct(stringType));
+        debrisProps.Fields.Add("threatLevel", Value.ForStruct(threatLevelType));
         debrisProps.Fields.Add("isFragmented", Value.ForStruct(booleanType));
 
         var debrisItemType = new Struct();
@@ -116,7 +121,7 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
         var properties = new Struct();
         properties.Fields.Add("debris", Value.ForStruct(debrisArrayType));
         properties.Fields.Add("totalMass", Value.ForStruct(numberType));
-        properties.Fields.Add("riskLevel", Value.ForStruct(stringType));
+        properties.Fields.Add("riskLevel", Value.ForStruct(threatLevelType));
 
         var responseFormat = new Struct();
         responseFormat.Fields.Add("type", Value.ForString("object"));
@@ -127,5 +132,13 @@ public class ScanDebrisFieldActivity : WorkflowActivity<Dictionary<string, objec
             Value.ForString("riskLevel")));
 
         return responseFormat;
+    }
+
+    private static Struct EnumType(params string[] values)
+    {
+        var enumType = new Struct();
+        enumType.Fields.Add("type", Value.ForString("string"));
+        enumType.Fields.Add("enum", Value.ForList(values.Select(Value.ForString).ToArray()));
+        return enumType;
     }
 }

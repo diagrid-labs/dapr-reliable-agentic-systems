@@ -1,5 +1,6 @@
 using Dapr.Workflow;
 using SpaceDebrisAgent.Models;
+using System.Text.Json;
 
 namespace SpaceDebrisAgent.Activities.Tools;
 
@@ -9,12 +10,11 @@ public class CheckFuelActivity : WorkflowActivity<Dictionary<string, object>, Fu
         WorkflowActivityContext context, 
         Dictionary<string, object> parameters)
     {
-        // This would query actual fuel sensors in real implementation
-        // For demo, return mock data
-        var currentFuel = 75.0;
-        var maxFuel = 100.0;
+        // The workflow passes the tracked fuel level, in a real implementation this would query fuel sensors
+        var currentFuel = ((JsonElement)parameters["fuelRemaining"]).GetDouble();
+        var maxFuel = ((JsonElement)parameters["fuelBudget"]).GetDouble();
         var percentRemaining = (currentFuel / maxFuel) * 100;
-        var estimatedRange = currentFuel * 10; // 10 km per kg
+        var estimatedRange = currentFuel * 10; // 10 km per kg, matches MoveToLocationActivity
         
         var warning = percentRemaining switch
         {
