@@ -17,6 +17,18 @@ hideFooter: true
 layout: default
 ---
 
+# Conversation API features
+
+- **Provider-agnostic**: switch LLM providers by changing the component, not the code.
+- **Tool calling**: the LLM can call your functions and APIs.
+- **Structured output**: pass a JSON schema as the response format to get typed responses.
+- **Caching**: prompt caching and response caching in the sidecar.
+- **PII obfuscation**: removes personal data, such as emails and phone numbers, from inputs and outputs.
+
+---
+layout: default
+---
+
 # Conversation API code example
 
 ```csharp
