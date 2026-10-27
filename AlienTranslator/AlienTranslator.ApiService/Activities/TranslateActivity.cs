@@ -49,7 +49,7 @@ Provide your translation and explain your reasoning for important translation ch
 
         var options = new ConversationOptions("conversation")
         {
-            Temperature = 0.75,
+            Temperature = 0.6,
             ResponseFormat = GetResponseFormat()
         };
         

@@ -11,4 +11,3 @@ layout: default
 ## Use Cases
 
 - Customer service routing
-- Content classification

@@ -42,21 +42,17 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
             .ToList();
 
         // Publish each scan as it completes, the results keep the original order
-        var pending = scanTasks.ToList();
-        while (pending.Count > 0)
+        await ProcessAsCompletedAsync(scanTasks, (index, metered) =>
         {
-            var done = await Task.WhenAny(pending);
-            pending.Remove(done);
-            var metered = await done;
             var result = metered.Value;
             usage += metered.Usage;
             scans.Add(new ScanProgress(
-                scanActivities[scanTasks.IndexOf(done)],
+                scanActivities[index],
                 result.SubsystemName,
                 result.Status,
                 result.HealthPercentage));
             Publish("Scanning");
-        }
+        });
 
         // All scans are complete here, this only collects the results in the original order
         var scanResults = (await Task.WhenAll(scanTasks)).Select(m => m.Value).ToList();
@@ -140,5 +136,20 @@ public class ParallelDiagnosticsWorkflow : Workflow<Starship, DiagnosticReport>
         var groups = votes.GroupBy(v => v.Value);
         var maxCount = groups.Max(g => g.Count());
         return (double)maxCount / votes.Count;
+    }
+
+    // A while loop inside a workflow is not a recommended practice: the loop runs again on every
+    // replay and an unbounded loop keeps growing the workflow history. It is used here only so the
+    // web front-end gets a status update as soon as each task completes. The loop is bounded by
+    // the number of tasks, which are all scheduled before it starts.
+    private static async Task ProcessAsCompletedAsync<T>(List<Task<T>> tasks, Action<int, T> onCompleted)
+    {
+        var pending = tasks.ToList();
+        while (pending.Count > 0)
+        {
+            var done = await Task.WhenAny(pending);
+            pending.Remove(done);
+            onCompleted(tasks.IndexOf(done), await done);
+        }
     }
 }

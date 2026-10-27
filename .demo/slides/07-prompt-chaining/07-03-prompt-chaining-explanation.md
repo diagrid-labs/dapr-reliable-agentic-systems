@@ -8,7 +8,6 @@ layout: default
 
 - Task can be decomposed into a fixed number of subtasks
 
-## Use Cases
+## Use Case
 
 - Multi-step analysis
-- Content generation pipeline

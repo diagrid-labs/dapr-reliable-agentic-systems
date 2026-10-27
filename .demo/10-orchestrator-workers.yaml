@@ -27,6 +27,8 @@ demos:
   - id: scene-mkb32jje-lewc
     title: Run workflow app
     steps:
+      - action: markdownPreview
+        path: .demo/slides/10-orchestrator-workers/10-05-demo-diagram.md
       - action: executeTerminalCommand
         command: cd SpaceColonyPlanner
         insertTypingMode: character-by-character
@@ -42,11 +44,6 @@ demos:
     icons:
       start: terminal
       end: ''
-  - title: Demo Diagram
-    id: scene-mk5h331d-k1l2
-    steps:
-      - action: markdownPreview
-        path: .demo/slides/10-orchestrator-workers/10-05-demo-diagram.md
   - id: scene-mkb32l72-xbfd
     title: Start workflow
     steps:
@@ -66,20 +63,16 @@ demos:
   - id: scene-mkb32n34-vuoe
     title: Stop the workflow app
     steps:
-      - action: focusTerminal
+      - action: openTerminal
         terminalId: aspire-run
       - action: sendKeybinding
         keybinding: ctrl+c
       - action: waitForTimeout
-        timeout: 500
-      - action: executeTerminalCommand
-        command: cd ..
-        autoExecute: true
+        timeout: 2000
+      - action: closeTerminal
         terminalId: aspire-run
-      - action: waitForTimeout
-        timeout: 500
       - action: executeVSCodeCommand
-        command: workbench.action.terminal.toggleTerminal
+        command: workbench.action.closePanel
     icons:
       start: terminal
       end: ''
@@ -119,30 +112,8 @@ demos:
     steps:
       - action: highlight
         path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
-        position: '94'
+        position: '90'
         highlightWholeLine: true
     icons:
       start: code
       end: ''
-  - id: scene-hl10w-3
-    title: Synthesize the plan
-    steps:
-      - action: highlight
-        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Workflows/ColonyOrchestratorWorkflow.cs
-        position: '99:102'
-        highlightWholeLine: true
-    icons:
-      start: code
-      end: ''
-    disabled: true
-  - id: scene-hl10a-0
-    title: 'AnalyzePlanetActivity: structured output'
-    steps:
-      - action: highlight
-        path: SpaceColonyPlanner/SpaceColonyPlanner.ApiService/Activities/Analysis/AnalyzePlanetActivity.cs
-        position: '24:28'
-        highlightWholeLine: true
-    icons:
-      start: code
-      end: ''
-    disabled: true

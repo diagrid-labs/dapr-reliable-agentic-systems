@@ -9,5 +9,5 @@ layout: default
    - Dapr services
    - Valkey
 - .NET 10 with Aspire
-- Diagrid Dapr Dev Dashboard
-- OpenAI (via a Dapr component)
+- Dapr Dev Dashboard
+- OpenAI (via a Dapr Conversation component)

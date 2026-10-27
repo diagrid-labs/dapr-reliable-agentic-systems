@@ -6,7 +6,7 @@ demos:
     id: scene-mk5gtt7t-nlly
     steps:
       - action: openSlide
-        path: .demo/slides/01-intro/01-01-intro.md
+        path: .demo/slides/01-intro/01-00-intro-techorama.md
         slide: 1
       - action: setPresentationView
       - action: startEngageTimeSession

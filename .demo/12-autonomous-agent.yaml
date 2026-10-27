@@ -27,6 +27,8 @@ demos:
   - id: scene-mkb3njij-6q2c
     title: Run workflow app
     steps:
+      - action: markdownPreview
+        path: .demo/slides/12-autonomous-agent/12-05-demo-diagram.md
       - action: executeTerminalCommand
         command: cd SpaceDebrisAgent
         insertTypingMode: character-by-character
@@ -42,11 +44,6 @@ demos:
     icons:
       start: terminal
       end: ''
-  - title: Demo Diagram
-    id: scene-mk5h3n1f-o5p6
-    steps:
-      - action: markdownPreview
-        path: .demo/slides/12-autonomous-agent/12-05-demo-diagram.md
   - id: scene-mkb3nkrx-8xbi
     title: Start workflow
     steps:
@@ -66,20 +63,16 @@ demos:
   - id: scene-mkb3nme9-36la
     title: Stop the workflow app
     steps:
-      - action: focusTerminal
+      - action: openTerminal
         terminalId: aspire-run
       - action: sendKeybinding
         keybinding: ctrl+c
       - action: waitForTimeout
-        timeout: 500
-      - action: executeTerminalCommand
-        command: cd ..
-        autoExecute: true
+        timeout: 2000
+      - action: closeTerminal
         terminalId: aspire-run
-      - action: waitForTimeout
-        timeout: 500
       - action: executeVSCodeCommand
-        command: workbench.action.terminal.toggleTerminal
+        command: workbench.action.closePanel
     icons:
       start: terminal
       end: ''
@@ -104,6 +97,7 @@ demos:
     icons:
       start: code
       end: ''
+    disabled: true
   - id: scene-hl12w-1
     title: Tool dispatch
     steps:

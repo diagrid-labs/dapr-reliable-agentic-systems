@@ -44,7 +44,7 @@ layout: default
 
 # Why Durable Execution Matters for AI Agents
 
-- **Resume from Last Checkpoint** - Not from the start of the workflow
+- **Resume from Last Checkpoint on Failure** - Not from the start of the workflow
 - **Save on LLM Costs** - No re-execution of expensive calls
 - **Predictable Behavior** - Deterministic execution
 - **Built-in Observability** - Full execution history

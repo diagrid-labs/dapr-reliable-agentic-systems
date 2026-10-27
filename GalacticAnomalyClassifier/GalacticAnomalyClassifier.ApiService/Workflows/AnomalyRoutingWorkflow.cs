@@ -21,13 +21,13 @@ public class AnomalyRoutingWorkflow : Workflow<SpaceAnomaly, AnalysisResult>
     {
         context.SetCustomStatus(new RoutingProgress("Classifying", null, null, TokenUsage.Zero));
 
-        var classified = await context.CallActivityAsync<Metered<AnomalyClassification>>(
+        var classifiedAnomaly = await context.CallActivityAsync<Metered<AnomalyClassification>>(
             nameof(ClassifyAnomalyActivity),
             input,
             GetDefaultRetryPolicy());
 
-        var classification = classified.Value;
-        var usage = classified.Usage;
+        var classification = classifiedAnomaly.Value;
+        var usage = classifiedAnomaly.Usage;
 
         var anomalyType = ParseAnomalyType(classification.Type);
         context.SetCustomStatus(new RoutingProgress("Analyzing", anomalyType.ToString(), classification.Confidence, usage));

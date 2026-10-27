@@ -79,16 +79,12 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
         }
         
         // Publish each worker as it completes, the plans keep the request order
-        var pending = workerTasks.ToList();
-        while (pending.Count > 0)
+        await ProcessAsCompletedAsync(workerTasks, (index, metered) =>
         {
-            var done = await Task.WhenAny(pending);
-            pending.Remove(done);
-            usage += (await done).Usage;
-            var index = workerTasks.IndexOf(done);
+            usage += metered.Usage;
             structures[index] = structures[index] with { Done = true };
             Publish("PlanningStructures");
-        }
+        });
 
         // All workers are complete here, this only collects the plans in the request order
         var structurePlans = (await Task.WhenAll(workerTasks)).Select(m => m.Value).ToList();
@@ -112,5 +108,20 @@ public class ColonyOrchestratorWorkflow : Workflow<ColonyRequest, ColonyMasterPl
             GetDefaultRetryPolicy());
         
         return optimizedPlan;
+    }
+
+    // A while loop inside a workflow is not a recommended practice: the loop runs again on every
+    // replay and an unbounded loop keeps growing the workflow history. It is used here only so the
+    // web front-end gets a status update as soon as each task completes. The loop is bounded by
+    // the number of tasks, which are all scheduled before it starts.
+    private static async Task ProcessAsCompletedAsync<T>(List<Task<T>> tasks, Action<int, T> onCompleted)
+    {
+        var pending = tasks.ToList();
+        while (pending.Count > 0)
+        {
+            var done = await Task.WhenAny(pending);
+            pending.Remove(done);
+            onCompleted(tasks.IndexOf(done), await done);
+        }
     }
 }

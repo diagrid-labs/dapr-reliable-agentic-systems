@@ -98,4 +98,39 @@ pre, pre code {
   .section h1 {
     font-weight: 700;
   }
+
+  /* Techorama start slide: the conference logo fills the top half of the
+     background image, so the content is confined to the bottom half. */
+  .slide__layout.techorama .slide__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .slide__layout.techorama .slide__content__inner {
+    height: 50%;
+    justify-content: center;
+    padding: 8px 32px 16px;
+  }
+
+  /* The theme's 32px base font makes the content taller than the bottom
+     half (270px of the 540px slide), so this slide uses fixed, smaller sizes:
+     ~34px title + ~59px name/role + ~101px animation + spacing ≈ 240px. */
+  .slide__layout.techorama h2 {
+    font-size: 28px;
+    line-height: 1.2;
+    margin: 0 0 8px;
+  }
+
+  .slide__layout.techorama p {
+    font-size: 18px;
+    margin: 0 0 8px;
+  }
+
+  /* 70% of the bot animation's 504px width. An explicit width instead of
+     `zoom`, because DemoTime's overflow check mismeasures zoomed elements. */
+  .slide__layout.techorama img {
+    width: 353px;
+    height: auto;
+  }
 }

@@ -27,6 +27,8 @@ demos:
   - id: scene-mkb2csbu-w72j
     title: Run workflow app
     steps:
+      - action: markdownPreview
+        path: .demo/slides/09-parallelization/09-05-demo-diagram.md
       - action: executeTerminalCommand
         command: cd StarshipDiagnostics
         insertTypingMode: character-by-character
@@ -42,11 +44,6 @@ demos:
     icons:
       start: terminal
       end: ''
-  - title: Demo Diagram
-    id: scene-mk5h2p1c-i9j0
-    steps:
-      - action: markdownPreview
-        path: .demo/slides/09-parallelization/09-05-demo-diagram.md
   - id: scene-mkb2ctl7-haoq
     title: Start workflow
     steps:
@@ -66,20 +63,16 @@ demos:
   - id: scene-mkb2cv2y-avsr
     title: Stop the workflow app
     steps:
-      - action: focusTerminal
+      - action: openTerminal
         terminalId: aspire-run
       - action: sendKeybinding
         keybinding: ctrl+c
       - action: waitForTimeout
-        timeout: 500
-      - action: executeTerminalCommand
-        command: cd ..
-        autoExecute: true
+        timeout: 2000
+      - action: closeTerminal
         terminalId: aspire-run
-      - action: waitForTimeout
-        timeout: 500
       - action: executeVSCodeCommand
-        command: workbench.action.terminal.toggleTerminal
+        command: workbench.action.closePanel
     icons:
       start: terminal
       end: ''
@@ -109,7 +102,7 @@ demos:
     steps:
       - action: highlight
         path: StarshipDiagnostics/StarshipDiagnostics.ApiService/Workflows/ParallelDiagnosticsWorkflow.cs
-        position: '62'
+        position: '58'
         highlightWholeLine: true
     icons:
       start: code
@@ -119,19 +112,8 @@ demos:
     steps:
       - action: highlight
         path: StarshipDiagnostics/StarshipDiagnostics.ApiService/Workflows/ParallelDiagnosticsWorkflow.cs
-        position: '80:96'
+        position: '76:92'
         highlightWholeLine: true
     icons:
       start: code
       end: ''
-  - id: scene-hl09a-0
-    title: 'HullIntegrityScanActivity: structured output'
-    steps:
-      - action: highlight
-        path: StarshipDiagnostics/StarshipDiagnostics.ApiService/Activities/Scanners/HullIntegrityScanActivity.cs
-        position: '25:29'
-        highlightWholeLine: true
-    icons:
-      start: code
-      end: ''
-    disabled: true
