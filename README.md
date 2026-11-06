@@ -261,4 +261,4 @@ The UIs show animated durability (a timeline of saved checkpoints that stays put
 
 - Join the [Dapr Discord](https://bit.ly/dapr-discord) to connect with the community.
 - Explore the [Diagrid Dapr Dev Dashboard](https://github.com/diagridio/dev-dashboard) for workflow observability.
-- Run your workflows and AI Agents reliably with [Diagrid Catalyst](https://www.diagrid.io/catalyst).
+- Run your workflows and AI Agents reliably with [Diagrid](https://www.diagrid.io/catalyst).
